@@ -1,0 +1,2 @@
+class BadClassYepThisWontWork
+end

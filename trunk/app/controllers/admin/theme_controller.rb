@@ -1,0 +1,81 @@
+require_dependency 'area_finder_hash'
+
+class Admin::ThemeController < ApplicationController
+  before_filter :check_admin
+  menu({  'List' => 'index' })
+  TEMPLATE_PATH = 'admin/theme/'
+  
+  def index
+    @themes = []
+    
+    Dir.foreach(Theme::get_path) do |theme|
+      if File.exists?(Theme::get_path + '/' + theme + '/theme.yml') then
+        yaml = YAML::load(File.open(Theme::get_path + '/' + theme + '/theme.yml', 'r'))
+        yaml['id'] = theme
+        yaml['active'] = Theme::current == theme
+        @themes.push yaml
+      end
+    end
+    
+    @themes.sort! { |a,b| a['name'] <=> b['name'] }
+    
+    final_render(TEMPLATE_PATH + 'index')
+  end
+  
+  def templates
+    templates_shared
+  end
+  
+  def templates_with_ajax
+    @ajax = true
+    templates_shared
+  end
+  
+  def edit_template
+    edit_template_shared
+  end
+  
+  def edit_template_with_ajax
+    @ajax = true
+    edit_template_shared
+  end
+  
+  private
+  def edit_template_shared
+    @theme = params[:edittheme]
+    @edittemplate = params[:template]
+
+    fpath = Theme::get_path.to_s + '/' + @theme + '/templates/' + @edittemplate + '.rhtml'
+    if !File.exists?(fpath) then
+      flash.now[:error] = 'template_doesnt_exist'._t('system')
+      return templates_shared(@theme)
+    end
+    
+    File.open(fpath, 'r') do |tfh|
+      if !tfh.stat.writable? then
+        flash.now[:error] = 'template_unwritable'._tkey('system') / @edittemplate
+        return templates_shared(@theme)
+      elsif !tfh.stat.readable? then
+        flash.now[:error] = 'template_unreadable'._tkey('system') / @edittemplate
+        return templates_shared(@theme)
+      end
+      
+      @template_contents = tfh.read
+    end
+    
+    final_render(TEMPLATE_PATH + 'edit_template')
+  end
+  
+  def templates_shared(theme = params[:id])
+    @theme = theme
+    
+    @templates = []
+    Dir.foreach(Theme::get_path + '/' + @theme + '/templates') do |template|
+      next unless template =~ /^(.+?).rhtml$/
+      @templates.push($1)
+    end
+    
+    @templates.sort!
+    final_render(TEMPLATE_PATH + 'templates')
+  end
+end
