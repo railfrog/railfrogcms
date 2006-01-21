@@ -24,6 +24,9 @@ class ApplicationController < ActionController::Base
     rescue ArgumentError
       Locale.set(Option.get('default_language'))
     end
+    
+    @content_for_script = ''
+    @extra_javascript = ''
   end
   
   def theme_render(contents, options = {})

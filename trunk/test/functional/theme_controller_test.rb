@@ -42,12 +42,12 @@ class ThemeControllerTest < Test::Unit::TestCase
   end
   
   def test_should_route_url_to_resource
-    options = { :resource => 'test', :filename => 'hi.txt', :controller => 'theme', :action => 'resource', :build => 'false' }
+    options = { :resource => 'test', :filename => 'hi.txt', :controller => 'theme', :action => 'resource' }
     assert_routing('theme/test/hi.txt', options)
   end
   
   def test_should_route_url_with_theme_to_resource
-    options = { :resource => 'test', :filename => 'hi.txt', :theme => 'dummy', :controller => 'theme', :action => 'resource', :build => 'false' }
+    options = { :resource => 'test', :filename => 'hi.txt', :theme => 'dummy', :controller => 'theme', :action => 'resource' }
     assert_routing('theme/dummy/test/hi.txt', options)
   end
 end

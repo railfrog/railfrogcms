@@ -13,6 +13,27 @@ Copyright: Its a FREE template but i would like if you left this notice here :D
  padding: 0px;
 }
 
+div.area-hover {
+	border: 1px solid #00688B;
+	background-color: #104E8B;
+	text-align: center;
+	vertical-align: middle;
+	padding: 50px;
+	color: #FFF;
+	font-family:verdana,arial,sans-serif;
+}
+
+div.area {
+	border: 1px solid #00688B;
+	background-color: #ADEAEA;
+	text-align: center;
+	vertical-align: middle;
+	padding: 50px;
+	color: #00688B;
+	font-family:verdana,arial,sans-serif;
+	cursor:move;
+}
+
 body {
  background: #fff url(<%= url_for_theme_resource('images', 'bodybg.png') %>) repeat-x;
  font-family: Verdana, Arial, sans-serif;

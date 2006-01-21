@@ -8,11 +8,13 @@ module Admin::ThemeHelper
   end
   
   def url_for_templates(theme)
-    url_for :controller => '/admin/theme', :action => 'templates', :id => theme['id']
+    theme = theme.is_a?(String) ? theme : theme['id']
+    url_for :controller => '/admin/theme', :action => 'templates', :id => theme
   end
   
   def url_for_templates_with_ajax(theme)
-    url_for :controller => '/admin/theme', :action => 'templates_with_ajax', :id => theme['id']
+    theme = theme.is_a?(String) ? theme : theme['id']
+    url_for :controller => '/admin/theme', :action => 'templates_with_ajax', :id => theme
   end
   
   def url_for_edit_template(theme, template)

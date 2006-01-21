@@ -62,7 +62,13 @@ class Admin::ThemeController < ApplicationController
     @theme = params[:edittheme]
     @edittemplate = params[:template]
     
-    @areas = AreaFinderHash.new
+    @areas = AreaHash.new
+    Theme::swap(@theme) { final_render('templates/' + @edittemplate, :string => true) }
+    @extra_javascript = ''
+    @areas.areas.each_key do |area|
+      @extra_javascript += render_to_string(:inline => '<%= drop_receiving_element("area-' + area + '", :url => { :action => "add" }, :loading => "Element.show(\'indicator\')", :complete => "Element.hide(\'indicator\')", :hoverclass => "area-hover") %>')
+    end
+    @areas = AreaHash.new
     Theme::swap(@theme) { final_render('templates/' + @edittemplate) }
   end
   
