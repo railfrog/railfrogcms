@@ -8,8 +8,8 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'account/:action/:id', :id => nil, :controller => 'account'
   
   # Themes
-  map.connect 'theme/:theme/:resource/:filename', :build => 'false', :controller => 'theme', :action => 'resource'
-  map.connect 'theme/:resource/:filename', :build => 'false', :controller => 'theme', :action => 'resource'
+  map.connect 'theme/:theme/:resource/:filename', :controller => 'theme', :action => 'resource'
+  map.connect 'theme/:resource/:filename', :controller => 'theme', :action => 'resource'
   
   # Items
   map.connect ':item', :controller => 'item', :action => 'view_item'
