@@ -35,13 +35,19 @@ class ThemeControllerTest < Test::Unit::TestCase
     assert_equal 'text/plain', @response.headers['Content-Type']
   end
   
+  def test_should_process_erb_on_resource_data_on_request
+    get :resource, { :resource => 'test', :filename => 'erb.txt', :build => 'true', :test => 'Yay' }
+    assert_equal 'Yay',@response.body
+    assert_equal 'text/plain', @response.headers['Content-Type']
+  end
+  
   def test_should_route_url_to_resource
-    options = { :resource => 'test', :filename => 'hi.txt', :controller => 'theme', :action => 'resource' }
+    options = { :resource => 'test', :filename => 'hi.txt', :controller => 'theme', :action => 'resource', :build => 'false' }
     assert_routing('theme/test/hi.txt', options)
   end
   
   def test_should_route_url_with_theme_to_resource
-    options = { :resource => 'test', :filename => 'hi.txt', :theme => 'dummy', :controller => 'theme', :action => 'resource' }
+    options = { :resource => 'test', :filename => 'hi.txt', :theme => 'dummy', :controller => 'theme', :action => 'resource', :build => 'false' }
     assert_routing('theme/dummy/test/hi.txt', options)
   end
 end

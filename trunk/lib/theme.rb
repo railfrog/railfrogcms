@@ -134,6 +134,13 @@ module Theme
       end
     end
     
+    def swap(new_theme)
+      old_theme = current
+      set(new_theme)
+      yield
+      set(old_theme)
+    end
+    
     def rendered_file; return @@rendered_file; end
     def get_assigns; return @@theme_assigns; end
     def get_path; return @@theme_dir; end

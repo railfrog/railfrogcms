@@ -49,7 +49,30 @@ class Admin::ThemeController < ApplicationController
     do_edit_template_shared
   end
   
+  def view_template
+    view_template_shared
+  end
+  
+  def view_template_with_ajax
+    @ajax = true
+    view_template_shared
+  end
+  
+  def raw_view_template
+    @theme = params[:edittheme]
+    @edittemplate = params[:template]
+    
+    @areas = AreaFinderHash.new
+    Theme::swap(@theme) { final_render('templates/' + @edittemplate) }
+  end
+  
   private
+  def view_template_shared
+    return unless check_theme_and_template
+    
+    final_render(TEMPLATE_PATH + 'view_template')  
+  end
+  
   def do_edit_template_shared
     return unless check_theme_and_template
     

@@ -21,6 +21,8 @@
 <tr>
 <td><%= template %></td>
 <td align="center">
+<%= link_to_remote 'View', { :url => url_for_view_template_with_ajax(@theme, template), :update => 'items-list', :loading => "Element.show('indicator.content')", :loaded => "Element.hide('indicator.content')" }, { :href => url_for_view_template(@theme, template) } %>
+|
 <%= link_to_remote 'Edit', { :url => url_for_edit_template_with_ajax(@theme, template), :update => 'items-list', :loading => "Element.show('indicator.content')", :loaded => "Element.hide('indicator.content')" }, { :href => url_for_edit_template(@theme, template) } %>
 </td>
 </tr>

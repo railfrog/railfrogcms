@@ -30,4 +30,16 @@ module Admin::ThemeHelper
   def url_for_do_edit_template(theme, template)
     url_for :controller => '/admin/theme', :action => 'do_edit_template', :edittheme => theme, :template => template
   end
+  
+  def url_for_view_template_with_ajax(theme, template)
+    url_for :controller => '/admin/theme', :action => 'view_template_with_ajax', :edittheme => theme, :template => template
+  end
+  
+  def url_for_view_template(theme, template)
+    url_for :controller => '/admin/theme', :action => 'view_template', :edittheme => theme, :template => template
+  end
+  
+  def url_for_raw_view_template(theme, template)
+    url_for :controller => '/admin/theme', :action => 'raw_view_template', :edittheme => theme, :template => template
+  end
 end

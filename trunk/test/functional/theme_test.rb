@@ -94,4 +94,14 @@ class ThemeLibTest < Test::Unit::TestCase
       assert Theme::extension_contents.empty?
     end
   end
+  
+  def test_should_swap_templates_for_block
+    assert_equal 'system', Theme::current
+    assert_equal 'BOO!', Theme::render('boo', :string => true)
+    Theme::swap('dummy') do
+      assert_equal 'dummy', Theme::current
+      assert_equal 'BOO! from Dummy', Theme::render('boo', :string => true)
+    end
+    assert_equal 'system', Theme::current
+  end
 end

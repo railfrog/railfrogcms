@@ -44,4 +44,11 @@ class Admin::ThemeControllerTest < Test::Unit::TestCase
       assert_equal 'new', file.read
     end
   end
+  
+  def test_should_view_template
+    get :view_template, { :edittheme => 'system', :template => 'test' }
+    assert_rendered_file 'admin/theme/view_template'
+    assert assigns.has_key?('edittemplate')
+    assert assigns.has_key?('theme')
+  end
 end

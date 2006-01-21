@@ -2,7 +2,16 @@ class ThemeController < ApplicationController
   def resource
     render :text => '404', :status => 404 and return if params[:filename].to_s.split(%r{[\\/]}).include?("..") or params[:resource].to_s.split(%r{[\\/]}).include?("..")
     mime = mime_type_for(params[:filename].to_s)
-    send_file Theme::get_path + '/' + Theme::current + '/resources/' + params[:resource].to_s + '/' + params[:filename].to_s, :type => mime, :disposition => 'inline', :stream => false
+    stream_options = { :type => mime, :disposition => 'inline', :stream => false }
+    filename = Theme::get_path + '/' + Theme::current + '/resources/' + params[:resource].to_s + '/' + params[:filename].to_s
+    return send_file filename, stream_options unless params[:build] == 'true'
+    
+    contents = ''
+    File.open(filename, 'r') do |tfh|
+      contents = Theme::render_string(tfh.read, :string => true)
+    end
+    
+    return send_data contents, stream_options
   end
   
   private
