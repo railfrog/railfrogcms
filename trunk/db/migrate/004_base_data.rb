@@ -40,6 +40,7 @@ class BaseData < ActiveRecord::Migration
       'template_doesnt_exist' => 'The template you attempted to modify doesn\'t exist!',
       'template_unwritable'   => 'Unable to write to template "%s"! Please check write permissions.',
       'template_unreadable'   => 'Unable to read template "%s"! Please check read permissions.',
+      'template_saved'        => '%s saved!',
       
       # Fields
       'login'                 => 'login' }

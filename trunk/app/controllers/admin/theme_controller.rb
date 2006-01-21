@@ -40,18 +40,31 @@ class Admin::ThemeController < ApplicationController
     edit_template_shared
   end
   
+  def do_edit_template
+    do_edit_template_shared
+  end
+  
+  def do_edit_template_with_ajax
+    @ajax = true
+    do_edit_template_shared
+  end
+  
   private
-  def edit_template_shared
-    @theme = params[:edittheme]
-    @edittemplate = params[:template]
-
-    fpath = Theme::get_path.to_s + '/' + @theme + '/templates/' + @edittemplate + '.rhtml'
-    if !File.exists?(fpath) then
-      flash.now[:error] = 'template_doesnt_exist'._t('system')
-      return templates_shared(@theme)
+  def do_edit_template_shared
+    return unless check_theme_and_template
+    
+    File.open(@fpath, 'w') do |tfh|
+      tfh.write(params[:template_contents])
     end
     
-    File.open(fpath, 'r') do |tfh|
+    flash.now[:info] = 'template_saved'._tkey('system') / @edittemplate
+    return templates_shared(@theme)
+  end
+  
+  def edit_template_shared
+    return unless check_theme_and_template
+    
+    File.open(@fpath, 'r') do |tfh|
       if !tfh.stat.writable? then
         flash.now[:error] = 'template_unwritable'._tkey('system') / @edittemplate
         return templates_shared(@theme)
@@ -64,6 +77,20 @@ class Admin::ThemeController < ApplicationController
     end
     
     final_render(TEMPLATE_PATH + 'edit_template')
+  end
+  
+  def check_theme_and_template
+    @theme = params[:edittheme]
+    @edittemplate = params[:template]
+
+    @fpath = Theme::get_path.to_s + '/' + @theme + '/templates/' + @edittemplate + '.rhtml'
+    if !File.exists?(@fpath) then
+      flash.now[:error] = 'template_doesnt_exist'._t('system')
+      templates_shared(@theme)
+      return false
+    end
+    
+    return true
   end
   
   def templates_shared(theme = params[:id])

@@ -24,4 +24,24 @@ class Admin::ThemeControllerTest < Test::Unit::TestCase
     assert_rendered_file 'admin/theme/templates'
     assert assigns.has_key?('templates')
   end
+  
+  def test_should_edit_template
+    get :edit_template, { :edittheme => 'system', :template => 'test' }
+    assert_rendered_file 'admin/theme/edit_template'
+    assert assigns.has_key?('template_contents')
+    assert assigns.has_key?('edittemplate')
+    assert assigns.has_key?('theme')
+    
+    fpath = Theme::get_path.to_s + '/system/templates/test.rhtml'
+    File.open(fpath, 'r') do |file|
+      assert_equal assigns['template_contents'], file.read
+    end
+    
+    post :do_edit_template, { :edittheme => 'system', :template => 'test', :template_contents => 'new' }
+    assert_rendered_file 'admin/theme/templates'
+
+    File.open(fpath, 'r') do |file|
+      assert_equal 'new', file.read
+    end
+  end
 end
