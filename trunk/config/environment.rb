@@ -66,3 +66,6 @@ require_dependency 'ext_item_api'
 
 include Globalize
 include RailfrogExceptions
+
+Extension.set_path(RAILS_ROOT + '/extensions')
+Locale.set('eng')

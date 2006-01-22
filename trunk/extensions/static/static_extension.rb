@@ -1,6 +1,19 @@
 class StaticExt
   def self.type; 'base'; end
   
+  def cmd_install(extension, item)
+    print 'Content: '
+    content = gets.chomp
+    if content.empty?
+      print "\n"
+      puts "ERROR: You did not enter any content."
+      return false
+    end
+    
+    item['content'] = content
+    return true
+  end
+  
   def edit_item(extension, item)
     ext_item = {}
     ext_item['content'] = item['content']
