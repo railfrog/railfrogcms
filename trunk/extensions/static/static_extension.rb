@@ -1,9 +1,9 @@
 class StaticExt
   def self.type; 'base'; end
   
-  def cmd_install(extension, item)
+  def cmd_new_item(extension, item)
     print 'Content: '
-    content = gets.chomp
+    content = $stdin.gets.chomp
     if content.empty?
       print "\n"
       puts "ERROR: You did not enter any content."
@@ -13,6 +13,7 @@ class StaticExt
     item['content'] = content
     return true
   end
+  alias cmd_edit cmd_new_item
   
   def edit_item(extension, item)
     ext_item = {}

@@ -34,14 +34,14 @@ item.temp = 1
 item.save!
 
 begin
-  unless extension.ext_cmd_install(extension, item)
+  unless extension.ext_cmd_new_item(extension, item)
     item.destroy
     exit
   end
 rescue NoMethodError
   item.destroy
   print "\n"
-  puts "Error: The #{content_type} extension is not enabled for installing directly from the command line."
+  puts "Error: The #{content_type} extension is not enabled for creating items directly from the command line."
   exit
 end
 

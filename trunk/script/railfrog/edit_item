@@ -1,0 +1,31 @@
+#!/usr/bin/env ruby
+
+print 'Loading railfrog system...'
+require 'config/environment'
+puts 'Done'
+
+print "\n"
+puts '=== EDIT AN ITEM IN RAILFROG ==='
+if ARGV.empty?
+  print 'Item name: '
+  item_name = $stdin.gets.chomp
+else
+  item_name = ARGV[0].to_s
+end
+
+if (item = Item.find_by_name(item_name, :include => [:extension, :item_extensions])).nil?
+  print "\n"
+  puts "ERROR: Item named '#{item_name}' doesn't exist!"
+  exit
+end
+
+begin
+  exit unless item.extension.ext_cmd_edit(item.extension, item)
+rescue NoMethodError
+  print "\n"
+  puts "Error: The #{item.extension.name} extension is not enabled for editing directly from the command line."
+  exit
+end
+
+print "\n"
+puts 'Item saved!'
