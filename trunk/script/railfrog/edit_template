@@ -5,7 +5,7 @@ require 'config/environment'
 puts 'Done'
 
 print "\n"
-puts '=== DELETE A TEMPLATE FOR A THEME IN RAILFROG ==='
+puts '=== EDIT A TEMPLATE FOR A THEME IN RAILFROG ==='
 print 'Theme name: '
 theme_name = $stdin.gets.chomp
 
@@ -36,21 +36,32 @@ unless File.exists?(template_path)
   exit
 end
 
-result = ''
-while result != 'y' and result != 'n'
-  print "Attempting to destroy '#{template_name}'! Are you sure (Y/N)? "
-  result = $stdin.gets.chomp.downcase
+print 'Path to file containing template contents: '
+source_path = $stdin.gets.chomp
+
+unless File.exists?(source_path)
+  print "\n"
+  puts "ERROR: The source file for the template contents does not exist."
+  exit
 end
 
-if result == 'n'
-  print "\n"
-  puts 'Template was not deleted.'
-  exit
-elsif File.delete(template_path) == 0
-  print "\n"
-  puts "ERROR: Failed to delete template."
-  exit
+File.open(source_path, 'r') do |source_fh|
+  unless source_fh.stat.readable?
+    print "\n"
+    puts "ERROR: The source file for the template contents is not readable."
+    exit
+  end
+  
+  File.open(template_path, 'w+') do |fh|
+    unless fh.stat.writable?
+      print "\n"
+      puts "ERROR: Template is not writable!"
+      exit
+    end
+    
+    fh.write(source_fh.read)
+  end
 end
 
 print "\n"
-puts "#{template_name} deleted from #{theme_name}."
+puts "#{template_name} edited for #{theme_name}."
