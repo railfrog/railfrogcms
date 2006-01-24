@@ -8,7 +8,7 @@ class Option < ActiveRecord::Base
   def self.set(key, value)
     check_if_exists = find_by_name(key)
     unless check_if_exists.nil? then
-      check_if_exists.value = key
+      check_if_exists.value = value
       return check_if_exists.save
     end
     
