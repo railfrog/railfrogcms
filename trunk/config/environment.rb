@@ -69,5 +69,5 @@ include RailfrogExceptions
 
 Extension.set_path(RAILS_ROOT + '/extensions') if RAILS_ENV != 'test'
 Theme::set_path(RAILS_ROOT + '/themes') if RAILS_ENV != 'test'
-Theme::set(Option.get('default_theme'))
-Locale.set('eng')
+Theme::set(Option.get('default_theme')) if RAILS_ENV != 'test'
+Locale.set('eng') if RAILS_ENV != 'test'

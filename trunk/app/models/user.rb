@@ -40,6 +40,8 @@ class User < ActiveRecord::Base
       check_role = get_role(role_info)
       raise(RoleDoesntExistException, role_info) if check_role.nil?
       
+      raise(UserDoesntHaveRoleException, role_info) if check_user.roles.detect { |role| role.name == check_role.name }.nil?
+      
       check_user.roles.delete(check_role)
       check_user.save!
       return true
@@ -65,6 +67,8 @@ class User < ActiveRecord::Base
       
       check_role = get_role(role_info)
       raise(RoleDoesntExistException, role_info) if check_role.nil?
+      
+      raise(UserAlreadyHasRoleException, role_info) unless check_user.roles.detect { |role| role.name == check_role.name }.nil?
       
       check_user.roles << check_role
       check_user.save!

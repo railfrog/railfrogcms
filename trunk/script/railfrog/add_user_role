@@ -5,26 +5,17 @@ require 'config/environment'
 puts 'Done'
 
 print "\n"
-puts "=== ADD NEW USER ==="
-print 'New Login: '
+puts "=== ADD ROLE TO USER ==="
+print 'Login: '
 login_name = $stdin.gets.chomp
 
-unless User.find_by_login(login_name).nil?
+if (user = User.find_by_login(login_name)).nil?
   print "\n"
-  puts "ERROR: User with that login already exists."
+  puts "ERROR: User with that login doesn't exist."
   exit
 end
 
-print 'New Password: '
-password_val = $stdin.gets.chomp
-print 'Confirm Password: '
-unless $stdin.gets.chomp == password_val
-  print "\n"
-  puts "ERROR: Passwords did not match."
-  exit
-end
-
-print 'Roles, more than one separated by a comma: '
+print 'Role(s), more than one separated by a comma: '
 role_names = $stdin.gets.chomp
 
 roles = Role.find(:all)
@@ -42,14 +33,12 @@ role_names.each do |role_name|
   roles_to_add.push(role)
 end
 
-newuser = User.new
-newuser.login = login_name
-newuser.password = password_val
-newuser.save!
-
 roles_to_add.each do |role|
-  newuser.add_role(role)
+  begin
+    user.add_role(role)
+  rescue UserAlreadyHasRoleException
+  end
 end
 
 print "\n"
-puts "New user created."
+puts "Role(s) added to user."

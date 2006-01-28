@@ -38,6 +38,30 @@ unless new_password_val.empty?
   end
 end
 
+print 'Roles, more than one separated by a comma, or leave blank to keep the same roles: '
+role_names = $stdin.gets.chomp
+
+unless role_names.empty?
+  roles = Role.find(:all)
+  
+  roles_to_add = []
+  role_names.each do |role_name|
+    role = roles.detect { |role| role.name == role_name or role.translate == role_name }
+    
+    if role.nil?
+      print "\n"
+      puts "ERROR: Couldn't find a role named '#{role_name}'"
+      exit
+    end
+    
+    roles_to_add.push(role)
+  end
+  
+  roles_to_add.each do |role|
+    user.add_role(role)
+  end
+end
+
 user.login = new_login_name unless new_login_name.empty?
 user.password = new_password_val unless new_password_val.empty?
 user.save! unless new_login_name.empty? and new_password_val.empty?

@@ -20,6 +20,8 @@ module RailfrogExceptions
   class UserDoesntExistException < RuntimeError; end
   class InvalidPasswordException < RuntimeError; end
   class NoSessionStoringHashException < RuntimeError; end
+  class UserAlreadyHasRoleException < RuntimeError; end
+  class UserDoesntHaveRoleException< RuntimeError; end
   
   # Item Exceptions
   class ItemDoesntExistException < RuntimeError; end

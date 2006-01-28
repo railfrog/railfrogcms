@@ -14,6 +14,22 @@ class UserTest < Test::Unit::TestCase
     assert newuser.destroy
   end
   
+  def test_should_raise_error_when_removing_existent_role
+    mitch = User.find(users(:mitch).id)
+    assert_equal 0, mitch.roles.length
+    assert_raise(UserDoesntHaveRoleException) { mitch.remove_role(:admin) }
+  end
+  
+  def test_should_raise_error_when_adding_existent_role
+    mitch = User.find(users(:mitch).id)
+    assert_equal 0, mitch.roles.length
+    assert mitch.add_role(:admin)
+    assert_equal 1, mitch.roles.length
+    assert_raise(UserAlreadyHasRoleException) { mitch.add_role(:admin) }
+    assert mitch.remove_role(:admin)  
+    assert_equal 0, mitch.roles.length
+  end
+  
   def test_should_add_and_remove_role_fromto_user
     mitch = User.find(users(:mitch).id)
     assert_equal 0, mitch.roles.length
@@ -41,6 +57,7 @@ class UserTest < Test::Unit::TestCase
     assert RolePermission.set(:admin, :basic_delete)
     assert mitch.has_permission?(:basic_create)
     assert_equal false, mitch.has_permission?(:basic_delete)
+    assert mitch.remove_role(:admin)
   end
   
   def test_should_hash_password_when_setting_explicity
