@@ -27,11 +27,28 @@ end
 
 extension = Extension.find_by_name(content_type)
 
+print 'Content Extension(s), more than one separated by a comma: '
+content_extensions = $stdin.gets.chomp
+
+content_extensions_add = []
+content_extensions.each do |content_extension|
+  unless Extension.exists?(content_extension)
+    print "\n"
+    puts "Error: #{content_extension} doesn't exist or isn't installed!"
+    puts "If it's not installed, run the install_extension script to install it."
+    exit
+  end
+  
+  content_extensions_add.push(Extension.find_by_name(content_extension))
+end
+
 item = Item.new
 item.name = item_name
 item.extension_id = extension.id
 item.temp = 1
 item.save!
+
+content_extensions_add.each { |ext| item.set_content_extension(ext) }
 
 begin
   unless extension.ext_cmd_new_item(extension, item)
