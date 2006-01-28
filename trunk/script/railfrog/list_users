@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+
+print 'Loading railfrog system...'
+require 'config/environment'
+puts 'Done'
+
+print "\n"
+puts '=== Listing All Users ==='
+puts 'ID'.ljust(10) + 'Login'
+
+users = User.find(:all)
+if users.empty?
+  print "\n"
+  puts 'No users.'
+  exit
+end
+
+users.each do |user|
+  puts user.id.to_s.ljust(10) + user.login
+end

@@ -1,0 +1,33 @@
+#!/usr/bin/env ruby
+
+print 'Loading railfrog system...'
+require 'config/environment'
+puts 'Done'
+
+print "\n"
+puts "=== ADD NEW USER ==="
+print 'New Login: '
+login_name = $stdin.gets.chomp
+
+unless User.find_by_login(login_name).nil?
+  print "\n"
+  puts "ERROR: User with that login already exists."
+  exit
+end
+
+print 'New Password: '
+password_val = $stdin.gets.chomp
+print 'Confirm Password: '
+unless $stdin.gets.chomp == password_val
+  print "\n"
+  puts "ERROR: Passwords did not match."
+  exit
+end
+
+newuser = User.new
+newuser.login = login_name
+newuser.password = password_val
+newuser.save!
+
+print "\n"
+puts "New user created."
