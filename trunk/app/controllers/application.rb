@@ -27,6 +27,8 @@ class ApplicationController < ActionController::Base
     
     @content_for_script = ''
     @extra_javascript = ''
+    
+    ExtensionAPI::Controller.add_method('final_render', method(:final_render))
   end
   
   def theme_render(contents, options = {})

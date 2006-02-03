@@ -62,12 +62,19 @@ require_dependency 'globalize_extend'
 require_dependency 'auth'
 require_dependency 'theme'
 require_dependency 'phrases'
-require_dependency 'ext_item_api'
+
+# Extension API
+Dir.open(RAILS_ROOT + '/lib/extension_api') do |extapi|
+  extapi.each do |file|
+    next if file == '.' or file == '..'
+    require_dependency('extension_api/' + file[0..(file.length - 4)].to_s)
+  end
+end
 
 include Globalize
 include RailfrogExceptions
 
-Extension.set_path(RAILS_ROOT + '/extensions') if RAILS_ENV != 'test'
-Theme::set_path(RAILS_ROOT + '/themes') if RAILS_ENV != 'test'
-Theme::set(Option.get('default_theme')) if RAILS_ENV != 'test'
-Locale.set('eng') if RAILS_ENV != 'test'
+Extension.set_path(RAILS_ROOT + '/extensions') if RAILS_ENV != 'test' and !($0 =~ /rake/)
+Theme::set_path(RAILS_ROOT + '/themes') if RAILS_ENV != 'test' and !($0 =~ /rake/)
+Theme::set(Option.get('default_theme')) if RAILS_ENV != 'test' and !($0 =~ /rake/)
+Locale.set('eng') if RAILS_ENV != 'test' and !($0 =~ /rake/)

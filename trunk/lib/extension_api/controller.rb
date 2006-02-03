@@ -1,5 +1,5 @@
-module ExtensionAPI
-  module Item
+class ExtensionAPI
+  module Controller
     @@methods = nil
     
     class <<self
