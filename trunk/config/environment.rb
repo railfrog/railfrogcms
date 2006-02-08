@@ -66,8 +66,7 @@ require_dependency 'phrases'
 # Extension API
 Dir.open(RAILS_ROOT + '/lib/extension_api') do |extapi|
   extapi.each do |file|
-    next if file == '.' or file == '..'
-    require_dependency('extension_api/' + file[0..(file.length - 4)].to_s)
+    require_dependency("extension_api/#{file}") if file =~ /^\w+\.rb$/ 
   end
 end
 
