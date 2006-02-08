@@ -145,4 +145,4 @@ CREATE TABLE `users` (
   UNIQUE KEY `users_login_index` (`login`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-INSERT INTO schema_info (version) VALUES (4)
+INSERT INTO schema_info (version) VALUES (4);
