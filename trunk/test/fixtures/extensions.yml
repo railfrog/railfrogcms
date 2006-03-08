@@ -1,9 +1,0 @@
-static:
-  id: 1
-  name: static
-bad_class_name:
-  id: 2
-  name: bad_class
-nonexistent:
-  id: 3
-  name: vroomvroom

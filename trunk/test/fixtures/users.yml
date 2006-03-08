@@ -1,4 +1,0 @@
-mitch:
-  id: 1
-  login: mitch
-  password: <%= Auth::hash('woohoo') %>
