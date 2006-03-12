@@ -1,0 +1,6 @@
+- RailFrog
+
+To Install:
+Create a railfrog_development database and execute the sql statements in /db.
+Edit the database.yml as appropriate.
+Run WEBrick
