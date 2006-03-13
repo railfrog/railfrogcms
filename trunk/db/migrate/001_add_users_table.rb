@@ -1,6 +1,9 @@
 class AddUsersTable < ActiveRecord::Migration
   def self.up
-    create_table :users, :force => true do |t|
+    create_table(
+      :users, 
+      :force => true, 
+      :options => 'ENGINE=InnoDB DEFAULT CHARSET=utf8')do |t|
       t.column :first_name, :string, :null => false
       t.column :last_name,  :string, :null => false
       t.column :email,      :string, :null => false
