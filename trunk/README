@@ -1,6 +1,7 @@
-- RailFrog
+= RailFrog =
 
-To Install:
-Create a railfrog_development database and execute the sql statements in /db.
-Edit the database.yml as appropriate.
-Run WEBrick
+== Installation ==
+ 1. Edit the database.yml as appropriate.
+ 2. Create a {{{railfrog_development}}} database.
+ 3. Run {{{$ rake migrate}}} to create all required tables in the database.
+ 4. Run WEBrick
