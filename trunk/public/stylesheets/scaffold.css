@@ -6,10 +6,6 @@ body, p, ol, ul, td {
   line-height: 18px;
 }
 
-th {
-  text-align: left;
-}
-
 pre {
   background-color: #eee;
   padding: 10px;

@@ -1,7 +1,14 @@
 = RailFrog =
 
 == Installation ==
- 1. Edit the database.yml as appropriate.
- 2. Create a {{{railfrog_development}}} database.
+ 0. Drop {{{railfrog_development}}} database if it exists. # sorry for this. there were some changes in migration files.
+ 1. Create a {{{railfrog_development}}} database.
+ 2. Edit the database.yml as appropriate.
  3. Run {{{$ rake migrate}}} to create all required tables in the database.
  4. Run WEBrick
+
+== TODO == 
+ 0. add methods to add/modify/delete SiteMapping/Chunks/ChunkVersions
+ 1. refactor SiteMapper: add acts_as_threaded
+ 2. add UI to manage the sitemappings, chunks table
+ 3. add TTW WYSIWYG editor - Xinha

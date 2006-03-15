@@ -4,34 +4,37 @@
 
 ActiveRecord::Schema.define(:version => 2) do
 
+  create_table "chunk_versions", :force => true do |t|
+    t.column "chunk_id", :integer
+    t.column "version", :integer
+    t.column "description", :string
+    t.column "mime_type", :string, :limit => 50
+    t.column "live_version", :integer
+    t.column "base_version", :integer
+    t.column "content", :binary
+    t.column "updated_at", :datetime
+  end
+
   create_table "chunks", :force => true do |t|
+    t.column "description", :string
+    t.column "mime_type", :string, :limit => 50
+    t.column "live_version", :integer
     t.column "version", :integer
     t.column "base_version", :integer
-    t.column "mime_type", :string, :limit => 50
-    t.column "author_email", :string, :limit => 100
     t.column "content", :binary
-    t.column "last_updated_at", :datetime
   end
 
   create_table "layouts", :force => true do |t|
     t.column "name", :string
   end
 
-  create_table "live_versions", :force => true do |t|
+  create_table "site_mappings", :force => true do |t|
+    t.column "path_segment", :string, :default => "", :null => false
     t.column "chunk_id", :integer
     t.column "version", :integer
-    t.column "last_updated_at", :datetime
-  end
-
-  create_table "site_mappings", :force => true do |t|
-    t.column "path", :string, :default => "", :null => false
-    t.column "live_version_id", :integer
-    t.column "version", :integer
     t.column "layout_id", :integer
-    t.column "last_updated_at", :datetime
+    t.column "updated_at", :datetime
   end
-
-  add_index "site_mappings", ["path"], :name => "site_mappings_path_index", :unique => true
 
   create_table "users", :force => true do |t|
     t.column "first_name", :string, :default => "", :null => false
