@@ -1,11 +1,8 @@
 class SiteMapping < ActiveRecord::Base
+  belongs_to :chunk
+  
   def self.find_chunk(path)
     m = SiteMapping.find(:first, :conditions => ["path_segment = ?", path])
-    
-    if m.version then
-      Chunk.find_version(m.chunk_id, m.version)
-    else 
-      Chunk.find_live_version(m.chunk_id)
-    end
+    Chunk.find_version(m.chunk_id, m.version)
   end
 end

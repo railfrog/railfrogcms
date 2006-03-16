@@ -1,10 +1,9 @@
-require "acts_as_versioned"
-
 class Chunk < ActiveRecord::Base
-  acts_as_versioned
+  has_many :chunk_versions
   
-  def self.find_live_version(id)
+  def self.find_version(id, version = nil)
     chunk = find(id)
-    find_version(id, chunk.live_version)
+    version = chunk.live_version unless version 
+    chunk.chunk_versions.find(:first, :conditions => ["version = ?", version])
   end
 end

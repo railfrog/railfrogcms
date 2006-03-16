@@ -4,9 +4,9 @@ class SiteMapperController < ApplicationController
   # '', 'aaa', 'aaa/bbb', etc.
   def show_chunk
     path = @params[:path].to_s
-    @chunk = SiteMapping.find_chunk(path)
+    @chunk_version = SiteMapping.find_chunk(path)
     
-    redirect_to :action => 'notfound' unless @chunk
+    redirect_to :action => 'notfound' unless @chunk_version
   end
   
   # 404 action

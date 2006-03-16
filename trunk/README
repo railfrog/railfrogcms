@@ -7,6 +7,9 @@
  3. Run {{{$ rake migrate}}} to create all required tables in the database.
  4. Run WEBrick
 
+== DONE ==
+ * dropped acts_as_versioned from the Chunk model
+ 
 == TODO == 
  0. add methods to add/modify/delete SiteMapping/Chunks/ChunkVersions
  1. refactor SiteMapper: add acts_as_threaded

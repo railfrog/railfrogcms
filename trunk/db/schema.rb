@@ -7,11 +7,9 @@ ActiveRecord::Schema.define(:version => 2) do
   create_table "chunk_versions", :force => true do |t|
     t.column "chunk_id", :integer
     t.column "version", :integer
-    t.column "description", :string
-    t.column "mime_type", :string, :limit => 50
-    t.column "live_version", :integer
     t.column "base_version", :integer
     t.column "content", :binary
+    t.column "created_at", :datetime
     t.column "updated_at", :datetime
   end
 
@@ -19,9 +17,6 @@ ActiveRecord::Schema.define(:version => 2) do
     t.column "description", :string
     t.column "mime_type", :string, :limit => 50
     t.column "live_version", :integer
-    t.column "version", :integer
-    t.column "base_version", :integer
-    t.column "content", :binary
   end
 
   create_table "layouts", :force => true do |t|

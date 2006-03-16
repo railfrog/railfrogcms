@@ -7,12 +7,16 @@ class AddIterationOneTables < ActiveRecord::Migration
       t.column :description,     :string 
       t.column :mime_type,       :string, :limit => 50
       t.column :live_version,    :integer
+    end
+
+    create_table :chunk_versions, :options => options do |t|
+      t.column :chunk_id,         :integer
       t.column :version,         :integer
       t.column :base_version,    :integer
       t.column :content,         :binary
+      t.column :created_at,      :datetime
+      t.column :updated_at,      :datetime
     end
-    
-    Chunk.create_versioned_table :options => options 
 
     create_table :layouts, :options => options do |t|
       t.column :name,            :string
@@ -35,19 +39,25 @@ class AddIterationOneTables < ActiveRecord::Migration
   </body>
 </html>
 END_OF_STRING
-    
-    Chunk.create :description => "RailFrog Demo index page",
-      :live_version => 1,
-      :mime_type    => "application/xml+xhtml",
-      :content      => aContent
+
+    c = Chunk.create :description => "RailFrog Demo index page", 
+      :live_version => 1, 
+      :mime_type => "application/xml+xhtml"
+
+    c.save
+
+    c.chunk_versions.create :version => 1,
+      :base_version => 0,
+      :content => aContent
       
-    SiteMapping.create :path_segment => "", :chunk_id => 1
+    SiteMapping.create :chunk_id => c, :path_segment => ""
+
   end
   
   def self.down
     drop_table :site_mappings
     drop_table :layouts
-    Chunk.drop_versioned_table
+    drop_table :chunk_versions
     drop_table :chunks
   end
 end
