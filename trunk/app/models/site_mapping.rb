@@ -3,6 +3,6 @@ class SiteMapping < ActiveRecord::Base
   
   def self.find_chunk(path)
     m = SiteMapping.find(:first, :conditions => ["path_segment = ?", path])
-    Chunk.find_version(m.chunk_id, m.version)
+    Chunk.find_version(m.chunk_id, m.version) if m
   end
 end
