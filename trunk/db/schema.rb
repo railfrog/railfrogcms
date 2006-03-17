@@ -2,7 +2,7 @@
 # migrations feature of ActiveRecord to incrementally modify your database, and
 # then regenerate this schema definition.
 
-ActiveRecord::Schema.define(:version => 2) do
+ActiveRecord::Schema.define(:version => 3) do
 
   create_table "chunk_versions", :force => true do |t|
     t.column "chunk_id", :integer
@@ -29,7 +29,17 @@ ActiveRecord::Schema.define(:version => 2) do
     t.column "version", :integer
     t.column "layout_id", :integer
     t.column "updated_at", :datetime
+    t.column "root_id", :integer
+    t.column "parent_id", :integer
+    t.column "depth", :integer
+    t.column "lft", :integer
+    t.column "rgt", :integer
   end
+
+  add_index "site_mappings", ["path_segment"], :name => "site_mappings_path_segment_index"
+  add_index "site_mappings", ["lft"], :name => "site_mappings_lft_index"
+  add_index "site_mappings", ["rgt"], :name => "site_mappings_rgt_index"
+  add_index "site_mappings", ["depth"], :name => "site_mappings_depth_index"
 
   create_table "users", :force => true do |t|
     t.column "first_name", :string, :default => "", :null => false

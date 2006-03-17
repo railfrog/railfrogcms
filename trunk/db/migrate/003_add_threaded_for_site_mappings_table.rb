@@ -6,9 +6,10 @@ class AddThreadedForSiteMappingsTable < ActiveRecord::Migration
     add_column :site_mappings, :lft, :integer
     add_column :site_mappings, :rgt, :integer
     
+    # for better performance of the acts_as_threaded lookups
     add_index :site_mappings, :path_segment
-    add_index :site_mappings, :lft
-    add_index :site_mappings, :rgt
+    add_index :site_mappings, [:lft, :rgt]
+    add_index :site_mappings, :depth
   end
 
   def self.down
