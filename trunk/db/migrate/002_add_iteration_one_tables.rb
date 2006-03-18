@@ -49,9 +49,6 @@ END_OF_STRING
     c.chunk_versions.create :version => 1,
       :base_version => 0,
       :content => aContent
-      
-    SiteMapping.create :chunk_id => c, :path_segment => ""
-
   end
   
   def self.down

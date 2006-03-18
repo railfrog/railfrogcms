@@ -37,8 +37,8 @@ ActiveRecord::Schema.define(:version => 3) do
   end
 
   add_index "site_mappings", ["path_segment"], :name => "site_mappings_path_segment_index"
-  add_index "site_mappings", ["lft"], :name => "site_mappings_lft_index"
-  add_index "site_mappings", ["rgt"], :name => "site_mappings_rgt_index"
+  add_index "site_mappings", ["parent_id"], :name => "site_mappings_parent_id_index"
+  add_index "site_mappings", ["lft", "rgt"], :name => "site_mappings_lft_index"
   add_index "site_mappings", ["depth"], :name => "site_mappings_depth_index"
 
   create_table "users", :force => true do |t|
