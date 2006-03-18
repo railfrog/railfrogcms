@@ -1,7 +1,7 @@
 class AddIterationOneTables < ActiveRecord::Migration
   def self.up
     
-    options = 'ENGINE=InnoDB DEFAULT CHARSET=utf8'
+    options = ''
     
     create_table :chunks, :options => options do |t|
       t.column :description,     :string 
