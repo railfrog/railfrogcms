@@ -1,10 +1,10 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class UserTest < Test::Unit::TestCase
-  fixtures :users
+class LayoutTest < Test::Unit::TestCase
+  fixtures :layouts
 
   # Replace this with your real tests.
   def test_truth
-    #assert_kind_of User, User.find(:first)
+    assert_kind_of Layout, Layout.find(:first)
   end
 end

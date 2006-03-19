@@ -5,6 +5,6 @@ class ChunkVersionTest < Test::Unit::TestCase
 
   # Replace this with your real tests.
   def test_truth
-    assert_kind_of ChunkVersion, chunk_versions(:first)
+    assert_kind_of ChunkVersion, ChunkVersion.find(:first)
   end
 end

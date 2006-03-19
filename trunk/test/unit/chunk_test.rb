@@ -5,6 +5,6 @@ class ChunkTest < Test::Unit::TestCase
 
   # Replace this with your real tests.
   def test_truth
-    assert_kind_of Chunk, chunks(:first)
+    assert_kind_of Chunk, Chunk.find(:first)
   end
 end

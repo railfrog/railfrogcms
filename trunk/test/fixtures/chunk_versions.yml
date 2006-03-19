@@ -1,5 +1,53 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
-first:
-  id: 1
-another:
-  id: 2
+# Binary Data Language-Independent Type for YAML at http://yaml.org/type/binary.html
+
+--- !omap
+- first_version_of_index_page:
+    id:           1
+    chunk_id:     1
+    version:      1
+    base_version: null
+    content:      Hello, RailFrog
+  
+- second_version_of_index_page:
+    id:           2
+    chunk_id:     1
+    version:      2
+    base_version: 1
+    content: |     
+      <html>
+        <title>Welcome to RailFrog!</title>
+        <body>
+          <h1>Welcome to RailFrog CMS</h1>
+          <a href="/admin">Admin pages</a>
+        </body>
+      </html>
+
+- third_version_of_index_page: 
+    id:           3
+    chunk_id:     1
+    version:      3
+    base_version: 2
+    content: |
+      <html>
+        <title>New version of the: Welcome to RailFrog!</title>
+        <body>
+          <h1>Welcome to RailFrog CMS (in progress)</h1>
+          <a href="/admin">Admin pages</a>
+          <p>coming soon</p>
+        </body>
+      </html>
+      
+- first_version_of_chocolate_cake_page:
+    id:           4
+    chunk_id:     2
+    version:      1
+    base_version: null
+    content: |     
+      <html>
+        <title>Chocolate Cake</title>
+        <body>
+          <h1>Chocolate Cake</h1>
+          <p>ummm lovely!!!</p>
+        </body>
+      </html>  
