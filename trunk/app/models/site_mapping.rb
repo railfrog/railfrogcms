@@ -23,6 +23,7 @@ class SiteMapping < ActiveRecord::Base
     
     # getting first row (we have only one row). this a hash
     layout_ids = layout_ids[0] 
+    return nil unless layout_ids
     
     # Eg we got a hash: 
     # {"sm0_layout_id" => 0, "sm1_layout_id" => nil, "sm2_layout_id" => 2 }
