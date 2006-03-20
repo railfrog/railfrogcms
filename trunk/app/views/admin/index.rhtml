@@ -23,7 +23,7 @@
 <tr>
 <td valign="top" width="10%" align="left" style="border:grey solid 1px;">
 <% if @chunk_version then %>
-  <%= link_to 'Edit', :action => 'edit_document', :chunk_version_id => @chunk_version %>
+  <%= link_to 'Edit', { :action => 'edit_document', :chunk_version_id => @chunk_version, :site_mapping_id => @site_mapping } %>
   <%= link_to 'Versions', :action => 'versions', :chunk_id => @chunk_version.chunk %>
   <%= link_to 'Delete', { :action => 'delete_document', :chunk_version_id => @chunk_version, :mapping_id => @site_mapping }, :confirm => 'Are you sure you want to delete Document?' %>
 <% else %>

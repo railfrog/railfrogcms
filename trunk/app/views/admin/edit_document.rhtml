@@ -1,6 +1,6 @@
 <h1>Editing document</h1>
 
-<%= start_form_tag :action => 'save_document', :chunk_version_id => @chunk_version %>
+<%= start_form_tag :action => 'update_document', :site_mapping_id => @site_mapping, :chunk_version_id => @chunk_version %>
   <%= render :partial => 'document_form' %>
   <%= submit_tag 'Save' %>
 <%= end_form_tag %>
