@@ -1,14 +1,14 @@
 <html>
 <head>
   <title>RailFrog</title>
-  <%= stylesheet_link_tag 'scaffold' %>
+  <%= stylesheet_link_tag 'railfrog' %>
 </head>
 <body>
-
+<div id="wrapper">
 <p style="color: green"><%= flash[:notice] %></p>
 <p style="color: red"><%= flash[:error] %></p>
 
 <%= @content_for_layout %>
-
+</div>
 </body>
 </html>
