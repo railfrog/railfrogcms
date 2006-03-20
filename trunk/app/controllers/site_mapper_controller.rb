@@ -1,4 +1,5 @@
 class SiteMapperController < ApplicationController
+  layout 'default'
   
   # Unit tests are required for different urls:
   # '', 'aaa', 'aaa/bbb', etc.

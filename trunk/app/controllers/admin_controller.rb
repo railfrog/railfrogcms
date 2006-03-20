@@ -1,4 +1,6 @@
 class AdminController < ApplicationController
+  layout 'default'
+  
   def index
     @site_mappings = SiteMapping.find(:all, :order => 'root_id, lft')
     if params[:chunk_id] then

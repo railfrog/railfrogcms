@@ -1,5 +1,6 @@
 class UsersController < ApplicationController  
   require 'digest/sha1'
+  layout 'default'
   
   # Security
   before_filter :ensure_logged_in, :only => [ :index, :list, :new, :create ]
