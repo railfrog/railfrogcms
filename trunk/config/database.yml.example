@@ -1,20 +1,32 @@
-development:
-  host: localhost
-  adapter: mysql
-  database: railfrog_development
-  username: root
-  password: 
+# RailFrog sample database config. If you use the same login for dev,
+# test and production then you can set username and password here and
+# re-use it on the other blocks.  See the README for notes on creating
+# your databases.  The RailFrog team are currently supporting two
+# databases: PostgreSQL 7.4+ and MySQL 4.x+.  Specify 'adapter' as
+# 'postgresql' or 'mysql'.
 
-test:
+login: &login
+  adapter: postgresql
   host: localhost
-  adapter: mysql
+  username: railfrog
+  password: ribbet!
+
+# If you have created databases railfrog_development,
+# railfrog_test and railfrog_production, and set up
+# user and password as above, you don't need to change
+# any of the settings below.
+
+development:
+  database: railfrog_development
+  <<: *login
+  
+# Warning: The database defined as 'test' will be erased and
+# re-generated from your development database when you run 'rake'.
+# Do not set this db to the same as development or production.
+test:
   database: railfrog_test
-  username: root
-  password: 
+  <<: *login
 
 production:
-  host: localhost
-  adapter: mysql
   database: railfrog_production
-  username: root
-  password: 
+  <<: *login
