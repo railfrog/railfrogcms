@@ -1,0 +1,21 @@
+<h1>RailFrog Admin page</h1>
+
+<table witdth="100%" cellspacing="30">
+<tr>
+<td width="30%" align="left">
+<div>
+<%= link_to 'Add Folder', :action => 'add_folder' %>
+<%= link_to 'Add Content Chunk', :action => 'add_chunk' %>
+<%= link_to 'Upload Binary File', :action => 'add_binary' %>
+</div>
+<div>
+<% for mapping in @site_mappings %>
+  <div style="margin:5px 0px; padding-left:<%=mapping.depth*20%>"><%= link_to "#{h((mapping.path_segment.length > 0 ? mapping.path_segment : '<root>'))}", :action => 'index', :chunk_id => mapping.chunk_id %> <%= link_to 'Edit', :action => 'edit', :id => mapping %> <%= link_to 'Destroy', { :action => 'destroy', :id => mapping }, :confirm => 'Are you sure?' %></div>
+<% end %>
+</div>
+</td>
+<td valign="top" width="70%" align="left">
+  <%= @chunk_version.content %>
+</td>
+</tr>
+</table>

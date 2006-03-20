@@ -49,8 +49,30 @@ END_OF_STRING
     c.chunk_versions.create :version => 1,
       :base_version => 0,
       :content => aContent
+
+    aContent = <<END_OF_STRING
+<html>
+  <title>Lovely Chocolate Cake</title>
+  <body>
+    <h1>Chocolate Cake</h1>
+    <p>This is the best page about Chocolate Cakes!</p>
+  </body>
+</html>
+END_OF_STRING
+
+    c = Chunk.create :description => "Chocolate Cake Page", 
+      :live_version => 1, 
+      :mime_type => "application/xml+xhtml"
+
+    c.save
+
+    c.chunk_versions.create :version => 1,
+      :base_version => 0,
+      :content => aContent
+
   end
   
+
   def self.down
     drop_table :site_mappings
     drop_table :layouts
