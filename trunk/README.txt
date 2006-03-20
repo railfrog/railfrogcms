@@ -21,8 +21,12 @@ RailFrog is a lightweight Content Management System for building websites.
  2. add UI to manage the sitemappings, chunks table
  3. add TTW WYSIWYG editor - Xinha
 
+== Troubleshooting ==
 
-== Notes ==
+ If your database gets mashed, try
+ $rake migrate VERSION=0 && rake migrate
+
+== Database Setup ==
 
 === PostgreSQL ===
  * edit /var/lib/postgresql/data/pg_hba.conf to add a suitable auth rule
