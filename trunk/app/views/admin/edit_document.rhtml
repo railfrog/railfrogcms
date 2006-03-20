@@ -1,0 +1,8 @@
+<h1>Editing document</h1>
+
+<%= start_form_tag :action => 'save_document', :chunk_version_id => @chunk_version %>
+  <%= render :partial => 'document_form' %>
+  <%= submit_tag 'Save' %>
+<%= end_form_tag %>
+
+<%= link_to 'Back', :action => 'index' %>

@@ -1,21 +1,45 @@
 <h1>RailFrog Admin page</h1>
 
-<table witdth="100%" cellspacing="30">
+<table witdth="100%" cellspacing="5" cellpadding="5">
 <tr>
-<td width="30%" align="left">
-<div>
-<%= link_to 'Add Folder', :action => 'add_folder' %>
-<%= link_to 'Add Content Chunk', :action => 'add_chunk' %>
-<%= link_to 'Upload Binary File', :action => 'add_binary' %>
-</div>
+<td rowspan="3" width="30%" align="left" style="border:grey solid 1px;">
 <div>
 <% for mapping in @site_mappings %>
-  <div style="margin:5px 0px; padding-left:<%=mapping.depth*20%>"><%= link_to "#{h((mapping.path_segment.length > 0 ? mapping.path_segment : '<root>'))}", :action => 'index', :chunk_id => mapping.chunk_id %> <%= link_to 'Edit', :action => 'edit', :id => mapping %> <%= link_to 'Destroy', { :action => 'destroy', :id => mapping }, :confirm => 'Are you sure?' %></div>
+  <div style="margin:5px 0px; padding-left:<%=mapping.depth*20%>">
+    <%= link_to "#{h((mapping.path_segment.length > 0 ? mapping.path_segment : '<root>'))}", :action => 'index', :mapping_id => mapping.id %></div>
 <% end %>
 </div>
+</td>	
+<td width="70%" align="center" style="border:grey solid 1px; background:silver;">
+  <% if @chunk_version then %>
+  Document: <strong><%= @chunk_version.chunk.description %></strong> 
+  Version: <strong><%= @chunk_version.version %></strong>
+  Updated at: <strong><%= @chunk_version.updated_at.strftime("%y-%m-%d %H:%M:%S") %></strong>
+  <% else %>
+  Folder: <strong><%= @site_mapping.path_segment if @site_mapping %></strong> 
+  <% end %>
 </td>
-<td valign="top" width="70%" align="left">
+</tr>
+<tr>
+<td valign="top" width="10%" align="left" style="border:grey solid 1px;">
+<% if @chunk_version then %>
+  <%= link_to 'Edit', :action => 'edit_document', :chunk_version_id => @chunk_version %>
+  <%= link_to 'Versions', :action => 'versions', :chunk_id => @chunk_version.chunk %>
+  <%= link_to 'Delete', { :action => 'delete_document', :chunk_version_id => @chunk_version, :mapping_id => @site_mapping }, :confirm => 'Are you sure you want to delete Document?' %>
+<% else %>
+  <%= link_to 'New Document', :action => 'new_document', :mapping_id => @site_mapping %>
+  <%= link_to 'Upload File', :action => 'upload_file', :mapping_id => @site_mapping %>
+  <%= link_to 'New Folder', :action => 'new_folder', :mapping_id => @site_mapping %>
+  <%= link_to 'Edit Folder', :action => 'edit_site_mapping', :mapping_id => @site_mapping %>
+  <%= link_to 'Delete Folder', { :action => 'delete_site_mapping', :mapping_id => @site_mapping }, :confirm => 'Are you sure you want to delete Folder with all content?'  %>
+<% end %>
+</td>
+</tr>
+<tr>
+<td valign="top" width="70%" align="left" style="border:grey solid 1px;">
+<% if @chunk_version then %>
   <%= @chunk_version.content %>
+<% end %>
 </td>
 </tr>
 </table>
