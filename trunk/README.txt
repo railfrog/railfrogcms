@@ -28,6 +28,12 @@ RailFrog is a lightweight Content Management System for building websites.
 
 == Database Setup ==
 
+=== MySQL ===
+ * Create databases with UTF-8 as default charset:
+    > CREATE DATABASE railfrog_development DEFAULT CHARACTER SET "utf8";
+    > CREATE DATABASE railfrog_test DEFAULT CHARACTER SET "utf8";
+    > CREATE DATABASE railfrog_production DEFAULT CHARACTER SET "utf8";
+
 === PostgreSQL ===
  * edit /var/lib/postgresql/data/pg_hba.conf to add a suitable auth rule
  * use createuser / createdb to create dbs -- or:
@@ -37,8 +43,3 @@ RailFrog is a lightweight Content Management System for building websites.
     > create database railfrog_production with encoding = 'utf8';
     > create user railfrog with password 'ribbet!';
 
-=== MySQL ===
- * Create databases with UTF-8 as default charset:
-    > CREATE DATABASE railfrog_development DEFAULT CHARACTER SET "utf8";
-    > CREATE DATABASE railfrog_test DEFAULT CHARACTER SET "utf8";
-    > CREATE DATABASE railfrog_production DEFAULT CHARACTER SET "utf8";
