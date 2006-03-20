@@ -30,8 +30,8 @@
   <%= link_to 'New Document', :action => 'new_document', :mapping_id => @site_mapping %>
   <%= link_to 'Upload File', :action => 'upload_file', :mapping_id => @site_mapping %>
   <%= link_to 'New Folder', :action => 'new_folder', :mapping_id => @site_mapping %>
-  <%= link_to 'Edit Folder', :action => 'edit_site_mapping', :mapping_id => @site_mapping %>
-  <%= link_to 'Delete Folder', { :action => 'delete_site_mapping', :mapping_id => @site_mapping }, :confirm => 'Are you sure you want to delete Folder with all content?'  %>
+  <%= link_to 'Edit Folder', :action => 'edit_folder', :mapping_id => @site_mapping %>
+  <%= link_to 'Delete Folder', { :action => 'delete_folder', :mapping_id => @site_mapping }, :confirm => 'Are you sure you want to delete Folder with all content?'  %>
 <% end %>
 </td>
 </tr>

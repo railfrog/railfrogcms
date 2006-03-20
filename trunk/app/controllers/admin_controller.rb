@@ -64,5 +64,33 @@ class AdminController < ApplicationController
     
     redirect_to :action => 'index'
   end
+
+  def new_folder
+    @site_mapping = SiteMapping.new
+    @site_mapping.parent_id = params[:mapping_id]
+  end
+
+  def store_folder
+    site_mapping = SiteMapping.new(params[:site_mapping])
+    site_mapping.lft = 0
+    site_mapping.rgt = 0
+    site_mapping.depth = 0
+    site_mapping.parent_id = 0 unless site_mapping.parent_id
+    site_mapping.save
+    
+    redirect_to :action => 'index'
+  end
+  
+  def edit_folder
+    @site_mapping = SiteMapping.find(params[:mapping_id])
+  end
+
+  def update_folder
+    @site_mapping = SiteMapping.find(params[:site_mapping_id])
+    @site_mapping.update_attributes(params[:site_mapping])
+    @site_mapping.save
+    
+    redirect_to :action => 'index'
+  end
   
 end
