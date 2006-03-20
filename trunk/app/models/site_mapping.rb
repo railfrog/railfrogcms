@@ -43,7 +43,7 @@ class SiteMapping < ActiveRecord::Base
   
   protected 
   
-  # Constucts SQL query for getting site_mapping leaf.
+  # Constructs SQL query for getting site_mapping leaf.
   # Eg, for path ["products", "cakes", "chocolate_cake.html"]
   # this query will find 'chocolate_cake.html' leaf.
   def self.construct_find_chunk_sql(path)
@@ -60,7 +60,7 @@ class SiteMapping < ActiveRecord::Base
   # Eg, for path ["products", "cakes", "chocolate_cake.html"]
   # this query will find 'chocolate_cake.html' leaf.
   def self.construct_find_layout_sql(path)
-    layouts_list = ["sm0.layout_id sm0_layout_id"]
+    layouts_list = ["sm0.layout_id AS sm0_layout_id"]
     for i in 1..(path.size - 1) do
       layouts_list << ", sm#{i}.layout_id sm#{i}_layout_id"
     end
