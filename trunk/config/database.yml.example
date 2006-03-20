@@ -6,7 +6,7 @@
 # 'postgresql' or 'mysql'.
 
 login: &login
-  adapter: postgresql
+  adapter: mysql
   host: localhost
   username: railfrog
   password: ribbet!
