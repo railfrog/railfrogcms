@@ -16,7 +16,7 @@ class AddUsersTable < ActiveRecord::Migration
     User.create :first_name => "Test", 
       :last_name  => "Tester", 
       :email      => "test@test.com", 
-      :password   => "5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8"
+      :password   => "test"
   end
 
   def self.down
