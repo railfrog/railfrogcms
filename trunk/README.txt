@@ -1,6 +1,6 @@
 = RailFrog =
 
-RailFrog is a lightweight Content Management System for building websites.
+RailFrog is a lightweight Content Management System for building websites. 
 
 ## TODO
 
