@@ -62,7 +62,7 @@ class SiteMapping < ActiveRecord::Base
   def self.construct_find_layout_sql(path)
     layouts_list = ["sm0.layout_id AS sm0_layout_id"]
     for i in 1..(path.size - 1) do
-      layouts_list << ", sm#{i}.layout_id sm#{i}_layout_id"
+      layouts_list << ", sm#{i}.layout_id AS sm#{i}_layout_id"
     end
     
     "SELECT #{layouts_list.to_s} #{construct_from_and_where_clauses(path)}" 
