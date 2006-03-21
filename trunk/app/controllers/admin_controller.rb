@@ -93,4 +93,38 @@ class AdminController < ApplicationController
     redirect_to :action => 'index'
   end
   
+  def upload
+    @site_mapping = SiteMapping.new
+    @site_mapping.parent_id = params[:mapping_id]
+    
+    @chunk = Chunk.new
+    @chunk_version = ChunkVersion.new
+  end
+  
+  def store_uploaded
+    file_name = params['chunk_version']['tmp_file'].original_filename.gsub(/[^a-zA-Z0-9.]/, '_') # This makes sure filenames are sane
+    @params['chunk_version']['content'] = @params['chunk_version']['tmp_file'].read
+    @params['chunk_version'].delete('tmp_file')
+    #content_type = params['chunk_version']['tmp_file'].content_type
+    
+    chunk = Chunk.new(params[:chunk])
+    chunk.live_version = 1
+    chunk.save
+
+    chunk_version = chunk.chunk_versions.create(params[:chunk_version])
+    chunk_version.version = 1
+    chunk_version.save
+
+    site_mapping = SiteMapping.new(params[:site_mapping])
+    site_mapping.path_segment = file_name
+    site_mapping.chunk_id = chunk.id
+    site_mapping.lft = 0
+    site_mapping.rgt = 0
+    site_mapping.depth = 0
+    site_mapping.parent_id = 0 unless site_mapping.parent_id
+    site_mapping.save
+    
+    redirect_to :action => 'index'
+  end
+  
 end
