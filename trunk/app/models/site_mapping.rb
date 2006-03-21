@@ -70,10 +70,10 @@ class SiteMapping < ActiveRecord::Base
 
   # Constructs JOINs and conditions for given path  
   def self.construct_from_and_where_clauses(path)
-    joins = ["site_mappings sm0"]
+    joins = ["site_mappings AS sm0"]
     conditions = ["sm0.path_segment LIKE '#{path[0]}'"]
     for i in 1..(path.size - 1) do
-      joins << " INNER JOIN site_mappings sm#{i} ON sm#{i-1}.id = sm#{i}.parent_id"
+      joins << " INNER JOIN site_mappings AS sm#{i} ON sm#{i-1}.id = sm#{i}.parent_id"
       conditions << " AND sm#{i}.path_segment LIKE '#{path[i]}'"
     end
     
