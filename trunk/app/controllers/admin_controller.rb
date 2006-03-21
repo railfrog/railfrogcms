@@ -21,8 +21,11 @@ class AdminController < ApplicationController
   end
   
   def store_document
+    mime_type = MimeType.find_by_file_name(params[:site_mapping][:path_segment])
+  
     chunk = Chunk.new(params[:chunk])
     chunk.live_version = 1
+    chunk.mime_type = mime_type.id
     chunk.save
     
     chunk_version = chunk.chunk_versions.create(params[:chunk_version])
@@ -95,6 +98,12 @@ class AdminController < ApplicationController
     redirect_to :action => 'index'
   end
   
+  # See 
+  #  * [http://wiki.rubyonrails.org/rails/pages/HowtoUploadFiles HowtoUploadFiles]
+  #  * [http://wiki.rubyonrails.org/rails/pages/Upload+Progress+Bar Upload Progress Bar]
+  #  * [http://manuals.rubyonrails.com/read/chapter/56 Sending and receiving files]
+  #  * http://api.rubyonrails.com/classes/ActionController/Streaming.html send_data API]
+  #  * [http://scottraymond.net/articles/2005/07/05/caching-images-in-rails Caching]
   def upload
     @site_mapping = SiteMapping.new
     @site_mapping.parent_id = params[:mapping_id]
@@ -105,13 +114,15 @@ class AdminController < ApplicationController
   
   def store_uploaded
     file_name = params['chunk_version']['tmp_file'].original_filename.gsub(/[^a-zA-Z0-9.]/, '_') # This makes sure filenames are sane
-    content_type = get_content_type(file_name)
+    mime_type = MimeType.find_by_file_name(file_name)
+puts "\tMIME TYPE: #{mime_type}"
+puts "\tMIME TYPE.ID: #{mime_type.id}"
     @params['chunk_version']['content'] = @params['chunk_version']['tmp_file'].read
     @params['chunk_version'].delete('tmp_file')
     
     chunk = Chunk.new(params[:chunk])
     chunk.live_version = 1
-    chunk.mime_type = content_type
+    chunk.mime_type_id = mime_type.id
     chunk.save
     
     chunk_version = chunk.chunk_versions.create(params[:chunk_version])
@@ -128,25 +139,5 @@ class AdminController < ApplicationController
     site_mapping.save
     
     redirect_to :action => 'index'
-  end
-  
-  
-  
-  private 
-  
-  def get_content_type(filename)
-    a = filename =~ /png$/i
-    if a then
-      t = "image/png"
-#    if (filename =~ /jpe?g$/i) then
-#      t = "image/jpeg"
-#    else if () then
-#      t = "image/png"
-#    else if (filename =~ /gif$/i) then
-#      t = "image/gif"
-    else
-      t = "application/xml+xhtml"
-    end
-    t
   end
 end
