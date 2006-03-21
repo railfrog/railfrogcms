@@ -37,9 +37,16 @@
 </tr>
 <tr>
 <td valign="top" width="70%" align="left" style="border:grey solid 1px;">
-<% if @chunk_version then %>
-  <%= @chunk_version.content %>
-<% end %>
+<% 
+if @chunk_version then
+  if @chunk.is_binary? then 
+    #send_data @chunk_version.content, :filename => @site_mapping.path_segment, :type => @chunk.mime_type, :disposition => 'inline'
+  else %>
+    <%= @chunk_version.content%>
+    <%
+  end
+end 
+%>
 </td>
 </tr>
 </table>
