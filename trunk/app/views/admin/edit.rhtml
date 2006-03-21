@@ -110,12 +110,6 @@ HTMLArea.startEditors(xinha_editors);
 
 window.onload = xinha_init;
 </script>
-<!--link type="text/css" rel="alternate stylesheet" title="blue-look" href="../skins/blue-look/skin.css" />
-<link type="text/css" rel="alternate stylesheet" title="green-look" href="../skins/green-look/skin.css" />
-<link type="text/css" rel="alternate stylesheet" title="xp-blue" href="../skins/xp-blue/skin.css" />
-<link type="text/css" rel="alternate stylesheet" title="xp-green" href="../skins/xp-green/skin.css" />
-<link type="text/css" rel="alternate stylesheet" title="inditreuse" href="../skins/inditreuse/skin.css" />
-<link type="text/css" rel="alternate stylesheet" title="blue-metallic" href="../skins/blue-metallic/skin.css" /-->
 </head>
 
 <body>
@@ -123,7 +117,7 @@ window.onload = xinha_init;
 <h1>Edit Chunk</h1>
 
 <form id="editors_here">
-<textarea id="XinhaTextArea" name="XinhaTextArea" value="hello" rows="10" cols="80" style="width:100%"></textarea>
+<textarea id="XinhaTextArea" name="chunk_version[content]" value="hello" rows="10" cols="80" style="width:100%"></textarea>
 <p><input type="submit" value="Apply Changes" />&nbsp;<input type="button" value="Cancel" onclick="javascript:history.back(-1);" /></p>
 </form>
 
