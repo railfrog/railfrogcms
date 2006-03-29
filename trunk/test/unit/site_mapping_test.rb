@@ -57,4 +57,32 @@ class SiteMappingTest < Test::Unit::TestCase
     layout = SiteMapping.find_layout(["services"])
     assert_equal nil, layout
   end
+  
+  def test_full_path
+    mapping = SiteMapping.find(1)
+    assert_kind_of SiteMapping, mapping
+    assert_not_nil mapping
+    assert_equal "/", mapping.full_path
+
+    mapping = SiteMapping.find(2)
+    assert_kind_of SiteMapping, mapping
+    assert_not_nil mapping
+    assert_equal "/products", mapping.full_path
+
+    mapping = SiteMapping.find(3)
+    assert_kind_of SiteMapping, mapping
+    assert_not_nil mapping
+    assert_equal "/products/cakes", mapping.full_path
+
+    mapping = SiteMapping.find(4)
+    assert_kind_of SiteMapping, mapping
+    assert_not_nil mapping
+    assert_equal "/products/cakes/chocolate_cake.html", mapping.full_path
+    
+    mapping = SiteMapping.find(5)
+    assert_kind_of SiteMapping, mapping
+    assert_not_nil mapping
+    assert_equal "/index.html", mapping.full_path
+
+  end
 end

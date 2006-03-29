@@ -1,5 +1,7 @@
 class AddUsersTable < ActiveRecord::Migration
   def self.up
+    STDERR.puts "Migrating to version 1"
+    
     create_table(
       :users, 
       :force => true) do |t|

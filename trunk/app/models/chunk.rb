@@ -2,10 +2,6 @@ class Chunk < ActiveRecord::Base
   has_many :chunk_versions
   belongs_to :mime_type
   
-  def is_binary?
-    self.mime_type && self.mime_type.mime_type.include?("image")
-  end
-  
   def find_version(version = nil)
     Chunk.find_version(self.id, version)
   end

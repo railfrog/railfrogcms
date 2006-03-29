@@ -3,16 +3,41 @@ class SiteMapping < ActiveRecord::Base
   belongs_to :chunk
   
   validates_uniqueness_of :path_segment, :scope => "parent_id"
+
+  def full_path
+    path_segments = SiteMapping.connection.select_all(construct_find_path_segments_sql)
+    
+    # getting first row (we have only one row). this a hash
+    path_segments = path_segments[0] 
+    return nil unless path_segments
+    
+    # Eg we got a hash: 
+    # {"sm0_path_segment" => 'products', "sm1_path_segment" => 'cakes', "sm2_path_segments" => 'chocolate_cake.html' }
+    # and we'd like to create an array 
+    # {0 => 'products', 1 => 'cakes', 2 => 'chocolate_cake.html'}
+    path = []
+    for key in path_segments.keys
+      key.scan(/\d+/) {|new_key| path[new_key.to_i] = path_segments[key]}
+    end
+
+    "/" + path.join("/")
+  end
+
   
   def self.find_chunk_and_layout(path)
     c = find_chunk(path)
     l = find_layout(path)
     return c, l
   end
+
+  # find site_mapping for given path
+  def self.find_by_full_path(path) 
+    sm = SiteMapping.find_by_sql(construct_find_chunk_sql(path))
+  end
   
   def self.find_chunk(path) 
-    # find chunk for given path
-    sm = SiteMapping.find_by_sql(construct_find_chunk_sql(path))
+    # find site_mapping for given path
+    sm = find_by_full_path(path)
     
     # find chunk version
     cv = Chunk.find_version(sm[0].chunk_id, sm[0].version) if sm && sm.size == 1
@@ -66,6 +91,17 @@ class SiteMapping < ActiveRecord::Base
     end
     
     "SELECT #{layouts_list.to_s} #{construct_from_and_where_clauses(path)}" 
+  end
+
+  def construct_find_path_segments_sql
+    paths = ["sm0.path_segment AS sm0_path_segment"]
+    joins = ["site_mappings AS sm0"]
+    for i in 1..(self.depth) do
+      paths << ", sm#{i}.path_segment AS sm#{i}_path_segment"
+      joins << " INNER JOIN site_mappings AS sm#{i} ON sm#{i-1}.id = sm#{i}.parent_id"
+    end
+    
+    "SELECT #{paths.to_s} FROM #{joins} WHERE sm#{self.depth}.id = #{self.id}" 
   end
 
   # Constructs JOINs and conditions for given path  

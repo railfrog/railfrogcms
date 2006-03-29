@@ -3,15 +3,33 @@ class AdminController < ApplicationController
   
   def index
     @site_mappings = SiteMapping.find(:all, :order => 'root_id, lft')
+  end
+
+  def show_chunk
     if params[:mapping_id] then
       @site_mapping = SiteMapping.find(params[:mapping_id])
-      @chunk_version = @site_mapping.chunk.find_version() if @site_mapping.chunk
-      @chunk = @chunk_version.chunk if @chunk_version
-      send_data @chunk_version.content, :filename => @site_mapping.path_segment, :type => @chunk.mime_type, :disposition => 'inline' if @chunk && @chunk.is_binary?
-    else
+      if @site_mapping && @site_mapping.chunk then
+        @chunk = @site_mapping.chunk
+        @file_name = @site_mapping.full_path
+        mime_type = @chunk.mime_type.mime_type
+        if @chunk then
+          @chunk_version = @chunk.find_version()
+          if @chunk_version then 
+            disposition = 'inline'
+            if mime_type.include?("image") then
+              content = "<img src='#{@file_name}' />"
+            else
+              content = @chunk_version.content
+            end
+            send_data content, :filename => @file_name, :type => mime_type, :disposition => disposition
+          end
+        end
+      else
+        render(:layout => false)
+      end
     end
   end
-  
+
   def new_document
     @site_mapping = SiteMapping.new
     @site_mapping.parent_id = params[:mapping_id]
@@ -55,7 +73,7 @@ class AdminController < ApplicationController
     @chunk = @chunk_version.chunk
     
     live_version = (@chunk_version.version + 1)
-    version = @chunk.chunk_versions.create (params[:chunk_version])
+    version = @chunk.chunk_versions.create(params[:chunk_version])
     version.base_version = @chunk_version.version
     version.version = live_version
     version.save
@@ -115,8 +133,6 @@ class AdminController < ApplicationController
   def store_uploaded
     file_name = params['chunk_version']['tmp_file'].original_filename.gsub(/[^a-zA-Z0-9.]/, '_') # This makes sure filenames are sane
     mime_type = MimeType.find_by_file_name(file_name)
-puts "\tMIME TYPE: #{mime_type}"
-puts "\tMIME TYPE.ID: #{mime_type.id}"
     @params['chunk_version']['content'] = @params['chunk_version']['tmp_file'].read
     @params['chunk_version'].delete('tmp_file')
     

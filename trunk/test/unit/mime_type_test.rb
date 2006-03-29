@@ -5,6 +5,5 @@ class MimeTypeTest < Test::Unit::TestCase
 
   # Replace this with your real tests.
   def test_truth
-    assert_kind_of MimeType, mime_types(:first)
   end
 end

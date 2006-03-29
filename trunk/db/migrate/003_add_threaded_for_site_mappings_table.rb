@@ -1,5 +1,7 @@
 class AddThreadedForSiteMappingsTable < ActiveRecord::Migration
   def self.up
+    STDERR.puts "Migrating to version 3"
+  
     add_column :site_mappings, :root_id, :integer
     add_column :site_mappings, :parent_id, :integer
     add_column :site_mappings, :depth, :integer

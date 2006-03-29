@@ -1,5 +1,6 @@
 class AddIterationOneTables < ActiveRecord::Migration
   def self.up
+    STDERR.puts "Migrating to version 2"
     
     options = ''
     
@@ -41,9 +42,8 @@ class AddIterationOneTables < ActiveRecord::Migration
 END_OF_STRING
 
     c = Chunk.create :description => "RailFrog Demo index page", 
-      :live_version => 1, 
-      :mime_type => "application/xml+xhtml"
-
+      :live_version => 1
+  
     c.save
 
     c.chunk_versions.create :version => 1,
@@ -61,8 +61,7 @@ END_OF_STRING
 END_OF_STRING
 
     c = Chunk.create :description => "Chocolate Cake Page", 
-      :live_version => 1, 
-      :mime_type => "application/xml+xhtml"
+      :live_version => 1
 
     c.save
 

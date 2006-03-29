@@ -1,5 +1,7 @@
 class AddMimeTypesAndFileExtensionsTable < ActiveRecord::Migration
   def self.up
+    STDERR.puts "Migrating to version 4"
+    
     options = ''
     
     # MIME types and file extensions are from the 
@@ -9,20 +11,24 @@ class AddMimeTypesAndFileExtensionsTable < ActiveRecord::Migration
     #  * [http://en.wikipedia.org/wiki/MIME MIME Wikipedia page]
     #  * [http://framework.openoffice.org/documentation/mimetypes/mimetypes.html Mime Content Types used in OpenOffice]
     
+    STDERR.puts "  creating mime_types table"
     create_table :mime_types, :options => options do |t|
       t.column :mime_type,       :string
       t.column :description,     :string 
     end
     
+    STDERR.puts "  creating file_extensions table"
     create_table :file_extensions, :options => options do |t|
       t.column :extension,       :string
       t.column :mime_type_id,    :integer
     end
     
+    STDERR.puts "  loading mime types file"
     load_mime_types_file File.dirname(__FILE__) + '/mime.types'
     
     add_column :chunks, :mime_type_id, :integer
     remove_column :chunks, :mime_type
+    Chunk.reset_column_information
     
     set_mapping_ids_in_chunk_table
   end
@@ -57,5 +63,11 @@ class AddMimeTypesAndFileExtensionsTable < ActiveRecord::Migration
         sm.save
       end
     end
+
+    Chunk.find(:all, :conditions => "mime_type_id is null").each do |c| 
+      c.mime_type_id = MimeType.find_default_mime_type.id
+      c.save
+    end
+ 
   end
 end
