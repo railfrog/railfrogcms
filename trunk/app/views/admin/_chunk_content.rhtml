@@ -1,0 +1,25 @@
+<table width="100%" cellspacing="5" cellpadding="5">
+  <tr>
+    <td valign="top" align="left" style="border:grey solid 1px; background:silver;">
+      <div id="summary_content">
+        Folder: <strong><%= @site_mapping.full_path %></strong>
+      </div>
+    </td>
+  </tr>
+  <tr>
+    <td valign="top" align="left">
+      <div id="actions_content">
+        <%= link_to('Edit', { :action => 'edit_document', :chunk_version_id => @chunk_version, :site_mapping_id => @site_mapping }) %>
+        <%= link_to('Versions', :action => 'versions', :chunk_id => @chunk_version.chunk) %> 
+        <%= link_to('Delete', { :action => 'delete_document', :chunk_version_id => @chunk_version, :mapping_id => @site_mapping }, :confirm => 'Are you sure you want to delete Document?') %> 
+      </div>
+    </td>
+  </tr>
+  <tr>
+     <td style="border:grey solid 1px;">
+       <div id="chunk_content"><%= @chunk_content %></div>
+     </td>
+   </tr>
+</table>             
+
+

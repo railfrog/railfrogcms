@@ -7,6 +7,7 @@ class AdminController < ApplicationController
 
   def show_chunk
     if params[:mapping_id] then
+      disposition = 'inline'
       @site_mapping = SiteMapping.find(params[:mapping_id])
       if @site_mapping && @site_mapping.chunk then
         @chunk = @site_mapping.chunk
@@ -15,17 +16,18 @@ class AdminController < ApplicationController
         if @chunk then
           @chunk_version = @chunk.find_version()
           if @chunk_version then 
-            disposition = 'inline'
             if mime_type.include?("image") then
-              content = "<img src='#{@file_name}' />"
+              @chunk_content = "<img src='#{@file_name}' />"
             else
-              content = @chunk_version.content
+              @chunk_content = @chunk_version.content
             end
+            content = render_to_string :partial => 'chunk_content'
             send_data content, :filename => @file_name, :type => mime_type, :disposition => disposition
           end
         end
       else
-        render(:layout => false)
+        content = render_to_string :partial => 'folder_content'
+        send_data content, :filename => @file_name, :type => "text/html", :disposition => disposition
       end
     end
   end
@@ -43,7 +45,7 @@ class AdminController < ApplicationController
   
     chunk = Chunk.new(params[:chunk])
     chunk.live_version = 1
-    chunk.mime_type = mime_type.id
+    chunk.mime_type = mime_type
     chunk.save
     
     chunk_version = chunk.chunk_versions.create(params[:chunk_version])
