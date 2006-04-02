@@ -1,7 +1,5 @@
 class AddIterationOneTables < ActiveRecord::Migration
   def self.up
-    STDERR.puts "Migrating to version 2"
-    
     options = ''
     
     create_table :chunks, :options => options do |t|

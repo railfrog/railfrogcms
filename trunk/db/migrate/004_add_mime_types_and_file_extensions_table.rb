@@ -1,7 +1,5 @@
 class AddMimeTypesAndFileExtensionsTable < ActiveRecord::Migration
   def self.up
-    STDERR.puts "Migrating to version 4"
-    
     options = ''
     
     # MIME types and file extensions are from the 
@@ -10,14 +8,11 @@ class AddMimeTypesAndFileExtensionsTable < ActiveRecord::Migration
     #  * [http://www.iana.org/assignments/media-types/ IANA MIME Media Types]
     #  * [http://en.wikipedia.org/wiki/MIME MIME Wikipedia page]
     #  * [http://framework.openoffice.org/documentation/mimetypes/mimetypes.html Mime Content Types used in OpenOffice]
-    
-    STDERR.puts "  creating mime_types table"
     create_table :mime_types, :options => options do |t|
       t.column :mime_type,       :string
       t.column :description,     :string 
     end
-    
-    STDERR.puts "  creating file_extensions table"
+
     create_table :file_extensions, :options => options do |t|
       t.column :extension,       :string
       t.column :mime_type_id,    :integer

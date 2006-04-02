@@ -21,7 +21,7 @@ class AdminController < ApplicationController
             else
               @chunk_content = @chunk_version.content
             end
-            content = render_to_string :partial => 'chunk_content'
+            content = render_to_string :partial => 'chunk_content', :layout => "default"
             send_data content, :filename => @file_name, :type => mime_type, :disposition => disposition
           end
         end

@@ -1,13 +1,14 @@
 class SiteMapping < ActiveRecord::Base
   acts_as_threaded
   belongs_to :chunk
+  has_many :mapping_params
   
   validates_uniqueness_of :path_segment, :scope => "parent_id"
 
   def full_path
     path_segments = SiteMapping.connection.select_all(construct_find_path_segments_sql)
     
-    # getting first row (we have only one row). this a hash
+    # getting first row (we have only one row). this is a hash
     path_segments = path_segments[0] 
     return nil unless path_segments
     
@@ -22,12 +23,11 @@ class SiteMapping < ActiveRecord::Base
 
     "/" + path.join("/")
   end
-
   
-  def self.find_chunk_and_layout(path)
+  def self.find_chunk_and_mapping_params(path)
     c = find_chunk(path)
-    l = find_layout(path)
-    return c, l
+    mp = find_mapping_params(path)
+    return c, mp
   end
 
   # find site_mapping for given path
@@ -43,27 +43,24 @@ class SiteMapping < ActiveRecord::Base
     cv = Chunk.find_version(sm[0].chunk_id, sm[0].version) if sm && sm.size == 1
   end
   
-  def self.find_layout(path) 
-    layout_ids = SiteMapping.connection.select_all(construct_find_layout_sql(path))
-    
-    # getting first row (we have only one row). this a hash
-    layout_ids = layout_ids[0] 
-    return nil unless layout_ids
-    
-    # Eg we got a hash: 
-    # {"sm0_layout_id" => 0, "sm1_layout_id" => nil, "sm2_layout_id" => 2 }
-    # and we'd like to create an array 
-    # {0 => 0, 1 => nil, 2 => 2}
-    ordered_ids = []
-    for key in layout_ids.keys
-      key.scan(/\d+/) {|new_key| ordered_ids[new_key.to_i] = layout_ids[key]}
+  def self.find_mapping_params(path) 
+    conditions = [ "(sm.path_segment like '#{path[0]}' AND sm.depth = 0)" ]
+
+    for i in 1..(path.size - 1) do
+      conditions << " OR (sm.path_segment like '#{path[i]}' AND sm.depth = #{i})"
     end
 
-    # find layout id for last non null value
-    id = ordered_ids.reverse.find {|id| id}
+    params = MappingParam.find(:all,
+      :conditions => conditions.to_s,
+      :joins => "AS mp INNER JOIN site_mappings AS sm ON mp.site_mapping_id = sm.id",
+      :order => "sm.depth" )
     
-    # find layout by id    
-    Layout.find(id) if id
+    result = {}
+    params.each {|param| 
+      result[param.name] = param.value
+    }
+    
+    result
   end
   
   protected 
@@ -79,18 +76,6 @@ class SiteMapping < ActiveRecord::Base
       chunk_index = 0
     end
     "SELECT DISTINCT sm#{chunk_index}.* #{construct_from_and_where_clauses(path)}" 
-  end
-  
-  # Constucts SQL query for getting layout_ids for given path.
-  # Eg, for path ["products", "cakes", "chocolate_cake.html"]
-  # this query will find 'chocolate_cake.html' leaf.
-  def self.construct_find_layout_sql(path)
-    layouts_list = ["sm0.layout_id AS sm0_layout_id"]
-    for i in 1..(path.size - 1) do
-      layouts_list << ", sm#{i}.layout_id AS sm#{i}_layout_id"
-    end
-    
-    "SELECT #{layouts_list.to_s} #{construct_from_and_where_clauses(path)}" 
   end
 
   def construct_find_path_segments_sql
