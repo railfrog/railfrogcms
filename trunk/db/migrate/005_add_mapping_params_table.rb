@@ -31,6 +31,7 @@ class AddMappingParamsTable < ActiveRecord::Migration
   end
 
   def self.load_content_chunks(path, parent_sitemapping)
+    STDERR.puts "Loading pages"
     parent_id = parent_sitemapping ? parent_sitemapping.id : 0
     unless path == "" then
       path_segment = path.chomp('/').split('/').last
@@ -38,10 +39,10 @@ class AddMappingParamsTable < ActiveRecord::Migration
       sm.save
     end
     
-    puts "Loading chunks from the " + path
+    STDERR.puts "Loading chunks from the " + path
     Dir.glob(path + '*').each {|filename| 
       if File.directory?(filename) then
-        puts filename + " is a dir"
+        STDERR.puts filename + " is a dir"
         load_content_chunks filename + '/', sm
       else
         load_content_chunk(filename, sm)
@@ -66,14 +67,15 @@ class AddMappingParamsTable < ActiveRecord::Migration
   end
 
   def self.load_layout_chunks
+    STDERR.puts "Loading layouts"
     Dir.glob('*').each {|file| 
-      load_content_chunk(file)
+      load_layout_chunk(file)
     }
   end
   
   def self.load_layout_chunk(file)
     filename = File.basename(file)
-    content = IO.read(file)
+    content = File.new(file).binmode.read
     
     c = Chunk.create :description => filename, :live_version => 1
     c.save
