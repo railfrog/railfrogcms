@@ -1,0 +1,23 @@
+<html>
+<head>
+<title>RailFrog</title>
+<script type="text/javascript">
+_editor_url  = "<%= $INSTALLATION_BASE_URL + '/xinha'%>";
+_editor_lang = "en";
+</script>
+<script type="text/javascript" src="<%= $INSTALLATION_BASE_URL + '/xinha/htmlarea.js' %>"></script>
+<script type="text/javascript" src="<%= $INSTALLATION_BASE_URL + '/javascripts/xinha_config.js'%>"></script>
+<%= javascript_include_tag "prototype" %>
+<%= javascript_include_tag "prototype", "effects" %>
+<%= stylesheet_link_tag 'railfrog' %>
+</head>
+
+<body>
+<div id="wrapper">
+<p style="color: green"><%= flash[:notice] %></p>
+<p style="color: red"><%= flash[:error] %></p>
+
+<%= @content_for_layout %>
+</div>
+</body>
+</html>
