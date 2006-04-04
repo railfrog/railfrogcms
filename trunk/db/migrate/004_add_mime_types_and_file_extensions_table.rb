@@ -19,7 +19,7 @@ class AddMimeTypesAndFileExtensionsTable < ActiveRecord::Migration
     end
     
     STDERR.puts "  loading mime types file"
-    load_mime_types_file File.dirname(__FILE__) + '/mime.types'
+    load_mime_types_file File.dirname(__FILE__) + '/mime.types.4debug'
     
     add_column :chunks, :mime_type_id, :integer
     remove_column :chunks, :mime_type

@@ -1,5 +1,5 @@
 class SiteMapperController < ApplicationController
-  
+
   def show_chunk
     @chunk_version, @rf_params = SiteMapping.find_chunk_and_mapping_params(@params[:path])
     
@@ -26,7 +26,7 @@ class SiteMapperController < ApplicationController
         if layout_name then
           if layout_name.include?("chunk:") then
             id = layout_name.delete("chunk:").to_i
-            rendering_options[:inline] = Chunk.find_version(id).content
+            rendering_options[:inline] = Chunk.find_version({:id => id}).content
             @rf_params["chunk_content"] = @chunk_content
           else
             rendering_options[:partial] = "chunk_content"
@@ -37,6 +37,7 @@ class SiteMapperController < ApplicationController
           rendering_options[:layout] = 'default'
         end
         
+        session[:rf_params] = @rf_params
         rendering_options[:locals] = {:rf_params => @rf_params}
 
         data = render_to_string rendering_options
@@ -46,5 +47,10 @@ class SiteMapperController < ApplicationController
     else 
       render :partial => "notfound", :status => 404
     end
+  end
+  
+  hide_action :render_chunk
+  def render_chunk(options)
+    render_to_string :inline => Chunk.find_version(options).content, :locals => {:rf_params => session[:rf_params]}
   end
 end

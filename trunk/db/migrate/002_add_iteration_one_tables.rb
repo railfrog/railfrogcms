@@ -28,45 +28,6 @@ class AddIterationOneTables < ActiveRecord::Migration
       t.column :layout_id,       :integer
       t.column :updated_at,      :datetime
     end
-
-    aContent = <<END_OF_STRING
-<html>
-  <title>Welcome to RailFrog!</title>
-  <body>
-    <h1>Welcome to RailFrog CMS</h1>
-    <a href="/admin">Admin pages</a>
-  </body>
-</html>
-END_OF_STRING
-
-    c = Chunk.create :description => "RailFrog Demo index page", 
-      :live_version => 1
-  
-    c.save
-
-    c.chunk_versions.create :version => 1,
-      :base_version => 0,
-      :content => aContent
-
-    aContent = <<END_OF_STRING
-<html>
-  <title>Lovely Chocolate Cake</title>
-  <body>
-    <h1>Chocolate Cake</h1>
-    <p>This is the best page about Chocolate Cakes!</p>
-  </body>
-</html>
-END_OF_STRING
-
-    c = Chunk.create :description => "Chocolate Cake Page", 
-      :live_version => 1
-
-    c.save
-
-    c.chunk_versions.create :version => 1,
-      :base_version => 0,
-      :content => aContent
-
   end
   
 

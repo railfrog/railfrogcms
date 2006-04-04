@@ -1,3 +1,4 @@
+# TOFIX: direct inserting values to queries
 class SiteMapping < ActiveRecord::Base
   acts_as_threaded
   belongs_to :chunk
@@ -40,7 +41,7 @@ class SiteMapping < ActiveRecord::Base
     sm = find_by_full_path(path)
     
     # find chunk version
-    cv = Chunk.find_version(sm[0].chunk_id, sm[0].version) if sm && sm.size == 1
+    cv = Chunk.find_version({:id => sm[0].chunk_id, :version => sm[0].version}) if sm && sm.size == 1
   end
   
   def self.find_mapping_params(path) 
