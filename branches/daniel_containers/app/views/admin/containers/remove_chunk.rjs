@@ -1,0 +1,1 @@
+page.remove 'chunk_active_'+@params[:id]
