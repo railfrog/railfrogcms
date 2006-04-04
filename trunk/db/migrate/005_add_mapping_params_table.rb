@@ -28,6 +28,11 @@ class AddMappingParamsTable < ActiveRecord::Migration
 
     Dir.chdir("../layouts/")
     load_layout_chunks
+    
+    # Adhoc
+    # cos we have no UI for mapping_params
+    MappingParam.create :site_mapping_id => 1, :name => "layout", :value => "chunk:10"
+    MappingParam.create :site_mapping_id => 10, :name => "layout", :value => "chunk:10"
   end
 
   def self.load_content_chunks(path, parent_sitemapping)
