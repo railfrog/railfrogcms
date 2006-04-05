@@ -1,6 +1,9 @@
 class AdminController < ApplicationController
+  before_filter :ensure_logged_in
+
   layout 'default'
   
+
   def index
     @site_mappings = SiteMapping.find(:all, :order => 'root_id, lft')
   end

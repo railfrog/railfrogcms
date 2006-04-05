@@ -14,7 +14,7 @@ class UsersController < ApplicationController
       # ToDo: Store user details in a hash in the session state
       session[:first_name] = user.first_name
       session[:last_name] = user.last_name
-      redirect_to(:controller => 'index')
+      redirect_to(:controller => 'admin')
     else
       flash[:error] = 'Log In Failed'
       redirect_to :action => 'login'
