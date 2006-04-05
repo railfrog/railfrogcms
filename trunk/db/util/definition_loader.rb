@@ -54,13 +54,13 @@ class SiteDefinitionLoader
         
         chunk, sm = create_content_chunk(path_segment, parent_sitemapping, content)
         
-        # Loading params
-        # params:
+        # Loading labels
+        # labels:
         #   layout: "chunk:1"
         #   active_menu_item: "1" 
-        if page['params'] then
-          page['params'].each { |name, value|
-            MappingParam.create :site_mapping_id => sm.id, :name => name, :value => value
+        if page['labels'] then
+          page['labels'].each { |name, value|
+            MappingLabel.create :site_mapping_id => sm.id, :name => name, :value => value
           }
         end
           

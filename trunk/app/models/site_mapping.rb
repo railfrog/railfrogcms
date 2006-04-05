@@ -2,7 +2,7 @@
 class SiteMapping < ActiveRecord::Base
   acts_as_threaded
   belongs_to :chunk
-  has_many :mapping_params
+  has_many :mapping_labels
   
   validates_uniqueness_of :path_segment, :scope => "parent_id"
 
@@ -25,10 +25,10 @@ class SiteMapping < ActiveRecord::Base
     "/" + path.join("/")
   end
   
-  def self.find_chunk_and_mapping_params(path)
+  def self.find_chunk_and_mapping_labels(path)
     c = find_chunk(path)
-    mp = find_mapping_params(path)
-    return c, mp
+    ml = find_mapping_labels(path)
+    return c, ml
   end
 
   # find site_mapping for given path
@@ -44,21 +44,21 @@ class SiteMapping < ActiveRecord::Base
     cv = Chunk.find_version({:id => sm[0].chunk_id, :version => sm[0].version}) if sm && sm.size == 1
   end
   
-  def self.find_mapping_params(path) 
+  def self.find_mapping_labels(path) 
     conditions = [ "(sm.path_segment like '#{path[0]}' AND sm.depth = 0)" ]
 
     for i in 1..(path.size - 1) do
       conditions << " OR (sm.path_segment like '#{path[i]}' AND sm.depth = #{i})"
     end
 
-    params = MappingParam.find(:all,
+    labels = MappingLabel.find(:all,
       :conditions => conditions.to_s,
       :joins => "AS mp INNER JOIN site_mappings AS sm ON mp.site_mapping_id = sm.id",
       :order => "sm.depth" )
     
     result = {}
-    params.each {|param| 
-      result[param.name] = param.value
+    labels.each {|label| 
+      result[label.name] = label.value
     }
     
     result

@@ -7,7 +7,8 @@ class AddThreadedForSiteMappingsTable < ActiveRecord::Migration
     add_column :site_mappings, :rgt, :integer
     
     # for better performance of the acts_as_threaded lookups
-    add_index :site_mappings, :path_segment
+    add_index :site_mappings, :chunk_id
+    add_index :site_mappings, [:path_segment, :version]
     add_index :site_mappings, :parent_id
     add_index :site_mappings, [:lft, :rgt]
     add_index :site_mappings, :depth

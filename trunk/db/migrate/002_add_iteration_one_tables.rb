@@ -16,6 +16,9 @@ class AddIterationOneTables < ActiveRecord::Migration
       t.column :created_at,      :datetime
       t.column :updated_at,      :datetime
     end
+    
+    add_index :chunk_versions, :chunk_id
+    add_index :chunk_versions, :version
 
     create_table :layouts, :options => options do |t|
       t.column :name,            :string
@@ -29,6 +32,7 @@ class AddIterationOneTables < ActiveRecord::Migration
       t.column :updated_at,      :datetime
     end
   end
+
   
 
   def self.down
