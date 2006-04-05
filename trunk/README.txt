@@ -9,7 +9,9 @@ RailFrog is a lightweight Content Management System for building websites.
  1. Create a {{{railfrog_development}}} database.
  2. Copy config/database.yml.example to database.yml and edit as appropriate.
  3. Run {{{$ rake migrate}}} to create all required tables in the database.
- 4. Run WEBrick
+ 4. {{{rake rake load_site_db SITE=<site_name>}}} which placed in db/sites/ dir, 
+   eg {{{rake rake load_site_db SITE=railfrog}}}
+ 5. Run WEBrick
 
 == DONE ==
  * dropped acts_as_versioned from the Chunk model

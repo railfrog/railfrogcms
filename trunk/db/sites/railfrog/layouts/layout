@@ -8,11 +8,12 @@
   <link rel="stylesheet" href="/styles/base.css" type="text/css" media="screen" />
   <link rel="Start" title="Home" href="/" />   
 </head>
+
 <body id="about">		    
 
 <div id="container">
-<%= render_chunk :id => 9 %>
-<%= render_chunk :id => 11 %>
+<%= render_chunk :id => 2 %>
+<%= render_chunk :id => 4 %>
 <%= rf_params['chunk_content'] %>
 </div> <!-- #container -->
 <script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
