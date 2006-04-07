@@ -2,18 +2,23 @@
   <tr>
     <td valign="top" align="left" style="border:grey solid 1px; background:silver;">
       <div id="summary_content">
-        Document: <strong><%= @site_mapping.full_path %></strong>
+        Document: <strong><%= @file_name %></strong>
       </div>
     </td>
   </tr>
   <tr>
     <td valign="top" align="left">
       <div id="actions_content">
-        <a href="<%= @site_mapping.full_path %>" target="_blank">View</a>
+        <a href="<%= @file_name %>" target="_blank">View</a>
         <%= link_to('Edit', { :action => 'edit_document', :chunk_version_id => @chunk_version, :site_mapping_id => @site_mapping }) %>
         <%= link_to('Versions', :action => 'versions', :chunk_id => @chunk_version.chunk) %> 
         <%= link_to('Delete', { :action => 'delete_document', :chunk_version_id => @chunk_version, :mapping_id => @site_mapping }, :confirm => 'Are you sure you want to delete Document?') %> 
       </div>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <%= render(:partial => 'mapping_labels') %>
     </td>
   </tr>
   <tr>

@@ -9,29 +9,63 @@ class AdminController < ApplicationController
   end
 
   def show_chunk
+    disposition = 'inline'
     if params[:mapping_id] then
-      disposition = 'inline'
       @site_mapping = SiteMapping.find(params[:mapping_id])
       if @site_mapping && @site_mapping.chunk then
         @chunk = @site_mapping.chunk
         @file_name = @site_mapping.full_path
-        mime_type = @chunk.mime_type.mime_type
-        if @chunk then
-          @chunk_version = @chunk.find_version()
-          if @chunk_version then 
-            if mime_type.include?("image") then
-              @chunk_content = "<img src='#{@file_name}' />"
-            else
-              @chunk_content = @chunk_version.content
-            end
-            content = render_to_string :partial => 'chunk_content', :layout => "default"
-            send_data content, :filename => @file_name, :type => mime_type, :disposition => disposition
-          end
-        end
-      else
-        content = render_to_string :partial => 'folder_content'
-        send_data content, :filename => @file_name, :type => "text/html", :disposition => disposition
+        @mapping_labels = @site_mapping.mapping_labels #TODO Also look up lables inherited from parents?
       end
+    elsif params[:chunk_id] then
+      @chunk = Chunk.find(params[:chunk_id])
+      @file_name = @chunk.id #TODO Change this to a URL that it can render? Right now will generate error in view if you click on "view" link.
+    end
+    if @chunk then
+      mime_type = @chunk.mime_type.mime_type
+      @chunk_version = @chunk.find_version()
+      if @chunk_version then 
+        if mime_type.include?("image") then
+          @chunk_content = "<img src='#{@file_name}' />"
+        else
+          @chunk_content = @chunk_version.content
+        end
+        content = render_to_string :partial => 'chunk_content', :layout => "default"
+        send_data content, :filename => @file_name, :type => mime_type, :disposition => disposition
+      end
+    else
+      content = render_to_string :partial => 'folder_content'
+      send_data content, :filename => @file_name, :type => "text/html", :disposition => disposition
+    end
+  end
+
+  def save_site_mapping_label
+    if params[:label_id]
+      ml = MappingLabel.find(params[:label_id])
+    elsif params[:site_mapping_id]
+      ml = MappingLabel.new()
+      ml.site_mapping_id = params[:site_mapping_id]
+    end
+    if ml
+      ml.name = params[:label_name]
+      ml.value = params[:label_value]
+      if ml.save
+        render :text => ml.name + ": " + ml.value + "<br>" #TODO Render new links to edit and delete.
+      else
+        render :text => 'unable to save label'
+      end
+    else
+      render :nothing => true
+    end
+  end
+
+  def delete_site_mapping_label
+    #Delete from parents? Childern?
+    #What if the same label is set on multiple ansestors?
+    if MappingLabel.delete(params[:label_id]) > 0
+      render :nothing => true 
+    else
+      render :text => 'Unable to delete label' 
     end
   end
 
