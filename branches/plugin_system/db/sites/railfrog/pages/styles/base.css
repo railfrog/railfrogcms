@@ -1,0 +1,523 @@
+/* ----------------------------------------------------------------------------
+
+	Blatantly ripped from Jakog Skjerning's clean design of the Ruby on Rails Site
+	(http://www.rubyonrails.com/styles/base.css).
+
+    1. General HTML elements
+    2. General classes
+    3. General structure
+		1. header
+		2. Content
+		3. Sidebar
+	4. Sitewide elements 
+		1. Introduction boxes
+		2. Navigation
+	5. Elements for specific areas
+		1. Weblog
+		2. Reference documentation	
+		3. Trac "integration"
+		
+---------------------------------------------------------------------------- */
+
+* {
+	margin:                     0;
+	padding:                    0;	
+}
+
+body {	
+	margin-bottom:				1em;
+
+	color:						#333333;
+
+	background-color:           #FFFFFF;
+	background-image:			url(/images/bodybkgnd.png);
+	background-repeat:			repeat-x;
+	background-position:		0 -25px;
+
+	font-size:					80%;	
+	font-family:				verdana, helvetica, arial, sans-serif;
+	line-height:				1.6em;
+	
+	/* Center in IE5.5 */
+	text-align:					center;
+}
+
+code {
+	font-size:					1.2em;
+}
+
+h1 {
+	margin-bottom:				0.5em;
+	font-size:					2em;
+	font-weight:				normal;
+	letter-spacing:				-0.04em;
+}
+
+h2 {
+	margin-top:					1em;
+	margin-bottom:				0.5em;
+	font-size:					1.5em;
+	font-weight:				normal;
+	letter-spacing:				-0.04em;
+}
+
+iframe {
+	border:						none;
+}
+
+img {
+	border:						none;
+}
+
+p {
+	margin-bottom:				1em;
+}
+
+a {
+	/* color:						#70892F;*/
+	color:						#333;
+	padding: 					0 0 1px 0;
+	text-decoration: 			none;
+	border-bottom: 				1px dotted #70892F;
+}
+
+a:hover {
+	color:						#4A5B1F;
+	background-color:			#E4F3C6;
+}
+
+small {
+	color:						#AAAAAA;
+}
+
+
+ul {
+	margin-top:					1em;
+	margin-bottom:				1em;
+	list-style-type:			none;
+}
+
+ul li {
+	margin-left:				0.5em;
+	padding-left:				1em;
+	
+	background-image:			url(/images/bullet.gif);
+	background-repeat:			no-repeat;
+	background-position:		0 0.55em;
+}
+
+ol {
+	margin-left:				1em;
+	padding-left:				1em;
+}
+
+ol li {
+	margin-left: 				0.5em;
+	padding-left:				0.5em;
+}
+
+input, textarea, select {
+	font-family:				verdana, helvetica, arial, sans-serif;
+
+	border:						1px solid #888888;
+}
+
+input:focus, textarea:focus, select:focus {
+	border-color:				#333333;
+}
+
+blockquote {
+	font-style: 				italic;
+	padding-left: 				2em;
+	color: 						#888888;
+}
+
+pre {
+	background-color: 			#eeeeee;
+	margin-bottom: 				1em;
+	padding: 					1em;
+	font-size:					1em;
+}
+
+table {
+	font-size:					1em;
+}
+
+table td {
+	padding:					0 1em 0 0;
+	vertical-align:				top;
+}
+
+table tr td:first-child {
+	padding-left:				0;
+}
+
+/* ----------------------------------------------------------------------------
+	Structure
+---------------------------------------------------------------------------- */
+
+div#container {
+	width:						90%;
+	max-width:					720px;	
+
+	margin-top:					0px;
+	margin-left:				auto;
+	margin-right:				auto;
+
+	font-size:					1em;
+
+	/* Don't center text, only div#container */
+	text-align:					left;
+}
+
+div#header {
+	/* This height controls the vertical position of #content and #sidebar */
+	height:						176px;
+	overflow:					hidden;
+}
+
+div#header h1 {
+	height:						70px;
+	
+	background-image:			url(/images/nameplate.gif);
+	background-repeat:			no-repeat;
+	background-position:		0px 16px;
+	
+	margin:						0;
+	margin-left:				172px;
+	margin-top:					24px;
+	padding:					0;
+	/* Move the text out of the way */
+	text-indent:				-5000px;
+}
+
+div#logo {
+	float:						left;
+	width:						149px;
+	height:						161px;
+	margin:						0 14px 0 7px;
+}
+div#logo a {
+	border:						none;
+	padding:					0;
+}
+
+
+div#content {
+	margin-left:				168px;
+}
+
+/* Fix the IE only 3pixel jog - documented at http://www.positioniseverything.net/articles/hollyhack.html#haslayout \*/
+* html #content {
+	height: 1px;
+}
+/* End hide from IE5-mac */
+
+div#sidebar {
+	float: 						left;
+	width: 						118px;
+
+	margin-top:					-4px;
+	padding:					0 0 0 28px;
+
+	font-size:					0.8em;
+ 	line-height: 				1.6em;
+}
+
+div#sidebar h2 {
+	margin:						0;
+	
+	font-size:					1.1em;
+	font-weight:				bold;
+}
+
+div#sidebar ul {
+	margin-top:					0;
+	margin-bottom:				1em;
+	padding:					0;
+}
+
+div#sidebar ul li {
+	margin:						0 0 0.2em 0;
+	padding:					0;
+
+	line-height:				1.3em;
+	
+	background-image:			none;
+}
+
+div#sidebar ul li a {
+	display:					block;
+	width:						110px;
+	padding:					0.2em 0;
+}
+
+div#sidebar ul li a:hover {
+}
+
+div#sidebar img {
+	margin: 					0 0 9px 0;
+}
+/* ----------------------------------------------------------------------------
+	Specific site-wide elements
+---------------------------------------------------------------------------- */
+
+/* Introduction boxes */
+
+.introduction {
+	margin-bottom:				1em;
+	padding:					1em;
+
+ 	font-size:					1.3em;
+ 	line-height: 				1.6em;
+	background-color:			#E4F3C6;
+	
+	-moz-border-radius-bottomright:	1em;
+}
+
+.introduction p {
+	margin-bottom:				0;
+}
+.update {
+	margin-bottom:				1em;
+	padding:					1em;
+
+ 	font-size:					.9em;
+ 	line-height: 				1.3em;
+	background-color:			#C1DF7D;
+	
+	-moz-border-radius-bottomright:	1em;
+	-moz-border-radius-topright:	1em;
+	-moz-border-radius-bottomleft:	1em;
+	-moz-border-radius-topleft:	1em;
+}
+
+.update p {
+	margin-bottom:				0;
+}
+
+
+/* Navigation */
+
+ul#navMain {
+	height:						42px;
+	margin: 					0;
+	padding: 					16px 0 0 0;
+
+	list-style-type:			none;	
+}
+
+ul#navMain li {
+	display:					inline;
+	background-image:			none;	
+	margin:						0;
+	padding:					0;
+}
+
+ul#navMain li {
+	border-left:				1px solid #FFFFFF;
+}
+
+ul#navMain li.first-child {
+	/* Wouldn't it be nice if IE was up-to-date with the rest of the world so we could skip 
+	superfluous classes like this? */
+	border-left:				none;		
+}
+
+ul#navMain li a {		
+	padding:					0.2em 0.5em 0.2em 0.8em;	
+	color:						#FFFFFF;
+	text-decoration:			none;
+	border:						none;
+}
+
+ul#navMain li.first-child a {
+	/* Wouldn't it be nice if IE was up-to-date with the rest of the world? */
+	padding-left:				0;
+}
+
+ul#navMain li a:hover {	
+	text-decoration:			underline;
+	background-color:			transparent;
+	color:						#FECB09;
+}
+
+
+
+
+/* ----------------------------------------------------------------------------
+	Elements for specific areas
+---------------------------------------------------------------------------- */
+
+/* 1. Weblog */
+
+.blogEntry {
+	margin-bottom:				2em;
+}
+
+.blogEntry h2 {
+	margin-top:					0;
+	margin-bottom:				0;
+}
+
+.blogEntry h2 a {
+  color: black;
+  text-decoration: none;
+}
+
+.blogEntry h2 a:hover {
+  color: black;
+  text-decoration: underline;
+  background-color: white;
+}
+
+p.metaData {
+	color:						#999999;
+	font-size:					0.9em;
+}
+
+div.comments {
+	padding:					0.5em 1em;	
+
+	background-color:			#EEEEEE;
+	
+	-moz-border-radius-topleft:		1em;
+	-moz-border-radius-bottomright:	1em;
+}
+
+.comments textarea {
+	width:						99%;
+	height:						15em;
+}
+
+ol#commentlist li {
+	font-weight:				bold;
+}
+
+ol#commentlist li p {
+	font-weight:				normal;
+}
+
+ol#commentlist li .metaData {
+	color:						#333333;
+	font-size:					1em;
+	font-weight:				bold;
+}
+
+
+/* 2. Reference documentation */
+
+#api #sidebar {
+	display:					none;
+	width:						0;
+}
+
+#api #content {
+	width:						100%;
+	height:						800px;
+
+	margin-left:				0;
+}
+
+#api #logo {
+	width:						80px;
+	height:						86px;
+
+	margin-right:				0;
+}
+
+#api #logo img {
+	height:						84px;
+}
+
+#api {
+	/* The header is smaller on the reference page, move the background up so the menu is in the 
+	proper place still */
+	padding-bottom:				0;
+	margin-bottom:				0;
+	background-position:		0 -70px;
+}
+
+#api #header {
+	height:						84px;
+	margin:						0;
+	overflow:					hidden;
+}
+
+#api #header h1 {
+	height:						24px;
+
+	margin-top:					2px;
+	margin-left:				0;
+	
+	background-image:			none;
+
+	text-indent:				0;
+	font-size:					1.5em;
+	font-weight:				bold;
+	
+}
+#api #container {
+	max-width:					100%;
+}
+
+
+/* 3. Trac "integration" */
+
+/* 4. About / frontpage */
+
+table.get_started {
+	/* Center the table */
+	margin-left:				auto;
+	margin-right:				auto;
+}
+
+table.get_started td {
+	line-height:				1.4em;
+	text-align:					center;
+	margin:						1em;
+}
+
+table.get_started td h3 {
+	margin:						0;
+	font-size:					1em;	
+	font-weight:				normal;
+	font-style:					italic;
+}
+
+table.frameworks td {
+	width:						30%;
+	padding:					0.5em;
+}
+.datetime {
+	font-size: 					.8em;
+	color: 						#666;
+	font-style: 				italic;
+	padding:					12px 0 0 0;
+}
+/* Adds tiny icon to links that take the user offsite */
+.xlink {
+	background:					url(/images/xlink.gif) no-repeat right;
+	color:						#333;
+	padding: 					0 6px 1px 0;
+	text-decoration: 			none;
+	border-bottom: 				1px dotted #70892F;
+}
+.sbquote, .sbquoteattr {
+	font-style:					italic;
+	margin: 					6px 0 0 0;
+}
+.sbquoteattr {
+	text-align:					right;
+	margin:		 				0 6px 9px 0;
+}
+/* Mark the current page */
+body#about a.about,
+body#forum a.forum {
+	font-weight:				bold;
+}
+body#about a.about:hover,
+body#forum a.forum:hover {
+	text-decoration: 			none;
+	color:						#fff;				
+}	

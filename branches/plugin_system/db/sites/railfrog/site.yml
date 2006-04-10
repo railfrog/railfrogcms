@@ -1,0 +1,32 @@
+layouts:
+  - layout: 
+      path: layout
+  - header: 
+      path: header
+  - nav_main: 
+      path: nav_main
+  - sidebar: 
+      path: sidebar
+
+
+pages:
+  index.html: 
+    path: index.html
+    labels:
+      layout: "chunk:1"
+      active_menu_item: "1" 
+
+  chronicle.html: 
+    path: chronicle.html
+    labels:
+      layout: "chunk:1"
+      active_menu_item: "2" 
+
+  pond.html: 
+    content: |
+      <h1>Pond</h>
+      <a href="http://groups.google.com/group/railfrog-dev">Pond</a>
+
+    labels:
+      layout: "chunk:1"
+      active_menu_item: "3" 
