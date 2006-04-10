@@ -6,7 +6,7 @@ body {
 	height: 100%;
 }
 
-body, div, p, li, dd, td, th {
+body,div,p,li,dd,td,th {
 	font: 9pt "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
 }
 
@@ -20,16 +20,16 @@ body, div, p, li, dd, td, th {
 	padding: 20px
 }
 
-h1, h2, h3, h4 {
+h1,h2,h3,h4 {
 	color: #6EB61A;
 }
 
-a, a:visited, a:active {
+a,a:visited,a:active {
 	color: #4D4E5F;
 }
 
 a:hover {
-    background-color: #d8eea9;
+	background-color: #d8eea9;
 }
 
 input {
@@ -38,7 +38,7 @@ input {
 	background: #F7F4DF;
 }
 
-input:hover, input:focus {
+input:hover,input:focus {
 	border: 2px solid #6EB61A;
 	padding: 0;
 }
