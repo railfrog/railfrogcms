@@ -16,6 +16,7 @@ class AdminController < ApplicationController
         @chunk = @site_mapping.chunk
         @file_name = @site_mapping.full_path
         @mapping_labels = @site_mapping.mapping_labels #TODO Also look up lables inherited from parents?
+        @mapping_id = params[:mapping_id]
       end
     elsif params[:chunk_id] then
       @chunk = Chunk.find(params[:chunk_id])
@@ -50,12 +51,15 @@ class AdminController < ApplicationController
       ml.name = params[:label_name]
       ml.value = params[:label_value]
       if ml.save
-        render :text => ml.name + ": " + ml.value + "<br>" #TODO Render new links to edit and delete.
+        site_mapping = SiteMapping.find(ml.site_mapping_id)
+        @mapping_labels = site_mapping.mapping_labels
+        @mapping_id = ml.site_mapping_id
+        render :partial => 'mapping_labels'
       else
-        render :text => 'unable to save label'
+        render :text => 'unable to save label' #TODO: Use Ajax :update to display, re-display label list.
       end
     else
-      render :nothing => true
+      render :text => 'unable to save label' #TODO: Use Ajax :update to display error, re-display label list.
     end
   end
 
