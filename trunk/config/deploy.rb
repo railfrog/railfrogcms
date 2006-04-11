@@ -137,7 +137,7 @@ end
   desc "Restart the app server"
   task :restart, :roles => :app do
     copy_database_yml
-    sudo "chmod +x /var/www/localhost/rails/railfrog/current/public/dispatch.fcgi"
+#    sudo "chmod +x /var/www/localhost/rails/railfrog/current/public/dispatch.fcgi"
     sudo "/etc/init.d/apache2 restart"
   end
 
