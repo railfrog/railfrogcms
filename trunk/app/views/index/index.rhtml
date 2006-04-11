@@ -1,8 +1,0 @@
-<h1>RailFrog</h1>
-<% if logged_in? %>
-<p>Logged in as: <strong><%= session[:first_name].capitalize.to_s + " " + session[:last_name].capitalize.to_s %></strong> - <%= link_to "Log Out", :controller => 'users', :action => "logout" %></p>
-<p><%= link_to "User Management", :controller => 'users', :action => "list" %></p>
-<% else %>
-<p><%= link_to "Log In", :controller => 'users', :action => "login" %></p>
-<% end %>
-<p style="font-style: italic; color: red">Page Content</p>
