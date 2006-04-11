@@ -1,9 +1,7 @@
 body {
 	padding: 0;
 	margin: 0;
-	width: 100%;
 	background-color: #F7F4DF;
-	height: 100%;
 }
 
 body,div,p,li,dd,td,th {
@@ -16,8 +14,7 @@ body,div,p,li,dd,td,th {
 	border-left: 2px solid #4D4E5F;
 	border-right: 2px solid #4D4E5F;
 	background-color: #fff;
-	height: 100%;
-	padding: 20px
+	padding: 20px;
 }
 
 h1,h2,h3,h4 {
@@ -41,4 +38,32 @@ input {
 input:hover,input:focus {
 	border: 2px solid #6EB61A;
 	padding: 0;
+}
+
+#site_mappings_block h3 {
+	padding: 0 0 0.2em 0;
+	margin: 0 0 0.5em 0;
+	border-bottom: 1px solid #555;
+}
+
+#site_mappings_block ul {
+	padding-left: 1em;
+	list-style: none;
+}
+
+#site_mappings_block a.expand, #site_mappings_block a.collapse {
+	background-repeat: no-repeat;
+	height: 9px;
+	width: 9px;
+	margin: 5px 3px 0px -12px;
+	float: left;
+	clear: left;
+}
+
+#site_mappings_block a.expand {
+	background-image: url(/images/expand.gif);
+}
+
+#site_mappings_block a.collapse {
+	background-image: url(/images/collapse.gif);
 }

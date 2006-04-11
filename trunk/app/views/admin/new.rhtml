@@ -1,0 +1,9 @@
+<h1>Adding new document</h1>
+
+<%= start_form_tag :action => 'create'%>
+  <%= hidden_field 'site_mapping', 'parent_id' if params[:parent_id] %>
+  <%= render :partial => 'form' %>
+  <%= submit_tag 'Save' %>
+<%= end_form_tag %>
+
+<%= link_to 'Back', :action => 'index' %>

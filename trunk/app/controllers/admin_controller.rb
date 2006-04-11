@@ -1,14 +1,16 @@
 class AdminController < ApplicationController
   before_filter :ensure_logged_in
-
+  
   layout 'default'
   
-
   def index
-    @site_mappings = SiteMapping.find(:all, :order => 'root_id, lft')
+    @site_mappings = SiteMapping.find(:all, :order => 'root_id, lft').inject({}) do |hash, mapping|
+      (hash[mapping.parent_id] ||= []) << mapping
+      hash
+    end
   end
-
-  def show_chunk
+  
+  def show
     disposition = 'inline'
     if params[:mapping_id] then
       @site_mapping = SiteMapping.find(params[:mapping_id])
@@ -31,15 +33,12 @@ class AdminController < ApplicationController
         else
           @chunk_content = @chunk_version.content
         end
-        content = render_to_string :partial => 'chunk_content', :layout => "default"
+        content = render_to_string :partial => 'chunk_content'
         send_data content, :filename => @file_name, :type => mime_type, :disposition => disposition
       end
-    else
-      content = render_to_string :partial => 'folder_content'
-      send_data content, :filename => @file_name, :type => "text/html", :disposition => disposition
     end
   end
-
+  
   def save_site_mapping_label
     if params[:label_id]
       ml = MappingLabel.find(params[:label_id])
@@ -73,90 +72,55 @@ class AdminController < ApplicationController
     end
   end
 
-  def new_document
+  def new
     @site_mapping = SiteMapping.new
-    @site_mapping.parent_id = params[:mapping_id]
-    
+    @site_mapping.parent_id = params[:parent_id]
     @chunk = Chunk.new
     @chunk_version = ChunkVersion.new
   end
   
-  def store_document
-    mime_type = MimeType.find_by_file_name(params[:site_mapping][:path_segment])
-  
-    chunk = Chunk.new(params[:chunk])
-    chunk.live_version = 1
-    chunk.mime_type = mime_type
-    chunk.save
+  def create
+    @chunk = Chunk.new(params[:chunk])
+    @chunk_version = @chunk.chunk_versions.build(params[:chunk_version])
+    @site_mapping = @chunk.site_mappings.build(params[:site_mapping])
     
-    chunk_version = chunk.chunk_versions.create(params[:chunk_version])
-    chunk_version.version = 1
-    chunk_version.save
-    
-    site_mapping = SiteMapping.new(params[:site_mapping])
-    site_mapping.chunk_id = chunk.id
-    site_mapping.lft = 0
-    site_mapping.rgt = 0
-    site_mapping.depth = 0
-    site_mapping.parent_id = 0 unless site_mapping.parent_id
-    site_mapping.save
-    
-    redirect_to :action => 'index'
+    begin
+      @chunk.live_version = 1
+      @chunk.mime_type = MimeType.find_by_file_name(params[:site_mapping][:path_segment])
+      @chunk.save!
+      redirect_to :action => 'index'
+    rescue
+      render :action => 'new'
+    end
   end
   
-  def edit_document
+  def edit
     @site_mapping = SiteMapping.find(params[:site_mapping_id])
-    @chunk_version = ChunkVersion.find(params[:chunk_version_id])
+    @chunk_version = @old_chunk_version = ChunkVersion.find(params[:chunk_version_id])
     @chunk = @chunk_version.chunk
   end
   
-  def update_document
+  def update
     @site_mapping = SiteMapping.find(params[:site_mapping_id])
-    @chunk_version = ChunkVersion.find(params[:chunk_version_id])
-    @chunk = @chunk_version.chunk
+    @old_chunk_version = ChunkVersion.find(params[:old_chunk_version][:id])
+    @chunk = @old_chunk_version.chunk
+    @chunk_version = @chunk.chunk_versions.build(params[:chunk_version])
     
-    live_version = (@chunk_version.version + 1)
-    version = @chunk.chunk_versions.create(params[:chunk_version])
-    version.base_version = @chunk_version.version
-    version.version = live_version
-    version.save
-    
-    @chunk.update_attributes(params[:chunk])
-    @chunk.live_version = live_version
-    @chunk.save
-    
-    @site_mapping.update_attributes(params[:site_mapping])
-    @site_mapping.save
-    
-    redirect_to :action => 'index'
-  end
-  
-  def new_folder
-    @site_mapping = SiteMapping.new
-    @site_mapping.parent_id = params[:mapping_id]
-  end
-  
-  def store_folder
-    site_mapping = SiteMapping.new(params[:site_mapping])
-    site_mapping.lft = 0
-    site_mapping.rgt = 0
-    site_mapping.depth = 0
-    site_mapping.parent_id = 0 unless site_mapping.parent_id
-    site_mapping.save
-    
-    redirect_to :action => 'index'
-  end
-  
-  def edit_folder
-    @site_mapping = SiteMapping.find(params[:mapping_id])
-  end
-  
-  def update_folder
-    @site_mapping = SiteMapping.find(params[:site_mapping_id])
-    @site_mapping.update_attributes(params[:site_mapping])
-    @site_mapping.save
-    
-    redirect_to :action => 'index'
+    begin
+      Chunk.transaction do
+        @chunk.attributes = params[:chunk]
+        @site_mapping.attributes = params[:site_mapping]
+        
+        @chunk_version.base_version = @old_chunk_version.version
+        @chunk.live_version = @chunk_version.next_version #TODO User should select live version
+        
+        @chunk.save!
+        @site_mapping.save!
+      end
+      redirect_to :action => 'index'
+    rescue
+      render :action => 'edit'
+    end
   end
   
   # See 
@@ -167,36 +131,34 @@ class AdminController < ApplicationController
   #  * [http://scottraymond.net/articles/2005/07/05/caching-images-in-rails Caching]
   def upload
     @site_mapping = SiteMapping.new
-    @site_mapping.parent_id = params[:mapping_id]
+    @site_mapping.parent_id = params[:parent_id]
     
     @chunk = Chunk.new
     @chunk_version = ChunkVersion.new
   end
   
   def store_uploaded
-    file_name = params['chunk_version']['tmp_file'].original_filename.gsub(/[^a-zA-Z0-9.]/, '_') # This makes sure filenames are sane
-    mime_type = MimeType.find_by_file_name(file_name)
-    @params['chunk_version']['content'] = @params['chunk_version']['tmp_file'].read
-    @params['chunk_version'].delete('tmp_file')
-    
-    chunk = Chunk.new(params[:chunk])
-    chunk.live_version = 1
-    chunk.mime_type_id = mime_type.id
-    chunk.save
-    
-    chunk_version = chunk.chunk_versions.create(params[:chunk_version])
-    chunk_version.version = 1
-    chunk_version.save
-    
-    site_mapping = SiteMapping.new(params[:site_mapping])
-    site_mapping.path_segment = file_name
-    site_mapping.chunk_id = chunk.id
-    site_mapping.lft = 0
-    site_mapping.rgt = 0
-    site_mapping.depth = 0
-    site_mapping.parent_id = 0 unless site_mapping.parent_id
-    site_mapping.save
-    
-    redirect_to :action => 'index'
+    if params['chunk_version']['tmp_file'].nil?
+      render :action => 'upload'
+    else 
+      file_name = params['chunk_version']['tmp_file'].original_filename.gsub(/[^a-zA-Z0-9.]/, '_') # This makes sure filenames are sane
+      mime_type = MimeType.find_by_file_name(file_name)
+      @params['chunk_version']['content'] = @params['chunk_version']['tmp_file'].read
+      @params['chunk_version'].delete('tmp_file')
+      
+      @chunk = Chunk.new(params[:chunk])
+      @chunk_version = @chunk.chunk_versions.build(params[:chunk_version])
+      @site_mapping = @chunk.site_mappings.build(params[:site_mapping])
+      
+      begin
+        @site_mapping.path_segment = file_name
+        @chunk.live_version = 1
+        @chunk.mime_type_id = mime_type.id
+        @chunk.save!
+        redirect_to :action => 'index'
+      rescue
+        render :action => 'upload'
+      end
+    end
   end
 end

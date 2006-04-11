@@ -2,7 +2,8 @@
   <tr>
     <td valign="top" align="left" style="border:grey solid 1px; background:silver;">
       <div id="summary_content">
-        Document: <strong><%= @file_name %></strong>
+        Chunk: <strong><%= @file_name %></strong>
+        <div>Last edited <%= time_ago_in_words(@chunk_version.created_at) %> ago (Revision <%= @chunk_version.version %>)</div>
       </div>
     </td>
   </tr>
@@ -10,9 +11,9 @@
     <td valign="top" align="left">
       <div id="actions_content">
         <a href="<%= @file_name %>" target="_blank">View</a>
-        <%= link_to('Edit', { :action => 'edit_document', :chunk_version_id => @chunk_version, :site_mapping_id => @site_mapping }) %>
-        <%= link_to('Versions', :action => 'versions', :chunk_id => @chunk_version.chunk) %> 
-        <%= link_to('Delete', { :action => 'delete_document', :chunk_version_id => @chunk_version, :mapping_id => @site_mapping }, :confirm => 'Are you sure you want to delete Document?') %> 
+        <%= link_to('Edit', { :action => 'edit', :chunk_version_id => @chunk_version, :site_mapping_id => @site_mapping }) %>
+        <%= link_to('New Chunk (as child)', :action => 'new', :parent_id => @site_mapping) %>
+        <%= link_to('Upload File (as child)', :action => 'upload', :parent_id => @site_mapping) %>
       </div>
     </td>
   </tr>
@@ -27,5 +28,3 @@
      </td>
    </tr>
 </table>             
-
-

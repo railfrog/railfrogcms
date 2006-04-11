@@ -1,5 +1,6 @@
 class Chunk < ActiveRecord::Base
-  has_many :chunk_versions
+  has_many :site_mappings
+  has_many :chunk_versions, :order => 'version'
   belongs_to :mime_type
   
   def find_version(version = nil)

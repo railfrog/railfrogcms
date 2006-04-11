@@ -39,11 +39,11 @@ class InitialSchema < ActiveRecord::Migration
       t.column "chunk_id", :integer
       t.column "version", :integer
       t.column "updated_at", :datetime
-      t.column "root_id", :integer
-      t.column "parent_id", :integer
-      t.column "depth", :integer
-      t.column "lft", :integer
-      t.column "rgt", :integer
+      t.column "root_id", :integer, :default => 0
+      t.column "parent_id", :integer, :default => 0
+      t.column "depth", :integer, :default => 0
+      t.column "lft", :integer, :default => 0
+      t.column "rgt", :integer, :default => 0
     end
     
     add_index "site_mappings", ["chunk_id"], :name => "site_mappings_chunk_id_index"
