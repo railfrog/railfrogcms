@@ -1,5 +1,6 @@
 require 'yaml'
 require File.dirname(__FILE__) + '/../../config/environment'
+require File.dirname(__FILE__) + '/../../app/models/chunk'
 
 class SiteDefinitionLoader
   
