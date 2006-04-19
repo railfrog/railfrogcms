@@ -2,26 +2,23 @@
   <tr>
     <td valign="top" align="left" style="border:grey solid 1px; background:silver;">
       <div id="summary_content">
-        Folder: <strong> <%= @site_mapping.full_path %></strong>
+        Folder: <strong><%= @file_name %></strong>
       </div>
     </td>
   </tr>
   <tr>
-    <td valign="top" align="left" style="border:grey solid 1px;">
+    <td valign="top" align="left">
       <div id="actions_content">
-        <%= link_to('New Document', :action => 'new_document', :mapping_id => @site_mapping) %> 
-        <%= link_to('Upload File', :action => 'upload', :mapping_id => @site_mapping) %> 
-        <%= link_to('New Folder', :action => 'new_folder', :mapping_id => @site_mapping) %> 
-        <%= link_to('Edit Folder', :action => 'edit_folder', :mapping_id => @site_mapping) %> 
-        <%= link_to('Delete Folder', { :action => 'delete_folder', :mapping_id => @site_mapping }, :confirm => 'Are you sure you want to delete Folder with all content?') %>
+        <%= link_to('Edit', { :action => 'edit_folder', :site_mapping_id => @site_mapping }) %>
+        <%= link_to('New folder', :action => 'new_folder', :parent_id => @site_mapping) %>
+        <%= link_to('New chunk', :action => 'new_chunk', :parent_id => @site_mapping) %>
+        <%= link_to('Upload File', :action => 'upload', :parent_id => @site_mapping) %>
       </div>
     </td>
   </tr>
   <tr>
-     <td>
-       <div id="chunk_content">&nbsp;</div>
-     </td>
-   </tr>
+    <td>
+      <%= render(:partial => 'mapping_labels') %>
+    </td>
+  </tr>
 </table>             
-
-

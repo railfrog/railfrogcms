@@ -11,9 +11,7 @@
     <td valign="top" align="left">
       <div id="actions_content">
         <a href="<%= @file_name %>" target="_blank">View</a>
-        <%= link_to('Edit', { :action => 'edit', :chunk_version_id => @chunk_version, :site_mapping_id => @site_mapping }) %>
-        <%= link_to('New Chunk (as child)', :action => 'new', :parent_id => @site_mapping) %>
-        <%= link_to('Upload File (as child)', :action => 'upload', :parent_id => @site_mapping) %>
+        <%= link_to('Edit', { :action => 'edit_chunk', :chunk_version_id => @chunk_version, :site_mapping_id => @site_mapping }) %>
       </div>
     </td>
   </tr>
@@ -23,8 +21,8 @@
     </td>
   </tr>
   <tr>
-     <td style="border:grey solid 1px;">
-       <div id="chunk_content"><%= @chunk_content %></div>
-     </td>
-   </tr>
+    <td style="border:grey solid 1px;">
+      <div id="chunk_content"><%= @chunk_content %></div>
+    </td>
+  </tr>
 </table>             

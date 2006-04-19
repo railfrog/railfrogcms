@@ -14,11 +14,11 @@ class AdminController < ApplicationController
     disposition = 'inline'
     if params[:mapping_id] then
       @site_mapping = SiteMapping.find(params[:mapping_id])
+      @mapping_labels = @site_mapping.mapping_labels #TODO Also look up lables inherited from parents?
+      @mapping_id = params[:mapping_id]
+      @file_name = @site_mapping.full_path
       if @site_mapping && @site_mapping.chunk then
         @chunk = @site_mapping.chunk
-        @file_name = @site_mapping.full_path
-        @mapping_labels = @site_mapping.mapping_labels #TODO Also look up lables inherited from parents?
-        @mapping_id = params[:mapping_id]
       end
     elsif params[:chunk_id] then
       @chunk = Chunk.find(params[:chunk_id])
@@ -36,6 +36,9 @@ class AdminController < ApplicationController
         content = render_to_string :partial => 'chunk_content'
         send_data content, :filename => @file_name, :type => mime_type, :disposition => disposition
       end
+    else
+      content = render_to_string :partial => 'folder_content'
+      send_data content, :filename => @file_name, :type => "text/html", :disposition => disposition
     end
   end
   
@@ -73,13 +76,33 @@ class AdminController < ApplicationController
   end
 
   def new
+    if params[:id] == 'folder'
+      new_folder
+      render :action => 'new_folder'
+    else
+      new_chunk
+      render :action => 'new_chunk'
+    end
+  end
+  
+  def edit
+    if params[:id] == 'folder'
+      edit_folder
+      render :action => 'edit_folder'
+    else
+      edit_chunk
+      render :action => 'edit_chunk'
+    end
+  end
+
+  def new_chunk
     @site_mapping = SiteMapping.new
     @site_mapping.parent_id = params[:parent_id]
     @chunk = Chunk.new
     @chunk_version = ChunkVersion.new
   end
   
-  def create
+  def create_chunk
     @chunk = Chunk.new(params[:chunk])
     @chunk_version = @chunk.chunk_versions.build(params[:chunk_version])
     @site_mapping = @chunk.site_mappings.build(params[:site_mapping])
@@ -90,17 +113,17 @@ class AdminController < ApplicationController
       @chunk.save!
       redirect_to :action => 'index'
     rescue
-      render :action => 'new'
+      render :action => 'new_chunk'
     end
   end
   
-  def edit
+  def edit_chunk
     @site_mapping = SiteMapping.find(params[:site_mapping_id])
     @chunk_version = @old_chunk_version = ChunkVersion.find(params[:chunk_version_id])
     @chunk = @chunk_version.chunk
   end
   
-  def update
+  def update_chunk
     @site_mapping = SiteMapping.find(params[:site_mapping_id])
     @old_chunk_version = ChunkVersion.find(params[:old_chunk_version][:id])
     @chunk = @old_chunk_version.chunk
@@ -117,6 +140,34 @@ class AdminController < ApplicationController
         @chunk.save!
         @site_mapping.save!
       end
+      redirect_to :action => 'index'
+    rescue
+      render :action => 'edit_chunk'
+    end
+  end
+  
+  def new_folder
+    @site_mapping = SiteMapping.new
+    @site_mapping.parent_id = params[:parent_id]
+  end
+  
+  def create_folder  
+    begin
+      @site_mapping = SiteMapping.create(params[:site_mapping])
+      redirect_to :action => 'index'
+    rescue
+      render :action => 'new_folder'
+    end
+  end
+  
+  def edit_folder
+    @site_mapping = SiteMapping.find(params[:site_mapping_id])
+  end
+  
+  def update_folder
+    @site_mapping = SiteMapping.find(params[:site_mapping_id])
+    begin
+      @site_mapping.update_attributes(params[:site_mapping])
       redirect_to :action => 'index'
     rescue
       render :action => 'edit'
