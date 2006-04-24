@@ -8,6 +8,11 @@ class ChunkVersion < ActiveRecord::Base
   end
   
   def next_version
-    connection.select_value("SELECT MAX(version)+1 FROM chunk_versions WHERE chunk_id = #{self.chunk_id}") || 1
+    ChunkVersion.next_version(self.chunk_id)
   end
+
+  def self.next_version(chunk_id)
+    connection.select_value("SELECT MAX(version)+1 FROM chunk_versions WHERE chunk_id = #{chunk_id}") || 1
+  end
+
 end

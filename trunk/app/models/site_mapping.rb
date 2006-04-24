@@ -1,10 +1,29 @@
-# TOFIX: direct inserting values to queries
+require 'pp'
+
+# FIXME: direct inserting values to queries
 class SiteMapping < ActiveRecord::Base
+  # the root folder is empty string
+  $ROOT_DIR = ''
+  
   acts_as_threaded
   belongs_to :chunk
   has_many :mapping_labels
   
   validates_uniqueness_of :path_segment, :scope => "parent_id"
+
+  def self.find_or_create_root
+    SiteMapping.find_or_create_by_path_segment($ROOT_DIR)
+  end
+
+  def self.find_or_create_by_parent_and_path_segment(parent, path_segment)
+    sm = SiteMapping.find_by_parent_id_and_path_segment(parent.id, path_segment)
+
+    unless sm then
+      sm = SiteMapping.create :path_segment => path_segment, :parent_id => parent.id, :depth => 0, :lft => 0, :rgt => 0, :root_id => 0
+    end
+
+    sm
+  end
 
   def full_path
     path_segments = SiteMapping.connection.select_all(construct_find_path_segments_sql)
@@ -22,21 +41,20 @@ class SiteMapping < ActiveRecord::Base
       key.scan(/\d+/) {|new_key| path[new_key.to_i] = path_segments[key]}
     end
 
-    "/" + path.join("/")
+    path.join("/")
   end
   
   def self.find_chunk_and_mapping_labels(path)
+    path.insert(0, $ROOT_DIR) unless path[0] == $ROOT_DIR  
+    
     c = find_chunk(path)
     ml = find_mapping_labels(path)
     return c, ml
   end
 
-  # find site_mapping for given path
-  def self.find_by_full_path(path) 
-    sm = SiteMapping.find_by_sql(construct_find_chunk_sql(path))
-  end
-  
   def self.find_chunk(path) 
+    path.insert(0, $ROOT_DIR) unless path[0] == $ROOT_DIR 
+    
     # find site_mapping for given path
     sm = find_by_full_path(path)
     
@@ -44,8 +62,17 @@ class SiteMapping < ActiveRecord::Base
     cv = Chunk.find_version({:id => sm[0].chunk_id, :version => sm[0].version}) if sm && sm.size == 1
   end
   
-  def self.find_mapping_labels(path) 
-    conditions = [ "(sm.path_segment like '#{path[0]}' AND sm.depth = 0)" ]
+  # find site_mapping for given path
+  def self.find_by_full_path(path)
+    path.insert(0, $ROOT_DIR) unless path[0] == $ROOT_DIR 
+    
+    sm = SiteMapping.find_by_sql(construct_find_chunk_sql(path))
+  end
+
+  def self.find_mapping_labels(path)
+    path.insert(0, $ROOT_DIR) unless path[0] == $ROOT_DIR 
+
+    conditions = [ "(sm.path_segment like '#{path[0]}' AND sm.depth = 0)" ] 
 
     for i in 1..(path.size - 1) do
       conditions << " OR (sm.path_segment like '#{path[i]}' AND sm.depth = #{i})"
@@ -60,7 +87,7 @@ class SiteMapping < ActiveRecord::Base
     labels.each {|label| 
       result[label.name] = label.value
     }
-    
+
     result
   end
   
@@ -93,7 +120,7 @@ class SiteMapping < ActiveRecord::Base
   # Constructs JOINs and conditions for given path  
   def self.construct_from_and_where_clauses(path)
     joins = ["site_mappings AS sm0"]
-    conditions = ["sm0.path_segment LIKE '#{path[0]}' AND sm0.depth = 0"]
+    conditions = ["sm0.path_segment LIKE '#{path[0]}' AND sm0.depth = 0"] 
     for i in 1..(path.size - 1) do
       joins << " INNER JOIN site_mappings AS sm#{i} ON sm#{i-1}.id = sm#{i}.parent_id"
       conditions << " AND sm#{i}.path_segment LIKE '#{path[i]}'"

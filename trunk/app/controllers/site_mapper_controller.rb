@@ -1,7 +1,15 @@
 class SiteMapperController < ApplicationController
-
   def show_chunk
-    @chunk_version, @rf_labels = SiteMapping.find_chunk_and_mapping_labels(@params[:path])
+    path = @params[:path]
+
+    @chunk_version, @rf_labels = SiteMapping.find_chunk_and_mapping_labels(path)
+
+    unless @chunk_version then
+      logger.info "Chunk is not found for path: #{path.to_s}. Trying to get index-page: #{@rf_labels['index-page']} ..."
+      path.push @rf_labels['index-page']
+
+      @chunk_version, @rf_labels = SiteMapping.find_chunk_and_mapping_labels(path)
+    end
     
     if @chunk_version then
       @chunk_content = @chunk_version.content
@@ -34,7 +42,7 @@ class SiteMapperController < ApplicationController
           end
         else
           rendering_options[:partial] = "chunk_content"
-          rendering_options[:layout] = 'default'
+	  rendering_options[:layout] = 'default'
         end
         
         session[:rf_labels] = @rf_labels
