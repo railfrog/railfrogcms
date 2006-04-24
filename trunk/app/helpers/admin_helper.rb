@@ -1,5 +1,12 @@
 module AdminHelper
   def create_mapping_tree(mappings, parent_id=0)
+    mappings[parent_id].sort! do |x,y| 
+      if (x.children_count == y.children_count) || (x.children_count > 0 && y.children_count > 0)
+        (x.path_segment <=> y.path_segment) 
+      else
+        (y.children_count <=> x.children_count) 
+      end
+    end
     tree = "<div id=\"tree_#{parent_id}\"><ul>"
     for map in mappings[parent_id] do
       tree += '<li>'
