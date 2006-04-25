@@ -5,28 +5,20 @@ RailFrog is a lightweight Content Management System for building websites.
 ## TODO
 
 == Installation ==
- 0. Drop {{{railfrog_development}}} database if it exists. # sorry for this. there were some changes in migration files.
- 1. Create a {{{railfrog_development}}} database.
+ 1. Create a {{{railfrog_development}}} database (see notes below).
  2. Copy config/database.yml.example to database.yml and edit as appropriate.
  3. Run {{{$ rake migrate}}} to create all required tables in the database.
- 4. {{{rake rf:load_site SITE=<path-to-site>}}}, 
-   eg {{{rake rf:load_site SITE=db/sites/railfrog}}}
- 5. Run WEBrick
+ 4. Run WEBrick
 
-== DONE ==
- * dropped acts_as_versioned from the Chunk model
- * refactor SiteMapper: add acts_as_threaded
- 
-== TODO == 
- 0. add methods to add/modify/delete SiteMapping/Chunks/ChunkVersions
- 1. refactor SiteMapper: add acts_as_threaded
- 2. add UI to manage the sitemappings, chunks table
- 3. add TTW WYSIWYG editor - Xinha
-
+== Loading site content ==
+ If you'd like to load site content to the RailFrog database use 
+{{{$ rake rf:load_site SITE=<path-to-site>}}}, or use our default site 
+{{{$ rake rf:load_site SITE=db/sites/railfrog}}}
+  
 == Troubleshooting ==
 
  If your database gets mashed, try
- $rake migrate VERSION=0 && rake migrate
+ {{{$ rake migrate VERSION=0 && rake migrate}}}
 
 == Database Setup ==
 
