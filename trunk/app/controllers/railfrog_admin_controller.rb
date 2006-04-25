@@ -6,7 +6,7 @@ class RailfrogAdminController < ApplicationController
   layout 'default'
   
   def index
-    @site_mappings = SiteMapping.find(:all, :order => 'root_id, lft').inject({}) do |hash, mapping|
+    @site_mappings = SiteMapping.get_all_tree.inject({}) do |hash, mapping|
       (hash[mapping.parent_id] ||= []) << mapping
       hash
     end

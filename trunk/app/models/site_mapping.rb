@@ -11,6 +11,16 @@ class SiteMapping < ActiveRecord::Base
   
   validates_uniqueness_of :path_segment, :scope => "parent_id"
 
+  def self.get_all_tree
+    tree = SiteMapping.find(:all, :order => 'root_id, lft')
+    
+    if tree.size == 0 then # the DB is empty
+      tree << SiteMapping.find_or_create_root
+    end
+
+    tree
+  end
+  
   def self.find_or_create_root
     SiteMapping.find_or_create_by_path_segment($ROOT_DIR)
   end
