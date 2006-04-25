@@ -1,6 +1,6 @@
 require 'pp'
 
-class AdminController < ApplicationController
+class RailfrogAdminController < ApplicationController
   before_filter :ensure_logged_in
   
   layout 'default'

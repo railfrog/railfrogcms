@@ -1,4 +1,4 @@
-module AdminHelper
+module RailfrogAdminHelper
   def create_mapping_tree(mappings, parent_id=0)
     mappings[parent_id].sort! do |x,y| 
       if (x.children_count == y.children_count) || (x.children_count > 0 && y.children_count > 0)
