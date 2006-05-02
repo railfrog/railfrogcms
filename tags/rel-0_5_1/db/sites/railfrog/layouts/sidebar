@@ -1,0 +1,27 @@
+    <div id="sidebar">
+		<p class="sbquote">&ldquo;Culture change&mdash;that big elusive goal&mdash;often starts with a single, small WOW! project.&rdquo;</p>
+
+		<p class="sbquoteattr">&mdash;<a class="xlink" href="http://www.tompeters.com/tpc/wow_projects.php">Tom Peters</a></p>
+		<h2>How can I participate?</h2>
+    <p>Register and make yourself known at the <a href="http://groups.google.com/group/railfrog-dev">Pond</a> (forum) or subscribe to the discussions by <a href="mailto:railfrog-dev-subscribe@groups.google.com">email</a>. Read the <a href="http://chronicle.railfrog.com">Chronicle</a> for the latest news. Explore the <a href="http://dev.railfrog.com">Wiki</a> and suggest some <a href="https://secure.cvsdude.org/trac/railfrog/cms/wiki/UserStories">features you'd like to see</a>. Go hunting for bugs in the <a href="https://secure.cvsdude.org/trac/railfrog/cms/browser/trunk">Trunk</a> (the latest source code right in the subversion repository). You can <a href="https://secure.cvsdude.org/trac/railfrog/cms/timeline">see how development is progressing</a>, <a href="https://secure.cvsdude.org/trac/railfrog/cms/wiki/GettingStartedForDevelopers">checkout the source code</a> and get a glimpse of the <a href="https://secure.cvsdude.org/trac/railfrog/cms/roadmap">roadmap</a> of the green future - just <a href="http://dev.railfrog.com">dive right in</a>.</p>
+
+    <p>If you're not a developer, then it will really help if you can <a href="https://secure.cvsdude.org/trac/railfrog/cms/wiki/UserStories">explain</a> to the developer tadpoles what they should be doing. This CMS needs <em><strong>your</strong></em> ideas!</p> 
+
+    
+	<h2>What is Rails?</h2>
+	<p><a class="xlink" href="http://www.rubyonrails.com">Rails</a> is a full-stack, open-source web framework in <a class="xlink" href="http://www.ruby-lang.org/en/20020101.html">Ruby</a> for writing real-world 
+	applications with joy and less code than most frameworks spend doing XML sit-ups.</p>
+
+		
+		<h2>So What&rsquo;s a<br />
+		Rail Frog?</h2>
+
+		<p>Railroad frogs are the sections of railroad track that guide rail car wheels from one track to the other.</p>
+		<img src="/images/rrfrog_thumb.jpg" alt="railroad frog"/>
+		
+    <p>While the Railroad/Rails analogy doesn&rsquo;t hold up perfectly, the name 
+      was short, memorable, unique, and the domain name was available!</p>
+
+<p><a href="http://www.cvsdude.com"><img src="https://secure.cvsdude.org/image/cvsdude_tag.jpg" border="0" alt="CVSDude"/></a></p>
+<p>Version control and software project management provided by CVSDude</p>
+	</div>
