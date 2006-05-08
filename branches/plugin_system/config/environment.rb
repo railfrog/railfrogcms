@@ -51,4 +51,6 @@ end
 # end
 
 # Include your application configuration below
-require 'core_ext/object.rb'
+require 'fileutils'
+
+Engines.start 'railfrog_core'

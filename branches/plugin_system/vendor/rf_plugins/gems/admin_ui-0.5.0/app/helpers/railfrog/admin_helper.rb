@@ -1,0 +1,2 @@
+module Railfrog::AdminHelper
+end

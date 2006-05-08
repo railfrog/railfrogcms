@@ -1,0 +1,2 @@
+module Railfrog::PluginsHelper
+end

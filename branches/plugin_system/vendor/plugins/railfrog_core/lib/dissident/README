@@ -1,0 +1,238 @@
+= Dissident, a Ruby dependency injection container
+
+    She gave him away.
+    When she couldn't hold, she folded...
+    A dissident is here.
+    Escape is never the safest path.
+    A dissident, a dissident is here...
+        --- Pearl Jam, Dissident
+
+(Also see http://chneukirchen.org/blog/archive/2005/08/design-and-evolution-of-a-dependency-injection-framework.html)
+
+== What does Dissident do?
+
+Dissident tries to make the best of different kinds of dependency
+injection:
+
+* It is as unobtrusive as Setter Injection (aka Type II), but done
+  magically.  It should feel exactly the same as just using the class
+  if used properly.
+
+* It is as easy as Constructor Injection (aka Type III) with, say,
+  PicoContainer (or what it would look like in an dynamically typed
+  language), but not as clumsy if used without DI.
+
+* It is lazy, like Getter Injection (aka Type "IV"),
+  and exactly as nice to use.  The laziness also solves the problem
+  of circular instantiations in a clever way.
+
+To a certain extend, this is like "Interface Driven Setter Dependency
+Injection", except for the bad taste this usually has in a static
+language.  Also, due to Ruby's open classes, Dissident *is*
+non-invasive.  Compare this example of Setter Injection, simply
+extended to make use of Dissident:
+
+    class App
+      attr_writer :database
+      attr_writer :logger
+    end
+
+    class App
+      inject :database
+      inject :logger
+    end
+
+(TODO: Infer attr_writer => inject?  Possibly too scary.)
+
+Dissident can provide real Constructor Injection too, making the
+classes totally independent of Dissident.  All you need to do is to
+add a constant +DISSIDENT_CONSTRUCTOR+ that holds an array of the
+services to inject---in order (Can't do better in dynamic languages,
+report your ideas).  Alternatively, use "provide" to pass arguments
+to the constructor:
+
+    class App
+      DISSIDENT_CONSTRUCTOR = [:database, :logger]
+
+      def initialize(db, log)
+        @database = db
+        @log = log
+      end
+    end
+
+    Dissident.use_for App
+
+Or, even (and probably preferable):
+
+    class MyContainer < Dissident::Container
+      provide :app, App, :database, :logger
+    end
+
+Dissident is *no* requirement for using the classes, for example
+during testing (just alias +inject+ to +attr_accessor+), but it is
+very easy to just use it, though.
+
+Dissident provides per-container "singletons" (multitons, actually, if
+you make use of parameterized services), that are not globally unique
+and visible everywhere to the program, but only for the scope of the
+container used.
+
+Dissident can do easy customization and "forking" of container
+implementations using standard Ruby inheritance.  You can, for example,
+inherit from your default container to add stubs for testing.
+
+Dissident provides multitons and multimethods for complete
+configurability of your applications.  A prototypish instantiation
+style exists too:
+
+    class MyContainer < Dissident::Container
+      def myservice
+        prototype { MyService.new }
+      end
+    end
+
+This will instantiate +MyService+ on each request of +myservice+.
+
+Dissident is totally transparent to the user, but not as "magic"
+(read: possibly unexpected) as PicoContainer.
+
+Compare:
+    
+    public interface Peelable {
+        void peel();
+    }
+    
+    public class Apple implements Peelable {
+        public void peel() { }
+    }
+    
+    public class Peeler implements Startable {
+        private final Peelable peelable;
+        public Peeler(Peelable peelable) {
+            this.peelable = peelable;
+        }
+        public void start() { peelable.peel(); }
+        public void stop() { }
+    }
+    
+    public class Juicer {
+        private final Peelable peelable;
+        private final Peeler peeler;
+    
+        public Juicer(Peelable peelable, Peeler peeler) {
+            this.peelable = peelable;
+            this.peeler = peeler;
+        }
+    }
+
+    MutablePicoContainer pico = new DefaultPicoContainer();
+    pico.registerComponentImplementation(Apple.class);
+    pico.registerComponentImplementation(Juicer.class);
+    pico.registerComponentImplementation(Peeler.class);
+
+    Juicer juicer = (Juicer) pico.getComponentInstance(Juicer.class);
+
+with:
+
+    class Apple
+      def peel; end
+    end
+
+    class Peeler
+      inject :peelable
+      def start
+        peelable.peel
+      end
+      def stop; end
+    end
+
+    class Juicer
+      inject :peeler
+      inject :peelable
+    end
+
+    class MyContainer < Dissident::Container
+      provide :peeler, Peeler
+      provide :peelable, Apple
+    end
+
+    Dissident.with MyContainer do
+      juicer = Juicer.new
+    end
+
+Dissident provides basic lifecycle management, as PicoContainer does
+(use require 'dissident/lifecycle').  (Note that +start+ is depth-first
+too, which shouldn't matter in general.)
+
+   require 'dissident/lifecycle'
+
+   class Logger
+     def start; end
+     def stop; end
+   end
+   class Database
+     inject :logger
+     def start; end
+     def stop; end
+     def dispose; end
+   end
+
+   class MyContainer < Dissident::Container
+     include Dissident::Lifecycle
+
+     provide :logger, Logger
+     provide :database, Database
+   end
+
+   Dissident.with MyContainer do |container|
+     container.start :database
+     container.stop :database
+     container.dispose :database
+   end
+
+Dissident includes an extensive test suite and is implemented using
+test-driven development.
+
+Dissident is available under the same liberal terms as Ruby itself.
+
+
+== What doesn't Dissident do?
+
+Dissident doesn't provide any means of configuration beyond plain Ruby
+code.  This is actually a pro: If you like using XML or YAML for
+assembling your application, you should rather look at Seep or
+Copland.  Furthermore, Dissident does not provide Contextualized
+Lookup (aka Type I), but if you really feel the urge to, you can do it
+by self-injecting the container.  (Also, using Ruby's powerful
+reflection, you can easily add your own configuration file binding
+too.)
+
+Dissident doesn't do multicasting (yet).
+
+Dissident doesn't provide Interceptors, Service Libraries or Logging.
+Use Needle if you want that.
+
+
+== Why Setter/Getter Injection is preferable to Constructor Injection (in Ruby):
+
+- *Less* code in Ruby
+- Better accessible to metaprogramming
+- Constructor Injection would require argument duplication (DRY,
+  initialize, setting, reflection)
+- Allows for parameterized services
+
+
+== History
+
+September 20, 2005:: First public release 0.1.
+
+
+== Copyright
+
+Copyright (C) 2005  Christian Neukirchen <http://purl.org/net/chneukirchen>
+
+This work is licensed under the same terms as Ruby itself.
+
+Please mail bugs, feature requests or patches to the mail addresses
+found above or use IRC[irc://freenode.net/#ruby-lang] to contact the
+developer.

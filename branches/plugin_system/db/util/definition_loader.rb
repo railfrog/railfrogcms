@@ -1,101 +1,107 @@
+require 'pp'
 require 'yaml'
-require File.dirname(__FILE__) + '/../../config/environment'
 
+# FIXME: write documentation
 class SiteDefinitionLoader
+	
+  # tag name of the labels tag, eg:
+  # pages:
+  #   rf_labels:
+  #     index-page=index.html
+  #     layout=chunk:1
+  $RF_LABELS_TAG = "rf-labels"
   
   def self.load_definition(file)
     site_definition = YAML::load(File.open( file ))
     
     Dir.chdir("layouts/")
-    loaded_layouts = load_layouts site_definition["layouts"]
+    load_layouts site_definition["layouts"]
     
     Dir.chdir("../pages/")
-    loaded_chunks = {}
-    get_pages(site_definition["pages"], loaded_chunks, nil)
+    get_pages(site_definition["pages"], SiteMapping.find_or_create_root)
     
     Dir.chdir("../")
-    return loaded_layouts, loaded_chunks
   end
   
   def self.load_layouts(node)
-    loaded_layouts = {}
-    
-    # loading layouts
     node.each {|layout| 
       layout.each {|layout_name, value|
         if value['path'] then
-          content = load_content(value['path'])
+          content = load_file_content(value['path'])
         elsif value['content']
           content = value['content']
         else 
           next
         end
         
-        puts "  Creating layout chunk #{layout_name}"
-        c = create_chunk(layout_name, content)
-        loaded_layouts[c.description] = c
+        puts "    loading layout chunk '#{layout_name}'"
+        c = Chunk.create_chunk(layout_name, content)
       }
     }
-    
-    loaded_layouts
   end
   
-  def self.get_pages(node, loaded_chunks, parent_sitemapping) 
-    parent_id = parent_sitemapping ? parent_sitemapping.id : 0
-    
+  def self.get_pages(node, parent_sitemapping) 
+
     node.each { |path_segment, page|
-      
-      if page['path'] || page['content'] then
-        if page['path'] then # load file from the path
-          content = load_content(page['path'])
-        else
-          content = page['content']
-        end
-        
-        chunk, sm = create_content_chunk(path_segment, parent_sitemapping, content)
-        
-        # Loading labels
-        # labels:
-        #   layout: "chunk:1"
-        #   active_menu_item: "1" 
-        if page['labels'] then
-          page['labels'].each { |name, value|
-            MappingLabel.create :site_mapping_id => sm.id, :name => name, :value => value
-          }
-        end
-          
-        loaded_chunks[sm.full_path] = chunk
+
+      if page.class == Hash \
+          && page.has_key?('path') \
+          && page['path'].class == String then # load file from the path
+
+        content = load_file_content(page['path'])
+
+	sm = SiteMapping.find_or_create_by_parent_and_path_segment(parent_sitemapping, path_segment)
+        Chunk.find_or_create_by_site_mapping_and_content(sm, content)
+        load_labels(page, sm)
+
+      elsif page.class == Hash \
+          && page.has_key?('content') \
+          && page['content'].class == String # load content of the chunk from the inline value
+
+        content = page['content']
+
+	sm = SiteMapping.find_or_create_by_parent_and_path_segment(parent_sitemapping, path_segment)
+        Chunk.find_or_create_by_site_mapping_and_content(sm, content)
+        load_labels(page, sm)
+	
+      elsif page.class == Hash \
+	  && path_segment == $RF_LABELS_TAG \
+	  && parent_sitemapping.full_path == '' then # root labels
+        load_labels({$RF_LABELS_TAG => page}, parent_sitemapping)
       else # dir
-        sm = SiteMapping.create :path_segment => path_segment, :parent_id => parent_id, :depth => 0, :lft => 0, :rgt => 0, :root_id => 0
-        sm.save
-      
-        get_pages(page, loaded_chunks, sm)
+	if path_segment == $RF_LABELS_TAG then
+          next
+	end
+
+        # Check whether such SiteMapping already exists
+        sm = SiteMapping.find_or_create_by_parent_and_path_segment(parent_sitemapping, path_segment) 
+	load_labels(page, sm)
+
+        get_pages(page, sm)
       end
     }
   end
-  
-  def self.create_content_chunk(filename, parent_sitemapping, content)
-    puts "  Creating content chunk filename: #{filename} #{parent_sitemapping}"
-    parent_id = parent_sitemapping ? parent_sitemapping.id : 0
-    mime_type = MimeType.find_by_file_name(filename)
-    c = create_chunk(filename, content, mime_type.id);
 
-    sm = SiteMapping.create :path_segment => filename, :parent_id => parent_id, :depth => 0, :lft => 0, :rgt => 0, :root_id => 0, :chunk_id => c.id
-    sm.save
-
-    return c, sm
+  # Loading labels
+  # rf-labels:
+  #   layout: "chunk:1"
+  #   active_menu_item: "1" 
+  def self.load_labels(node, site_mapping)
+    puts "      loading labels for '#{site_mapping.full_path}' path"
+    if node.class == Hash && node.has_key?($RF_LABELS_TAG) then
+      node[$RF_LABELS_TAG].each { |name, value|
+        site_mapping.mapping_labels.create :name => name, :value => value
+      }
+    else 
+      puts "-------"
+      puts " ERROR: unable to get labels for path '#{site_mapping.full_path}' from"
+      pp node
+      puts "-------"
+    end
   end
   
-  def self.create_chunk(description, content, mime_type_id = nil)
-    c = Chunk.create :description => description, :live_version => 1, :mime_type_id => mime_type_id
-    c.save
-
-    c.chunk_versions.create :version => 1, :base_version => 0, :content => content
-   
-    return c
-  end
-  
-  def self.load_content(file)
+  def self.load_file_content(file)
     File.new(file).binmode.read
   end
+
 end
