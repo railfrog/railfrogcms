@@ -8,12 +8,12 @@ class Chunk < ActiveRecord::Base
     c.save
 
     c.chunk_versions.create :version => 1, :base_version => 0, :content => content
-   
+
     c
   end
- 
+
   def self.find_or_create_by_site_mapping_and_content(site_mapping, content)
-    
+
     if site_mapping.chunk_id then
       c = Chunk.find(site_mapping.chunk_id)
       next_version = ChunkVersion.next_version(c.id)
@@ -26,15 +26,15 @@ class Chunk < ActiveRecord::Base
       c.save
       site_mapping.chunk_id = c.id 
       site_mapping.save
-      
+
       next_version = 1
-    end  
+    end
 
     c.chunk_versions.create :version => next_version, :base_version => 0, :content => content
 
     c
   end
-  
+
   def find_version(version = nil)
     Chunk.find_version({:id => self.id, :version => version })
   end
@@ -50,7 +50,10 @@ class Chunk < ActiveRecord::Base
     end
 
     version = options[:version] ? options[:version] : chunk.live_version
-     
+    if version == 'LATEST' then
+      version = ChunkVersion.last_version(chunk.id)
+    end
+
     chunk.chunk_versions.find(:first, :conditions => ["version = ?", version])
   end
 end

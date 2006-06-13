@@ -1,0 +1,28 @@
+<h1><%= @chunk.description %></h1>
+
+<p>Chunk MIME Type: <strong><%= @chunk.mime_type.mime_type %></strong></p>
+
+<% unless @chunk_versions.empty? then -%>
+  <table class="versioning">
+    <tr>
+      <th>Version</th>
+      <th>Base version</th>
+      <th>Created at</th>
+      <th>Updated at</th>
+      <th>&nbsp;</th>
+    </tr>
+
+    <% for version in @chunk_versions -%>
+    <tr>
+      <td><%= version.version %></td>
+      <td><%= version.base_version %></td>
+      <td><%= version.created_at.to_formatted_s(:db) %></td>
+      <td><%= version.updated_at.to_formatted_s(:db) %></td>
+      <td><%= (@chunk.live_version == version.version) ? '<strong>live</strong>' : link_to('put live', { :action => 'put_live', :chunk_id => @chunk, :version => version.version }) %></td>
+
+  </tr>
+  <% end -%>
+  </table>
+<% end -%>
+
+<%= link_to 'Back', :action => 'index' %>

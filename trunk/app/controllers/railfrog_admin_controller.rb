@@ -2,16 +2,16 @@ require 'pp'
 
 class RailfrogAdminController < ApplicationController
   before_filter :ensure_logged_in
-  
+
   layout 'default'
-  
+
   def index
     @site_mappings = SiteMapping.get_all_tree.inject({}) do |hash, mapping|
       (hash[mapping.parent_id] ||= []) << mapping
       hash
     end
   end
-  
+
   def show
     disposition = 'inline'
     if params[:mapping_id] then
@@ -43,7 +43,7 @@ class RailfrogAdminController < ApplicationController
       send_data content, :filename => @file_name, :type => "text/html", :disposition => disposition
     end
   end
-  
+
   def save_site_mapping_label
     if params[:label_id]
       ml = MappingLabel.find(params[:label_id])
@@ -86,7 +86,7 @@ class RailfrogAdminController < ApplicationController
       render :action => 'new_chunk'
     end
   end
-  
+
   def edit
     if params[:id] == 'folder'
       edit_folder
@@ -103,12 +103,12 @@ class RailfrogAdminController < ApplicationController
     @chunk = Chunk.new
     @chunk_version = ChunkVersion.new
   end
-  
+
   def create_chunk
     @chunk = Chunk.new(params[:chunk])
     @chunk_version = @chunk.chunk_versions.build(params[:chunk_version])
     @site_mapping = @chunk.site_mappings.build(params[:site_mapping])
-    
+
     begin
       @chunk.live_version = 1
       @chunk.mime_type = MimeType.find_by_file_name(params[:site_mapping][:path_segment])
@@ -118,27 +118,30 @@ class RailfrogAdminController < ApplicationController
       render :action => 'new_chunk'
     end
   end
-  
+
   def edit_chunk
     @site_mapping = SiteMapping.find(params[:site_mapping_id])
     @chunk_version = @old_chunk_version = ChunkVersion.find(params[:chunk_version_id])
     @chunk = @chunk_version.chunk
   end
-  
+
   def update_chunk
     @site_mapping = SiteMapping.find(params[:site_mapping_id])
     @old_chunk_version = ChunkVersion.find(params[:old_chunk_version][:id])
     @chunk = @old_chunk_version.chunk
     @chunk_version = @chunk.chunk_versions.build(params[:chunk_version])
-    
+
     begin
       Chunk.transaction do
         @chunk.attributes = params[:chunk]
         @site_mapping.attributes = params[:site_mapping]
-        
+
         @chunk_version.base_version = @old_chunk_version.version
-        @chunk.live_version = @chunk_version.next_version #TODO User should select live version
-        
+
+        if params[:put][:live] == "1" then
+          @chunk.live_version = @chunk_version.next_version
+        end
+
         @chunk.save!
         @site_mapping.save!
       end
@@ -147,13 +150,13 @@ class RailfrogAdminController < ApplicationController
       render :action => 'edit_chunk'
     end
   end
-  
+
   def new_folder
     @site_mapping = SiteMapping.new
     @site_mapping.parent_id = params[:parent_id]
   end
-  
-  def create_folder  
+
+  def create_folder
     begin
       @site_mapping = SiteMapping.create(params[:site_mapping])
       redirect_to :action => 'index'
@@ -161,11 +164,11 @@ class RailfrogAdminController < ApplicationController
       render :action => 'new_folder'
     end
   end
-  
+
   def edit_folder
     @site_mapping = SiteMapping.find(params[:site_mapping_id])
   end
-  
+
   def update_folder
     @site_mapping = SiteMapping.find(params[:site_mapping_id])
     begin
@@ -175,8 +178,8 @@ class RailfrogAdminController < ApplicationController
       render :action => 'edit'
     end
   end
-  
-  # See 
+
+  # See
   #  * [http://wiki.rubyonrails.org/rails/pages/HowtoUploadFiles HowtoUploadFiles]
   #  * [http://wiki.rubyonrails.org/rails/pages/Upload+Progress+Bar Upload Progress Bar]
   #  * [http://manuals.rubyonrails.com/read/chapter/56 Sending and receiving files]
@@ -185,11 +188,11 @@ class RailfrogAdminController < ApplicationController
   def upload
     @site_mapping = SiteMapping.new
     @site_mapping.parent_id = params[:parent_id]
-    
+
     @chunk = Chunk.new
     @chunk_version = ChunkVersion.new
   end
-  
+
   def store_uploaded
     if params['chunk_version']['tmp_file'].nil?
       render :action => 'upload'
@@ -198,11 +201,11 @@ class RailfrogAdminController < ApplicationController
       mime_type = MimeType.find_by_file_name(file_name)
       @params['chunk_version']['content'] = @params['chunk_version']['tmp_file'].read
       @params['chunk_version'].delete('tmp_file')
-      
+
       @chunk = Chunk.new(params[:chunk])
       @chunk_version = @chunk.chunk_versions.build(params[:chunk_version])
       @site_mapping = @chunk.site_mappings.build(params[:site_mapping])
-      
+
       begin
         @site_mapping.path_segment = file_name
         @chunk.live_version = 1
@@ -213,5 +216,18 @@ class RailfrogAdminController < ApplicationController
         render :action => 'upload'
       end
     end
+  end
+
+  def chunk_versions
+    @chunk = Chunk.find(params[:chunk_id], :include => :mime_type)
+    @chunk_versions = ChunkVersion.find(:all, :conditions => ["chunk_id = ?", @chunk.id], :order => "version DESC")
+  end
+
+  def put_live
+    chunk = Chunk.find(params[:chunk_id])
+    chunk.live_version = params[:version]
+    chunk.save
+
+    redirect_to :action => "chunk_versions", :chunk_id => chunk.id
   end
 end

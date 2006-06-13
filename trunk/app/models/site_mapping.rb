@@ -4,23 +4,23 @@ require 'pp'
 class SiteMapping < ActiveRecord::Base
   # the root folder is empty string
   $ROOT_DIR = ''
-  
+
   acts_as_threaded
   belongs_to :chunk
   has_many :mapping_labels
-  
+
   validates_uniqueness_of :path_segment, :scope => "parent_id"
 
   def self.get_all_tree
     tree = SiteMapping.find(:all, :order => 'root_id, lft')
-    
+
     if tree.size == 0 then # the DB is empty
       tree << SiteMapping.find_or_create_root
     end
 
     tree
   end
-  
+
   def self.find_or_create_root
     SiteMapping.find_or_create_by_path_segment($ROOT_DIR)
   end
@@ -37,11 +37,11 @@ class SiteMapping < ActiveRecord::Base
 
   def full_path
     path_segments = SiteMapping.connection.select_all(construct_find_path_segments_sql)
-    
+
     # getting first row (we have only one row). this is a hash
     path_segments = path_segments[0] 
     return nil unless path_segments
-    
+
     # Eg we got a hash: 
     # {"sm0_path_segment" => 'products', "sm1_path_segment" => 'cakes', "sm2_path_segments" => 'chocolate_cake.html' }
     # and we'd like to create an array 
@@ -53,29 +53,33 @@ class SiteMapping < ActiveRecord::Base
 
     path.join("/")
   end
-  
-  def self.find_chunk_and_mapping_labels(path)
-    path.insert(0, $ROOT_DIR) unless path[0] == $ROOT_DIR  
-    
-    c = find_chunk(path)
+
+  def self.find_chunk_and_mapping_labels(path, version = nil)
+    path.insert(0, $ROOT_DIR) unless path[0] == $ROOT_DIR
+
+    c = find_chunk(path, version)
     ml = find_mapping_labels(path)
     return c, ml
   end
 
-  def self.find_chunk(path) 
-    path.insert(0, $ROOT_DIR) unless path[0] == $ROOT_DIR 
-    
+  def self.find_chunk(path, version = nil)
+    path.insert(0, $ROOT_DIR) unless path[0] == $ROOT_DIR
+
     # find site_mapping for given path
     sm = find_by_full_path(path)
-    
+
     # find chunk version
-    cv = Chunk.find_version({:id => sm[0].chunk_id, :version => sm[0].version}) if sm && sm.size == 1
+    unless version then
+      version = sm[0].version
+    end
+
+    cv = Chunk.find_version({:id => sm[0].chunk_id, :version => version }) if sm && sm.size == 1
   end
-  
+
   # find site_mapping for given path
   def self.find_by_full_path(path)
     path.insert(0, $ROOT_DIR) unless path[0] == $ROOT_DIR 
-    
+
     sm = SiteMapping.find_by_sql(construct_find_chunk_sql(path))
   end
 
@@ -92,7 +96,7 @@ class SiteMapping < ActiveRecord::Base
       :conditions => conditions.to_s,
       :joins => "AS mp INNER JOIN site_mappings AS sm ON mp.site_mapping_id = sm.id",
       :order => "sm.depth" )
-    
+
     result = {}
     labels.each {|label| 
       result[label.name] = label.value
@@ -100,20 +104,20 @@ class SiteMapping < ActiveRecord::Base
 
     result
   end
-  
-  protected 
-  
+
+  protected
+
   # Constructs SQL query for getting site_mapping leaf.
   # Eg, for path ["products", "cakes", "chocolate_cake.html"]
   # this query will find 'chocolate_cake.html' leaf.
   def self.construct_find_chunk_sql(path)
-    
+
     if path.size > 0 then
       chunk_index = path.size-1
     else
       chunk_index = 0
     end
-    "SELECT DISTINCT sm#{chunk_index}.* #{construct_from_and_where_clauses(path)}" 
+    "SELECT DISTINCT sm#{chunk_index}.* #{construct_from_and_where_clauses(path)}"
   end
 
   def construct_find_path_segments_sql
@@ -123,7 +127,7 @@ class SiteMapping < ActiveRecord::Base
       paths << ", sm#{i}.path_segment AS sm#{i}_path_segment"
       joins << " INNER JOIN site_mappings AS sm#{i} ON sm#{i-1}.id = sm#{i}.parent_id"
     end
-    
+
     "SELECT #{paths.to_s} FROM #{joins} WHERE sm#{self.depth}.id = #{self.id}" 
   end
 
@@ -135,7 +139,7 @@ class SiteMapping < ActiveRecord::Base
       joins << " INNER JOIN site_mappings AS sm#{i} ON sm#{i-1}.id = sm#{i}.parent_id"
       conditions << " AND sm#{i}.path_segment LIKE '#{path[i]}'"
     end
-    
+
     "FROM #{joins.to_s} WHERE #{conditions.to_s}" 
   end
 end

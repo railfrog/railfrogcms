@@ -3,6 +3,7 @@
 <%= start_form_tag :action => 'update_chunk', :site_mapping_id => @site_mapping %>
   <%= hidden_field 'old_chunk_version', 'id' %>
   <%= render :partial => 'chunk_form' %>
+  <p><label for="put_live">Put Live</label><%= check_box('put', 'live') %>
   <%= submit_tag 'Save' %>
 <%= end_form_tag %>
 
