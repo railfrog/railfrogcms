@@ -120,6 +120,7 @@ class RailfrogAdminController < ApplicationController
   end
 
   def edit_chunk
+    @source = true if params[:source]
     @site_mapping = SiteMapping.find(params[:site_mapping_id])
     @chunk_version = @old_chunk_version = ChunkVersion.find(params[:chunk_version_id])
     @chunk = @chunk_version.chunk

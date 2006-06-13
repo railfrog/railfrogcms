@@ -9,7 +9,10 @@
 <p><label for="chunk_version_description">Document Description</label><br/>
 <%= text_field 'chunk', 'description'  %></p>
 <p><label for="chunk_version_content">Content</label><br/>
-<%= text_area 'chunk_version', 'content', :id => 'XinhaTextArea', :rows => '10', :columns => '80', :style => "width: 100%;"  %></p>
-
+<% if @source then %>
+<%= text_area 'chunk_version', 'content', :rows => '50', :columns => '80', :style => "width: 100%;"  %></p>
+<% else %>
+<%= text_area 'chunk_version', 'content', :id => 'XinhaTextArea', :rows => '50', :columns => '80', :style => "width: 100%;"  %></p>
+<% end %>
 <!--[eoform:post]-->
 

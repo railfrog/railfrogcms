@@ -12,6 +12,7 @@
       <div id="actions_content">
         <a href="<%= @file_name %>" target="_blank">View</a>
         <%= link_to('Edit', { :action => 'edit_chunk', :chunk_version_id => @chunk_version, :site_mapping_id => @site_mapping }) %>
+        <%= link_to('Edit Source', { :action => 'edit_chunk', :chunk_version_id => @chunk_version, :site_mapping_id => @site_mapping, :source => true }) %>
         <%= link_to('Versions', { :action => 'chunk_versions', :chunk_id => @chunk_version.chunk_id }) %>
       </div>
     </td>
