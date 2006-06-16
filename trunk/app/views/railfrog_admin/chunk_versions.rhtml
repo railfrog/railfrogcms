@@ -9,6 +9,7 @@
       <th>Base version</th>
       <th>Created at</th>
       <th>Updated at</th>
+      <th>Comments</th>
       <th>&nbsp;</th>
     </tr>
 
@@ -18,6 +19,7 @@
       <td><%= version.base_version %></td>
       <td><%= version.created_at.to_formatted_s(:db) %></td>
       <td><%= version.updated_at.to_formatted_s(:db) %></td>
+      <td><%= h version.comments %></td>
       <td><%= (@chunk.live_version == version.version) ? '<strong>live</strong>' : link_to('put live', { :action => 'put_live', :chunk_id => @chunk, :version => version.version }) %></td>
 
   </tr>
