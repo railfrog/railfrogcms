@@ -68,12 +68,17 @@ class SiteMapping < ActiveRecord::Base
     # find site_mapping for given path
     sm = find_by_full_path(path)
 
-    # find chunk version
-    unless version then
-      version = sm[0].version
-    end
+    if sm.empty? then
+      nil
+    else
+      # find chunk version
+      unless version then
+        version = sm[0].version
+      end
 
-    cv = Chunk.find_version({:id => sm[0].chunk_id, :version => version }) if sm && sm.size == 1
+      Chunk.find_version({:id => sm[0].chunk_id, :version => version })
+
+    end
   end
 
   # find site_mapping for given path
