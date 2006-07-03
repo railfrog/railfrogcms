@@ -1,6 +1,8 @@
 require 'pp'
 
 class SiteMapperController < ApplicationController
+  caches_page :show_chunk
+
   def show_chunk
     path = params[:path]
 
@@ -28,9 +30,8 @@ class SiteMapperController < ApplicationController
       data_options[:type] = mime_type
       data_options[:filename] = @params[:path].last
 
-      if mime_type.include?("image") then
-        data = @chunk_content
-      else # it is not image, then render our data inside the layout
+      if mime_type.include?("html") && params[:layout] != 'false' then
+        # it is a html doc, then render our data inside the layout
         layout_name = @rf_labels['layout']
         rendering_options = {}
         if layout_name then
@@ -44,13 +45,14 @@ class SiteMapperController < ApplicationController
           end
         else
           rendering_options[:partial] = "chunk_content"
-          rendering_options[:layout] = 'default'
         end
 
         session[:rf_labels] = @rf_labels
         rendering_options[:locals] = {:rf_labels => @rf_labels}
 
         data = render_to_string rendering_options
+      else
+        data = @chunk_content
       end
 
       send_data data, data_options

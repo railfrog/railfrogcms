@@ -7,7 +7,7 @@ class SiteMapping < ActiveRecord::Base
 
   acts_as_threaded
   belongs_to :chunk
-  has_many :mapping_labels
+  has_many :mapping_labels, :dependent => :destroy
 
   validates_uniqueness_of :path_segment, :scope => "parent_id"
 
@@ -110,6 +110,12 @@ class SiteMapping < ActiveRecord::Base
     result
   end
 
+  def self.destroy_tree(id)
+    #FIXME: Dirty hack - replace delete with destroy. Probably bug in the
+    # acts_as_threaded
+    SiteMapping.find(id).full_set.each {|sm| SiteMapping.delete(sm.id) }
+  end
+
   protected
 
   # Constructs SQL query for getting site_mapping leaf.
@@ -147,4 +153,6 @@ class SiteMapping < ActiveRecord::Base
 
     "FROM #{joins.to_s} WHERE #{conditions.to_s}" 
   end
+
+
 end

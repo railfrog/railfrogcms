@@ -1,6 +1,6 @@
 class Chunk < ActiveRecord::Base
   has_many :site_mappings
-  has_many :chunk_versions, :order => 'version'
+  has_many :chunk_versions, :order => 'version', :dependent => :destroy
   belongs_to :mime_type
 
   def self.create_chunk(description, content, mime_type_id = nil)

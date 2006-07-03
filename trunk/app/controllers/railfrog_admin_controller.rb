@@ -3,6 +3,8 @@ require 'pp'
 class RailfrogAdminController < ApplicationController
   before_filter :ensure_logged_in
 
+  upload_status_for :store_uploaded, :store_uploaded_version
+
   layout 'default'
 
   def index
@@ -13,34 +15,99 @@ class RailfrogAdminController < ApplicationController
   end
 
   def show
-    disposition = 'inline'
-    if params[:mapping_id] then
-      @site_mapping = SiteMapping.find(params[:mapping_id])
-      @mapping_labels = @site_mapping.mapping_labels #TODO Also look up lables inherited from parents?
-      @mapping_id = params[:mapping_id]
-      @file_name = @site_mapping.full_path
-      if @site_mapping && @site_mapping.chunk then
-        @chunk = @site_mapping.chunk
-      end
-    elsif params[:chunk_id] then
-      @chunk = Chunk.find(params[:chunk_id])
-      @file_name = @chunk.id #TODO Change this to a URL that it can render? Right now will generate error in view if you click on "view" link.
+    if mapping_id = params[:mapping_id] then
+      @site_mapping = SiteMapping.find(mapping_id, :include => [:chunk => [:mime_type]])
+    else
+      @site_mapping = SiteMapping.find_or_create_root
     end
-    if @chunk then
-      mime_type = @chunk.mime_type.mime_type
-      @chunk_version = @chunk.find_version()
-      if @chunk_version then 
-        if mime_type.include?("image") then
-          @chunk_content = "<img src='#{@file_name}' />"
-        else
-          @chunk_content = @chunk_version.content
-        end
-        content = render_to_string :partial => 'chunk_content'
-        send_data content, :filename => @file_name, :type => mime_type, :disposition => disposition
+
+    @file_name = @site_mapping.full_path
+
+    if @site_mapping.chunk then
+      @chunk = @site_mapping.chunk
+      @chunk_version = @chunk.find_version
+
+      render :update do |page|
+        page.replace_html 'summary', :partial => 'chunk_summary'
+        page.replace_html 'chunk_version_summary', :partial => 'chunk_version_summary'
+        page.replace_html 'context_menu', :partial => 'chunk_actions'
+        page.replace_html 'content', :partial => 'chunk_content',
+          :locals => { :file_name => @file_name, :mime_type => @chunk.mime_type.mime_type }
+        page.show 'chunk_version_summary'
+        page.show 'content'
       end
     else
-      content = render_to_string :partial => 'folder_content'
-      send_data content, :filename => @file_name, :type => "text/html", :disposition => disposition
+      render :update do |page|
+        page.replace_html 'summary', :partial => 'folder_summary',
+          :locals => { :file_name => @file_name.empty? ? '/' : @file_name }
+        page.replace_html 'context_menu', :partial => 'folder_actions',
+          :locals => { :site_mapping => @site_mapping }
+        page.hide 'chunk_version_summary'
+        page.hide 'content'
+      end
+    end
+  end
+
+  ###############################################################################
+  ###############################################################################
+  ###############################################################################
+
+  def new_folder
+    @site_mapping = SiteMapping.new
+    @site_mapping.parent_id = params[:parent_id]
+
+    render :update do |page|
+      page.replace_html 'content', :partial => 'new_folder'
+      page.show 'content'
+    end
+  end
+
+  def create_folder
+    begin
+      @site_mapping = SiteMapping.create(params[:site_mapping])
+      render :update do |page|
+        page.redirect_to :action => 'index'
+      end
+    rescue
+      render :update do |page|
+        page.replace_html 'content', :partial => 'new_folder'
+        page.show 'content'
+      end
+    end
+  end
+
+  def rename_folder
+    @site_mapping = SiteMapping.find(params[:id])
+
+    render :update do |page|
+      page.replace_html 'content', :partial => 'rename_folder'
+      page.show 'content'
+    end
+  end
+
+  def update_folder
+    @site_mapping = SiteMapping.find(params[:site_mapping][:id])
+    begin
+      @site_mapping.update_attributes(params[:site_mapping])
+      render :update do |page|
+        page.redirect_to :action => 'index'
+      end
+    rescue
+      render :update do |page|
+        page.replace_html 'content', :partial => 'rename_folder'
+        page.show 'content'
+      end
+    end
+  end
+
+  def show_labels
+    @mapping_id = params[:site_mapping_id]
+    @mapping_labels = MappingLabel.find_all_by_site_mapping_id(@mapping_id)
+
+    render :update do |page|
+      page.replace_html 'content', :partial => 'mapping_labels',
+        :locals => { :mapping_labels => @mapping_labels, :mapping_id => @mapping_id }
+      page.show 'content'
     end
   end
 
@@ -71,37 +138,32 @@ class RailfrogAdminController < ApplicationController
     #Delete from parents? Childern?
     #What if the same label is set on multiple ansestors?
     if MappingLabel.delete(params[:label_id]) > 0
-      render :nothing => true 
+      render :nothing => true
     else
-      render :text => 'Unable to delete label' 
+      render :text => 'Unable to delete label'
     end
   end
 
-  def new
-    if params[:id] == 'folder'
-      new_folder
-      render :action => 'new_folder'
-    else
-      new_chunk
-      render :action => 'new_chunk'
+  def delete_folder
+    SiteMapping.destroy_tree(params[:mapping_id])
+
+    render :update do |page|
+      page.redirect_to :action => 'index'
     end
   end
 
-  def edit
-    if params[:id] == 'folder'
-      edit_folder
-      render :action => 'edit_folder'
-    else
-      edit_chunk
-      render :action => 'edit_chunk'
-    end
-  end
+  ###############################################################################
 
   def new_chunk
     @site_mapping = SiteMapping.new
     @site_mapping.parent_id = params[:parent_id]
     @chunk = Chunk.new
     @chunk_version = ChunkVersion.new
+
+    render :update do |page|
+      page.replace_html 'content', :partial => 'new_chunk'
+      page.show 'content'
+    end
   end
 
   def create_chunk
@@ -113,9 +175,14 @@ class RailfrogAdminController < ApplicationController
       @chunk.live_version = 1
       @chunk.mime_type = MimeType.find_by_file_name(params[:site_mapping][:path_segment])
       @chunk.save!
-      redirect_to :action => 'index'
+      render :update do |page|
+        page.redirect_to :action => 'index'
+      end
     rescue
-      render :action => 'new_chunk'
+      render :update do |page|
+        page.replace_html 'content', :partial => 'new_chunk'
+        page.show 'content'
+      end
     end
   end
 
@@ -124,10 +191,15 @@ class RailfrogAdminController < ApplicationController
     @site_mapping = SiteMapping.find(params[:site_mapping_id])
     @chunk_version = @old_chunk_version = ChunkVersion.find(params[:chunk_version_id])
     @chunk = @chunk_version.chunk
+
+    render :update do |page|
+      page.replace_html 'content', :partial => 'edit_chunk'
+      page.show 'content'
+    end
   end
 
   def update_chunk
-    @site_mapping = SiteMapping.find(params[:site_mapping_id])
+    @site_mapping = SiteMapping.find(params[:site_mapping][:id])
     @old_chunk_version = ChunkVersion.find(params[:old_chunk_version][:id])
     @chunk = @old_chunk_version.chunk
     @chunk_version = @chunk.chunk_versions.build(params[:chunk_version])
@@ -145,38 +217,16 @@ class RailfrogAdminController < ApplicationController
 
         @chunk.save!
         @site_mapping.save!
+
+        render :update do |page|
+          page.redirect_to :action => 'index'
+        end
       end
-      redirect_to :action => 'index'
     rescue
-      render :action => 'edit_chunk'
-    end
-  end
-
-  def new_folder
-    @site_mapping = SiteMapping.new
-    @site_mapping.parent_id = params[:parent_id]
-  end
-
-  def create_folder
-    begin
-      @site_mapping = SiteMapping.create(params[:site_mapping])
-      redirect_to :action => 'index'
-    rescue
-      render :action => 'new_folder'
-    end
-  end
-
-  def edit_folder
-    @site_mapping = SiteMapping.find(params[:site_mapping_id])
-  end
-
-  def update_folder
-    @site_mapping = SiteMapping.find(params[:site_mapping_id])
-    begin
-      @site_mapping.update_attributes(params[:site_mapping])
-      redirect_to :action => 'index'
-    rescue
-      render :action => 'edit'
+      render :update do |page|
+        page.replace_html 'content', :partial => 'edit_chunk'
+        page.show 'content'
+      end
     end
   end
 
@@ -186,18 +236,23 @@ class RailfrogAdminController < ApplicationController
   #  * [http://manuals.rubyonrails.com/read/chapter/56 Sending and receiving files]
   #  * http://api.rubyonrails.com/classes/ActionController/Streaming.html send_data API]
   #  * [http://scottraymond.net/articles/2005/07/05/caching-images-in-rails Caching]
-  def upload
+  def upload_file
     @site_mapping = SiteMapping.new
-    @site_mapping.parent_id = params[:parent_id]
+    @site_mapping.parent_id = params[:mapping_id]
 
     @chunk = Chunk.new
     @chunk_version = ChunkVersion.new
+
+    render :update do |page|
+      page.replace_html 'content', :partial => 'upload'
+      page.show 'content'
+    end
   end
 
   def store_uploaded
-    if params['chunk_version']['tmp_file'].nil?
+    if params['chunk_version']['tmp_file'].nil? then
       render :action => 'upload'
-    else 
+    else
       file_name = params['chunk_version']['tmp_file'].original_filename.gsub(/[^a-zA-Z0-9.]/, '_') # This makes sure filenames are sane
       mime_type = MimeType.find_by_file_name(file_name)
       @params['chunk_version']['content'] = @params['chunk_version']['tmp_file'].read
@@ -212,23 +267,92 @@ class RailfrogAdminController < ApplicationController
         @chunk.live_version = 1
         @chunk.mime_type_id = mime_type.id
         @chunk.save!
+
         redirect_to :action => 'index'
       rescue
-        render :action => 'upload'
+        render :update do |page|
+          page.replace_html 'content', :partial => 'new_chunk'
+          page.show 'content'
+        end
       end
     end
   end
 
-  def chunk_versions
-    @chunk = Chunk.find(params[:chunk_id], :include => :mime_type)
-    @chunk_versions = ChunkVersion.find(:all, :conditions => ["chunk_id = ?", @chunk.id], :order => "version DESC")
+  def upload_new_version
+    cv = ChunkVersion.find(params[:chunk_version_id], :include => :chunk)
+    @chunk = cv.chunk
+
+    render :update do |page|
+      page.replace_html 'content', :partial => 'upload_new_version'
+      page.show 'content'
+    end
+  end
+
+  def store_uploaded_version
+    if params['chunk_version']['tmp_file'].nil? then
+      render :action => 'upload_new_version'
+    else
+      file_name = params['chunk_version']['tmp_file'].original_filename.gsub(/[^a-zA-Z0-9.]/, '_') # This makes sure filenames are sane
+      mime_type = MimeType.find_by_file_name(file_name)
+      @params['chunk_version']['content'] = @params['chunk_version']['tmp_file'].read
+      @params['chunk_version'].delete('tmp_file')
+
+      @chunk = Chunk.find(params[:chunk][:id])
+      @chunk_version = @chunk.chunk_versions.build(params[:chunk_version])
+
+      begin
+        if params[:put][:live] == "1" then
+          @chunk.live_version = @chunk_version.next_version
+        end
+
+        @chunk.mime_type_id = mime_type.id
+        @chunk.save!
+
+        redirect_to :action => 'index'
+      rescue
+        render :update do |page|
+          page.replace_html 'content', :partial => 'new_chunk'
+          page.show 'content'
+        end
+      end
+    end
+  end
+
+  def show_versions
+    cv = ChunkVersion.find(:all,
+      :include => :chunk,
+      :conditions => ["chunk_id = ?", params[:chunk_id].to_i],
+      :order => "version DESC")
+
+    render :update do |page|
+      page.replace_html 'content', :partial => 'chunk_versions',
+        :locals => { :chunk => cv[0].chunk, :chunk_versions => cv }
+    end
   end
 
   def put_live
-    chunk = Chunk.find(params[:chunk_id])
-    chunk.live_version = params[:version]
-    chunk.save
+    c = Chunk.find(params[:chunk_id],
+      :include => :chunk_versions,
+      :order => "chunk_versions.version DESC" )
+    c.live_version = params[:version]
+    c.save!
+    chunk_versions = c.chunk_versions
 
-    redirect_to :action => "chunk_versions", :chunk_id => chunk.id
+    @chunk_version = c.find_version
+
+    render :update do |page|
+      page.replace_html 'chunk_version_summary', :partial => 'chunk_version_summary'
+      page.replace_html 'content', :partial => 'chunk_versions',
+        :locals => { :chunk => c, :chunk_versions => chunk_versions }
+    end
   end
+
+  def delete_chunk
+    SiteMapping.destroy(params[:mapping_id])
+    Chunk.destroy(params[:chunk_id])
+    render :update do |page|
+      page.redirect_to :action => "index"
+    end
+  end
+
 end
