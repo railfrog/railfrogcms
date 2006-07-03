@@ -1,7 +1,7 @@
 require 'pp'
 
 class SiteMapperController < ApplicationController
-  caches_page :show_chunk
+#  caches_page :show_chunk
 
   def show_chunk
     path = params[:path]
