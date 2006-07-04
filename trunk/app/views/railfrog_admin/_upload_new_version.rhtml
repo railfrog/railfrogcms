@@ -1,6 +1,7 @@
 <h4>Upload new version</h4>
 
   <%= form_tag_with_upload_progress(:action=>'store_uploaded_version')%>
+    <%= hidden_field 'site_mapping', 'id' %>
     <%= hidden_field 'chunk', 'id' %>
     <p><label for="chunk_version_content">Content</label><br/>
     <%= file_field :chunk_version, :tmp_file %>

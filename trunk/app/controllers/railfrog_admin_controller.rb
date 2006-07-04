@@ -89,6 +89,8 @@ class RailfrogAdminController < ApplicationController
     @site_mapping = SiteMapping.find(params[:site_mapping][:id])
     begin
       @site_mapping.update_attributes(params[:site_mapping])
+      logger.info @site_mapping
+      
       render :update do |page|
         page.redirect_to :action => 'index'
       end
@@ -218,6 +220,8 @@ class RailfrogAdminController < ApplicationController
         @chunk.save!
         @site_mapping.save!
 
+        expire @site_mapping
+	  
         render :update do |page|
           page.redirect_to :action => 'index'
         end
@@ -281,6 +285,7 @@ class RailfrogAdminController < ApplicationController
   def upload_new_version
     cv = ChunkVersion.find(params[:chunk_version_id], :include => :chunk)
     @chunk = cv.chunk
+    @site_mapping = SiteMapping.find(params[:mapping_id])
 
     render :update do |page|
       page.replace_html 'content', :partial => 'upload_new_version'
@@ -303,10 +308,12 @@ class RailfrogAdminController < ApplicationController
       begin
         if params[:put][:live] == "1" then
           @chunk.live_version = @chunk_version.next_version
+          expire SiteMapping.find(params[:site_mapping][:id])
         end
 
         @chunk.mime_type_id = mime_type.id
         @chunk.save!
+
 
         redirect_to :action => 'index'
       rescue
@@ -326,7 +333,8 @@ class RailfrogAdminController < ApplicationController
 
     render :update do |page|
       page.replace_html 'content', :partial => 'chunk_versions',
-        :locals => { :chunk => cv[0].chunk, :chunk_versions => cv }
+        :locals => { :chunk => cv[0].chunk, :chunk_versions => cv,
+	  :mapping_id => params[:mapping_id]}
     end
   end
 
@@ -340,6 +348,8 @@ class RailfrogAdminController < ApplicationController
 
     @chunk_version = c.find_version
 
+    expire SiteMapping.find(params[:mapping_id])
+
     render :update do |page|
       page.replace_html 'chunk_version_summary', :partial => 'chunk_version_summary'
       page.replace_html 'content', :partial => 'chunk_versions',
@@ -348,11 +358,20 @@ class RailfrogAdminController < ApplicationController
   end
 
   def delete_chunk
-    SiteMapping.destroy(params[:mapping_id])
     Chunk.destroy(params[:chunk_id])
+    sm = SiteMapping.find(params[:mapping_id])
+    expire sm
+    sm.destroy
     render :update do |page|
       page.redirect_to :action => "index"
     end
   end
 
+  private
+  def expire(sm)
+    logger.info "Expiring #{sm.full_path}"
+    expire_page :controller => 'site_mapper', 
+      :action => 'show_chunk',
+      :path => sm.full_path.split('/')
+  end
 end

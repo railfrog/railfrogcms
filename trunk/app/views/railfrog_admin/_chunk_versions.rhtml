@@ -18,7 +18,7 @@
       <td><%= version.created_at.to_formatted_s(:db) %></td>
       <td><%= version.updated_at.to_formatted_s(:db) %></td>
       <td><%= h version.comments %></td>
-      <td><%= (chunk.live_version == version.version) ? '<strong>live</strong>' : link_to_remote('put live', :url => { :action => 'put_live', :chunk_id => chunk, :version => version.version }) %></td>
+      <td><%= (chunk.live_version == version.version) ? '<strong>live</strong>' : link_to_remote('put live', :url => { :action => 'put_live', :chunk_id => chunk, :version => version.version, :mapping_id => mapping_id }) %></td>
 
   </tr>
   <% end -%>

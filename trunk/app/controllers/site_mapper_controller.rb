@@ -1,9 +1,10 @@
 require 'pp'
 
 class SiteMapperController < ApplicationController
-#  caches_page :show_chunk
+  caches_page :show_chunk
 
   def show_chunk
+
     path = params[:path]
 
     @chunk_version, @rf_labels = SiteMapping.find_chunk_and_mapping_labels(path, params[:version])

@@ -18,7 +18,8 @@
   <li>
     <%= link_to_remote('Upload new version',
       :url => { :action => 'upload_new_version',
-      :chunk_version_id => @chunk_version}) %>
+      :chunk_version_id => @chunk_version,
+      :mapping_id => @site_mapping}) %>
   </li>
   <li>
     <%= link_to_remote('Labels',
@@ -28,7 +29,8 @@
   <li>
     <%= link_to_remote('Versions',
       :url => { :action => 'show_versions',
-      :chunk_id => @chunk }) %>
+      :chunk_id => @chunk,
+      :mapping_id => @site_mapping}) %>
   </li>
   <li>
     <%= link_to_remote('Delete document',
