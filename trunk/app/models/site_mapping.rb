@@ -54,19 +54,20 @@ class SiteMapping < ActiveRecord::Base
     path.join("/")
   end
 
-  def self.find_chunk_and_mapping_labels(path, version = nil)
+  def self.find_chunk_and_mapping_labels(path, version = nil, external_only = false)
     path.insert(0, $ROOT_DIR) unless path[0] == $ROOT_DIR
 
-    c = find_chunk(path, version)
+    c = find_chunk(path, version, external_only)
     ml = find_mapping_labels(path)
+
     return c, ml
   end
 
-  def self.find_chunk(path, version = nil)
+  def self.find_chunk(path, version = nil, external_only = false)
     path.insert(0, $ROOT_DIR) unless path[0] == $ROOT_DIR
 
     # find site_mapping for given path
-    sm = find_by_full_path(path)
+    sm = find_by_full_path(path, external_only)
 
     if sm.empty? then
       nil
@@ -76,16 +77,16 @@ class SiteMapping < ActiveRecord::Base
         version = sm[0].version
       end
 
-      Chunk.find_version({:id => sm[0].chunk_id, :version => version })
+      Chunk.find_version({:id => sm[0].chunk_id, :version => version})
 
     end
   end
 
   # find site_mapping for given path
-  def self.find_by_full_path(path)
+  def self.find_by_full_path(path, external_only = false)
     path.insert(0, $ROOT_DIR) unless path[0] == $ROOT_DIR 
 
-    sm = SiteMapping.find_by_sql(construct_find_chunk_sql(path))
+    sm = SiteMapping.find_by_sql(construct_find_chunk_sql(path, external_only))
   end
 
   def self.find_mapping_labels(path)
@@ -121,14 +122,14 @@ class SiteMapping < ActiveRecord::Base
   # Constructs SQL query for getting site_mapping leaf.
   # Eg, for path ["products", "cakes", "chocolate_cake.html"]
   # this query will find 'chocolate_cake.html' leaf.
-  def self.construct_find_chunk_sql(path)
+  def self.construct_find_chunk_sql(path, external_only = false)
 
     if path.size > 0 then
       chunk_index = path.size-1
     else
       chunk_index = 0
     end
-    "SELECT DISTINCT sm#{chunk_index}.* #{construct_from_and_where_clauses(path)}"
+    "SELECT DISTINCT sm#{chunk_index}.* #{construct_from_and_where_clauses(path, external_only)}"
   end
 
   def construct_find_path_segments_sql
@@ -143,12 +144,17 @@ class SiteMapping < ActiveRecord::Base
   end
 
   # Constructs JOINs and conditions for given path  
-  def self.construct_from_and_where_clauses(path)
+  def self.construct_from_and_where_clauses(path, external_only = false)
     joins = ["site_mappings AS sm0"]
     conditions = ["sm0.path_segment LIKE '#{path[0]}' AND sm0.depth = 0"] 
+    i = 0
     for i in 1..(path.size - 1) do
       joins << " INNER JOIN site_mappings AS sm#{i} ON sm#{i-1}.id = sm#{i}.parent_id"
       conditions << " AND sm#{i}.path_segment LIKE '#{path[i]}'"
+    end
+
+    if external_only then
+      conditions << " AND sm#{i}.is_internal = false"
     end
 
     "FROM #{joins.to_s} WHERE #{conditions.to_s}" 

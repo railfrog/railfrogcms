@@ -2,9 +2,6 @@ require File.dirname(__FILE__) + '/../../config/environment'
 require File.dirname(__FILE__) + '/definition_loader'
 
 #FIXME: Write help for SiteLoader usage
-#FIXME: Load site from any given folder
-# All layouts should be explictely defined in the site.yml 
-# because loading order is important
 class SiteLoader
 
   $SITE_YML = 'site.yml'
@@ -19,11 +16,10 @@ class SiteLoader
     #raise "No site definition file '#{$SITE_YML}' found in the #{path2site} dir" \
     #  unless File.readable_real?($SITE_YML)
     
-    puts "  Loading site content from the site.yml"
+    puts "  Loading site content from the #{$SITE_YML}"
     SiteDefinitionLoader.load_definition $SITE_YML
   
     puts "  Loading chunks from filesystem"
-    Dir.chdir("pages/")
     load_content_chunks(SiteMapping.find_or_create_root)
   end
 
@@ -59,6 +55,7 @@ class SiteLoader
     puts "    loading content of the chunk from file: '#{file}'"
     content = SiteDefinitionLoader.load_file_content(file)
     Chunk.find_or_create_by_site_mapping_and_content(site_mapping, content)
+    SiteDefinitionLoader.is_parent_internal(site_mapping)   
   end
 
 end

@@ -11,7 +11,9 @@ module RailfrogAdminHelper
     for map in mappings[parent_id] do
       tree += '<li>'
       tree += link_to_function('', visual_effect(:toggle_slide, "tree_#{map.id}", :duration => 0.5)+" if (Element.hasClassName('link_tree_#{map.id}', 'expand')) { Element.addClassName('link_tree_#{map.id}', 'collapse'); Element.removeClassName('link_tree_#{map.id}', 'expand'); } else { Element.addClassName('link_tree_#{map.id}', 'expand'); Element.removeClassName('link_tree_#{map.id}', 'collapse'); }", :class => (parent_id == 0 ? 'collapse':'expand'), :id => "link_tree_#{map.id}") if (map.children_count > 0) || map.chunk_id.nil?
-      tree += link_to_remote("#{h((map.path_segment.length > 0 ? map.path_segment : '/'))}", :url => { :action => 'show', :mapping_id => map.id })
+      tree += link_to_remote("#{h((map.path_segment.length > 0 ? map.path_segment : '/'))}", 
+        { :url => { :action => 'show', :mapping_id => map.id }}, 
+	((map.is_internal) ? {:class => 'internal'} : {}) )
       tree += create_mapping_tree(mappings, map.id) if (map.children_count > 0)
       tree += '</li>'
     end

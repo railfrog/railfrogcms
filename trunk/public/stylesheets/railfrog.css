@@ -133,4 +133,7 @@ div.progressBar div.background {
   width: 0%;
 }
 
-
+a.internal {
+  color: #6BB618;
+  font-style: italic;
+}

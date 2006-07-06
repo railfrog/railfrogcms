@@ -7,7 +7,7 @@ class SiteMapperController < ApplicationController
 
     path = params[:path]
 
-    @chunk_version, @rf_labels = SiteMapping.find_chunk_and_mapping_labels(path, params[:version])
+    @chunk_version, @rf_labels = SiteMapping.find_chunk_and_mapping_labels(path, params[:version], true)
 
     unless @chunk_version then
       logger.info "Chunk is not found for path: #{path.to_s}. Trying to get index-page: #{@rf_labels['index-page']} ..."
@@ -33,16 +33,23 @@ class SiteMapperController < ApplicationController
 
       if mime_type.include?("html") && params[:layout] != 'false' then
         # it is a html doc, then render our data inside the layout
-        layout_name = @rf_labels['layout']
+        layout = @rf_labels['layout']
         rendering_options = {}
-        if layout_name then
-          if layout_name.include?("chunk:") then
-            id = layout_name.delete("chunk:").to_i
-            rendering_options[:inline] = Chunk.find_version({:id => id}).content
+        if layout then
+          if layout.include?("mapping:") then
+            layout.gsub!("mapping:", "")
+
+	    layout_chunk = SiteMapping.find_chunk(layout.split('/'))
+	    if layout_chunk then
+	      rendering_options[:inline] = layout_chunk.content
+	    else 
+	      rendering_options[:inline] = "Couldn't find layout #{layout}" 
+	    end
+	      
             @rf_labels["chunk_content"] = @chunk_content
           else
             rendering_options[:partial] = "chunk_content"
-            rendering_options[:layout] = layout_name
+            rendering_options[:layout] = layout
           end
         else
           rendering_options[:partial] = "chunk_content"

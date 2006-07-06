@@ -39,12 +39,12 @@ class Chunk < ActiveRecord::Base
     Chunk.find_version({:id => self.id, :version => version })
   end
 
-  # available options are: :id, :name, :version
+  # available options are: :id, :path, :version
   def self.find_version(options)
     if id = options[:id] then
       chunk = find(id)
-    elsif name = options[:name] then
-      chunk = find(:first, :conditions => ["description = ?", name])
+    elsif path = options[:path] then
+      chunk = SiteMapping.find_chunk(path.split('/')).chunk
     else
       return nil
     end
