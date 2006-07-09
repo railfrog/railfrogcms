@@ -91,6 +91,13 @@ module RailfrogAdminHelper
     
     if count == 0
       html << 'No Folders'
+      html << javascript_tag("if ($('folders-nav')) {" +
+                               "Element.hide('folders-nav');" +
+                             "}" +
+                             "if ($('folders-content')) {" +
+                               "Element.hide('folders-content');" +
+                             "}" +
+                             "$('folders-action-collapse-image').src = '#{image_path('collapsed')}';")
     end
     
     html << '</ul>'
@@ -149,6 +156,13 @@ module RailfrogAdminHelper
 
     if mapping_labels.empty?
       html << '<span>No Labels</span>'
+      html << javascript_tag("if ($('labels-nav')) {" +
+                               "Element.hide('labels-nav');" +
+                             "}" +
+                             "if ($('labels-content')) {" +
+                               "Element.hide('labels-content');" +
+                             "}" +
+                             "$('labels-action-collapse-image').src = '#{image_path('collapsed')}';")
     else
       html << '<table>'
 
@@ -169,6 +183,14 @@ module RailfrogAdminHelper
     html = ''
   
     html << '<ul class="relatedcontent">'
+    html << '<li>No Tags</li>'
+    html << javascript_tag("if ($('tags-nav')) {" +
+                             "Element.hide('tags-nav');" +
+                           "}" +
+                           "if ($('tags-content')) {" +
+                             "Element.hide('tags-content');" +
+                           "}" +
+                           "$('tags-action-collapse-image').src = '#{image_path('collapsed')}';")
     html << '</ul>'
 
     return html
@@ -183,7 +205,7 @@ module RailfrogAdminHelper
     author = 'Unknown'
     updated_at = site_mapping.updated_at
 
-    # the number of files found
+    # the number of folders found
     count = 0
 
     # the individual mime types specified by the mime class
@@ -209,6 +231,13 @@ module RailfrogAdminHelper
 
     if count == 0
       html << '<span>No Files</span>'
+      html << javascript_tag("if ($('#{mime_class}-nav')) {" +
+                               "Element.hide('#{mime_class}-nav');" +
+                             "}" +
+                             "if ($('#{mime_class}-content')) {" +
+                               "Element.hide('#{mime_class}-content');" +
+                             "}" +
+                             "$('#{mime_class}-action-collapse-image').src = '#{image_path('collapsed')}';")
     end
 
     html << '</table>'
