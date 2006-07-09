@@ -397,9 +397,8 @@ class RailfrogAdminController < ApplicationController
   def delete_chunk
     SiteMapping.destroy(params[:site_mapping_id])
     Chunk.destroy(params[:chunk_id])
-    render :update do |page|
-      page.redirect_to :action => "index"
-    end
+    
+    redirect_to :action => 'explore'
   end
 
 end

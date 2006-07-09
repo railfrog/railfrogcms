@@ -26,12 +26,11 @@
                                                                           :chunk_id => chunk.id }) %>
     </li>
     <li>
-      <%= link_to_remote('delete document',
-                         :update => 'content-main',
-                         :url => { :action => 'delete_chunk',
-                                   :site_mapping_id => site_mapping.id,
-                                   :chunk_id => chunk.id },
-                         :confirm => 'Are you sure?') %>
+      <%= link_to('delete document',
+                  { :action => 'delete_chunk',
+                    :site_mapping_id => site_mapping.id,
+                    :chunk_id => chunk.id },
+                  :confirm => 'Are you sure you want to delete this document?') %>
     </li>
   <%= block_nav_end %>
 
