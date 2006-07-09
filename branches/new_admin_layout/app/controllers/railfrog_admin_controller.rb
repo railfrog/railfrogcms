@@ -216,11 +216,8 @@ class RailfrogAdminController < ApplicationController
     @site_mapping.parent_id = params[:parent_id]
     @chunk = Chunk.new
     @chunk_version = ChunkVersion.new
-
-    render :update do |page|
-      page.replace_html 'content', :partial => 'new_chunk'
-      page.show 'content'
-    end
+    
+    render :partial => 'explore_block_new_chunk'
   end
 
 
