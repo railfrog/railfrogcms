@@ -85,10 +85,7 @@ class RailfrogAdminController < ApplicationController
     @site_mapping = SiteMapping.new
     @site_mapping.parent_id = params[:site_mapping_id]
 
-    render :update do |page|
-      page.replace_html 'content', :partial => 'new_folder'
-      page.show 'content'
-    end
+    render :partial => 'explore_block_new_folder'
   end
 
 

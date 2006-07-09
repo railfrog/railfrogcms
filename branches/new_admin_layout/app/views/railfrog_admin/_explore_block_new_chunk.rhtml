@@ -1,5 +1,5 @@
 <%= block_start 'new-chunk', 'Create New Document' %>
-  <%= block_content_start 'folders' %>
+  <%= block_content_start 'new-chunk' %>
 
     <%= form_remote_tag :url => { :action => 'create_chunk' } %>
       <%= hidden_field 'site_mapping', 'parent_id' %>
