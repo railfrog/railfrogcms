@@ -9,5 +9,5 @@
                   "Element.removeClassName('folder-#{site_mapping.id}', 'expanded');" +
                 "}" %>
 <li id="folder-<%= site_mapping.id %>" class="<%= e_class %>" onclick="<%= onclick_js.gsub("\"", "'") %>">
-  <%= link_to(site_mapping.path_segment, { :site_mapping_id => site_mapping.id }) %>
+  <%= link_to(site_mapping.path_segment, { :id => site_mapping.id }) %>
 </li>

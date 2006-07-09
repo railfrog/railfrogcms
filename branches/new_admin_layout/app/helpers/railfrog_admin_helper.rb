@@ -20,28 +20,28 @@ module RailfrogAdminHelper
 
 
   def block_nav_start(dom_id_segment)
-    html = "<ul id=\"#{dom_id_segment}-nav\" class=\"block-nav horizontal-list\">"
+    html = "<ul id=\"#{dom_id_segment}-nav\" class=\"block-nav horizontal-list\"><div>"
 
     return html
   end
 
 
   def block_nav_end
-    html = "</ul>"
+    html = "</div></ul>"
 
     return html
   end
 
 
   def block_content_start(dom_id_segment)
-    html = "<div id=\"#{dom_id_segment}-content\" class=\"block-content\">"
+    html = "<div id=\"#{dom_id_segment}-content\" class=\"block-content\"><div>"
 
     return html
   end
 
 
   def block_content_end
-    html = "</div>"
+    html = "</div></div>"
 
     return html
   end
@@ -66,7 +66,7 @@ module RailfrogAdminHelper
                       :size => '10x10',
                       :alt => 'V',
                       :id => "#{dom_segment_id}-action-collapse-image",
-                      :class => 'js-only')
+                      :class => 'js-true')
     html << '</li>'
 
     return html

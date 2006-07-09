@@ -51,6 +51,10 @@ a:hover {
     background-color: #F7F4DF;
 }
 
+table {
+    width: 100%;
+}
+
 th {
     text-align: left;
 }
@@ -205,19 +209,15 @@ th {
  * ---------------------------------------------------------------------------------------------- COMMON --
  */
 #content {
-    width: 74%;
-    float: right;
-    clear: right;
-    background: #FFFFFF;
+
 }
 
 #content-main {
-    margin: 0 0 0 2%;
+    width: 73%;
+    float: right;
+    clear: right;
+    background: #FFFFFF;
     border: 1px solid #505050;
-}
-
-#content-main table {
-    width: 100%;
 }
 
 #page-heading {
@@ -249,10 +249,13 @@ th {
     list-style-type: none;
 }
 
-/* this class is to hide elements on browsers without javascript */
-.js-only {
+/* used to hide elements on browsers with javascript */
+.js-true {
     display: none;
 }
+
+/* used to hide elements on browsers without javascript */
+.js-false {}
 
 .relatedcontent {
     list-style: none;
