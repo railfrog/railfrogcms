@@ -60,7 +60,7 @@ module RailfrogAdminHelper
                  "  $('#{dom_segment_id}-action-collapse-image').src = '#{image_path('expanded')}'" +
                  "}"
 
-    html  = "<li id=\"#{dom_segment_id}-action-collapse\" " +
+    html  = "<li id=\"#{dom_segment_id}-action-collapse\" class=\"action-collapse\" " +
                 "onclick=\"#{onclick_js.gsub("\"", "'")}\">"
     html << image_tag('expanded',
                       :size => '10x10',

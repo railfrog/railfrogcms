@@ -149,9 +149,8 @@ th {
 #search {
     position: relative;
     top: -15px;
-    float: right;
+    text-align: right;
     clear: right;
-    padding: 4px;
 }
 
 #search-input {
@@ -208,9 +207,7 @@ th {
 /**
  * ---------------------------------------------------------------------------------------------- COMMON --
  */
-#content {
-
-}
+#content {}
 
 #content-main {
     width: 73%;
@@ -224,6 +221,7 @@ th {
 	font-size: 160%;
 	font-weight: bold;
 }
+
 /* elements that are collapsed (showing an expand icon) */
 .collapsed {
 	background-image: url(/images/collapsed.png);
@@ -236,8 +234,7 @@ th {
 }
 
 /* elements that could have children, but don't */
-.empty {
-}
+.empty {}
 
 .expanded, .collapsed, .empty {
     background-repeat: no-repeat;
@@ -266,6 +263,8 @@ th {
 /**
  * ---------------------------------------------------------------------------------------------- BLOCKS --
  */
+/* button to expand and collapse blocks */
+.action-collapse {}
 
 /* TODO: this is what I called a 'box', I think Drupal does the same thing, please confirm the name -dr_nailz */
 .block {
@@ -288,7 +287,8 @@ th {
 .block-actions {
     clear: right;
     float: right;
-    margin: 0 4px 0 0;;
+    margin: 0 4px 0 0;
+    padding: 0;
     color: #FFFFFF;
     position: relative;
     top: -20px;
