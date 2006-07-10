@@ -6,6 +6,8 @@ class RailfrogAdminController < ApplicationController
   upload_status_for :store_uploaded, :store_uploaded_version
 
   layout 'admin'
+  
+  @@default_page_heading = 'RailFrog Control Panel'
 
   def index
     # redirect to the default admin action
@@ -14,11 +16,15 @@ class RailfrogAdminController < ApplicationController
 
 
   def dashboard
+    @page_heading = @@default_page_heading
+
     # TODO: dashboard stats'n'stuff
   end
 
 
   def explore
+    @page_heading = @@default_page_heading
+  
     # TODO: sort SiteMappings alphabetically within tree
 
     # if we were given a SiteMapping id, retrieve it
@@ -57,6 +63,8 @@ class RailfrogAdminController < ApplicationController
 
 
   def edit_chunk
+    @page_heading = @@default_page_heading
+
     @source = true if params[:source]
     @site_mapping = SiteMapping.find(params[:id])
     @chunk_version = @old_chunk_version = ChunkVersion.find(params[:version])
@@ -65,14 +73,17 @@ class RailfrogAdminController < ApplicationController
 
 
   def settings
+    @page_heading = @@default_page_heading
   end
 
 
   def users
+    @page_heading = @@default_page_heading
   end
 
 
   def plugins
+    @page_heading = @@default_page_heading
   end
 
   ###############################################################################
