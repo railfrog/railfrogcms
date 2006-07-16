@@ -20,6 +20,7 @@ text/enriched
 text/h323					323
 text/html					html htm shtml
 
+application/x-javascript			js
 application/msword				doc dot
 application/pdf					pdf
 application/xml					xml xsl
