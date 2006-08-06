@@ -54,4 +54,5 @@ end
 
 ActionController::Base.perform_caching = true
 
+Engines.start 'railfrog_core'
 
