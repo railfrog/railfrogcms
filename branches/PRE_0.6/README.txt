@@ -7,18 +7,18 @@ RailFrog is a lightweight Content Management System for building websites.
 == Installation ==
  1. Create a {{{railfrog_development}}} database (see notes below).
  2. Copy config/database.yml.example to database.yml and edit as appropriate.
- 3. Run {{{$ rake migrate}}} to create all required tables in the database.
+ 3. Run {{{$ rake db:migrate:engines:railfrog_core}}} to create all required tables in the database.
  4. Run WEBrick
 
 == Loading site content ==
  If you'd like to load site content to the RailFrog database use 
 {{{$ rake rf:load_site SITE=<path-to-site>}}}, or use our default site 
-{{{$ rake rf:load_site SITE=db/sites/railfrog}}}
+{{{$ rake rf:load_site SITE=vendor/plugins/railfrog_core/db/sites/railfrog}}}
   
 == Troubleshooting ==
 
  If your database gets mashed, try
- {{{$ rake migrate VERSION=0 && rake migrate}}}
+ {{{$ rake migrate:engines:railfrog_core VERSION=0 && rake migrate:engines:railfrog_core}}}
 
 == Database Setup ==
 
