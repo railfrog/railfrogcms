@@ -154,7 +154,7 @@ class SiteMapping < ActiveRecord::Base
     end
 
     if external_only then
-      conditions << " AND sm#{i}.is_internal = false"
+      conditions << " AND sm#{i}.is_internal = 'false'"
     end
 
     "FROM #{joins.to_s} WHERE #{conditions.to_s}" 
