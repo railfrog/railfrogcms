@@ -1,4 +1,4 @@
-module Railfrog
+module RailFrogCore
   # Check a User is Logged In
   def logged_in?
     session[:user_id]
