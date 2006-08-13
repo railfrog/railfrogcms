@@ -7,9 +7,9 @@ module RailFrogCore
   # Ensure a User is Logged In
   def ensure_logged_in
     return true if logged_in?
+
     flash[:error] = 'Please Log In'
-    #redirect_to_login
-    redirect_to :controller => 'users', :action => 'login'
+    redirect_to :controller => 'user', :action => 'login'
     return false
   end
 end

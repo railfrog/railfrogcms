@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base  
-  include Railfrog
+  include RailFrogCore
 
   model :user
 end

@@ -1,10 +1,11 @@
-class UsersController < ApplicationController  
+class UserController < ApplicationController
   require 'digest/sha1'
   layout 'default'
-  
+
   # Security
   before_filter :ensure_logged_in, :only => [ :index, :list, :new, :create ]
-  
+
+
   # Login Authentication
   def authenticate
     encrypted_password = SHA1.hexdigest params[:password]
@@ -21,7 +22,8 @@ class UsersController < ApplicationController
       return
     end
   end
-  
+
+
   # Logout
   # ToDo: Return URI
   def logout
@@ -31,20 +33,24 @@ class UsersController < ApplicationController
     flash[:notice] = 'Logout Sucessful'
     redirect_to :controller => 'index'
   end
-  
+
+
   # User Administration
   def index
     list
     render :action => 'list'
   end
 
+
   def list
     @user_pages, @users = paginate :users, :per_page => 10
   end
 
+
   def new
     @user = User.new
   end
+
 
   def create
     @user = User.new(params[:user])
@@ -55,4 +61,6 @@ class UsersController < ApplicationController
       render :action => 'new'
     end
   end
+
+
 end

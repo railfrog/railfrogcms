@@ -1,160 +1,251 @@
 require 'pp'
 
 class RailfrogAdminController < ApplicationController
-  before_filter :ensure_logged_in
+  layout 'admin'
 
+  before_filter :ensure_logged_in
   upload_status_for :store_uploaded, :store_uploaded_version
 
-  layout 'default'
+  @@default_page_heading = 'RailFrog Control Panel'
+
+
+  ################################################################################################# Routed Actions
+
 
   def index
-    @site_mappings = SiteMapping.get_all_tree.inject({}) do |hash, mapping|
-      (hash[mapping.parent_id] ||= []) << mapping
-      hash
-    end
+    # redirect to the default admin action
+    redirect_to :action => :dashboard
   end
 
-  def show
-    if mapping_id = params[:mapping_id] then
-      @site_mapping = SiteMapping.find(mapping_id, :include => [:chunk => [:mime_type]])
+
+  def dashboard
+    @page_heading = @@default_page_heading
+
+    # TODO: dashboard stats'n'stuff
+  end
+
+
+  def explore
+    @page_heading = @@default_page_heading
+
+    # TODO: sort SiteMappings alphabetically within tree
+
+    # if we were given a SiteMapping id, retrieve it, otherwise default to the root SiteMapping
+    @site_mapping = params[:id].nil? ? SiteMapping.root : SiteMapping.find(params[:id])
+
+    if @site_mapping.folder?
+      # this SiteMapping is a folder, so we can show its info
+      @folder = @site_mapping
     else
-      @site_mapping = SiteMapping.find_or_create_root
-    end
+      # this SiteMapping is not a folder, so we show its parent's info
+      @folder = @site_mapping.parent
 
-    @file_name = @site_mapping.full_path
-
-    if @site_mapping.chunk then
+      # get the chunk this SiteMapping refers to
       @chunk = @site_mapping.chunk
-      @chunk_version = @chunk.find_version
-
-      render :update do |page|
-        page.replace_html 'summary', :partial => 'chunk_summary'
-        page.replace_html 'chunk_version_summary', :partial => 'chunk_version_summary'
-        page.replace_html 'context_menu', :partial => 'chunk_actions'
-        page.replace_html 'content', :partial => 'chunk_content',
-          :locals => { :file_name => @file_name, :mime_type => @chunk.mime_type.mime_type }
-        page.show 'chunk_version_summary'
-        page.show 'content'
-      end
-    else
-      render :update do |page|
-        page.replace_html 'summary', :partial => 'folder_summary',
-          :locals => { :file_name => @file_name.empty? ? '/' : @file_name }
-        page.replace_html 'context_menu', :partial => 'folder_actions',
-          :locals => { :site_mapping => @site_mapping }
-        page.hide 'chunk_version_summary'
-        page.hide 'content'
-      end
+      # get the mime type of this chunk
+      @mime_type = @chunk.mime_type
+      # get all the versions of this chunk
+      @chunk_versions = ChunkVersion.find(:all,
+                                          :conditions => ["chunk_id = ?", @chunk.id],
+                                          :order => "version DESC")
     end
+
+    # get the full path for this SiteMapping
+    @full_path = @site_mapping.full_path
   end
 
-  ###############################################################################
-  ###############################################################################
-  ###############################################################################
+
+  def edit_chunk
+    @page_heading = @@default_page_heading
+
+    @source = true if params[:source]
+    @site_mapping = SiteMapping.find(params[:id])
+    @chunk_version = @old_chunk_version = ChunkVersion.find(params[:version])
+    @chunk = @chunk_version.chunk
+  end
+
+
+  def settings
+    @page_heading = @@default_page_heading
+  end
+
+
+  def users
+    @page_heading = @@default_page_heading
+  end
+
+
+  def plugins
+    @page_heading = @@default_page_heading
+  end
+
+
+  ############################################################################################# Non-Routed Actions
+
 
   def new_folder
     @site_mapping = SiteMapping.new
-    @site_mapping.parent_id = params[:parent_id]
+    @site_mapping.parent_id = params[:site_mapping_id]
 
-    render :update do |page|
-      page.replace_html 'content', :partial => 'new_folder'
-      page.show 'content'
-    end
+    render :partial => 'explore_block_new_folder'
   end
+
 
   def create_folder
     begin
       @site_mapping = SiteMapping.create(params[:site_mapping])
-      render :update do |page|
-        page.redirect_to :action => 'index'
-      end
+
+      # reload page to refresh changes
+      render(:update) { |page| page.redirect_to '' }
     rescue
       render :update do |page|
-        page.replace_html 'content', :partial => 'new_folder'
-        page.show 'content'
+        page.replace_html 'content-main', :partial => 'new_folder'
       end
     end
   end
 
+
   def rename_folder
-    @site_mapping = SiteMapping.find(params[:id])
+    @site_mapping = SiteMapping.find(params[:site_mapping_id])
 
     render :update do |page|
-      page.replace_html 'content', :partial => 'rename_folder'
-      page.show 'content'
+      page.replace_html 'content-main', :partial => 'rename_folder'
     end
   end
+
 
   def update_folder
     @site_mapping = SiteMapping.find(params[:site_mapping][:id])
     begin
       @site_mapping.update_attributes(params[:site_mapping])
-      logger.info @site_mapping
-      
       render :update do |page|
-        page.redirect_to :action => 'index'
+        page.redirect_to ''
       end
     rescue
       render :update do |page|
-        page.replace_html 'content', :partial => 'rename_folder'
-        page.show 'content'
+        page.replace_html 'content-main', :partial => 'rename_folder'
       end
     end
   end
 
-  def show_labels
-    @mapping_id = params[:site_mapping_id]
-    @mapping_labels = MappingLabel.find_all_by_site_mapping_id(@mapping_id)
-
-    render :update do |page|
-      page.replace_html 'content', :partial => 'mapping_labels',
-        :locals => { :mapping_labels => @mapping_labels, :mapping_id => @mapping_id }
-      page.show 'content'
-    end
-  end
-
-  def save_site_mapping_label
-    if params[:label_id]
-      ml = MappingLabel.find(params[:label_id])
-    elsif params[:site_mapping_id]
-      ml = MappingLabel.new()
-      ml.site_mapping_id = params[:site_mapping_id]
-    end
-    if ml
-      ml.name = params[:label_name]
-      ml.value = params[:label_value]
-      if ml.save
-        site_mapping = SiteMapping.find(ml.site_mapping_id)
-        @mapping_labels = site_mapping.mapping_labels
-        @mapping_id = ml.site_mapping_id
-        render :partial => 'mapping_labels'
-      else
-        render :text => 'unable to save label' #TODO: Use Ajax :update to display, re-display label list.
-      end
-    else
-      render :text => 'unable to save label' #TODO: Use Ajax :update to display error, re-display label list.
-    end
-  end
-
-  def delete_site_mapping_label
-    #Delete from parents? Childern?
-    #What if the same label is set on multiple ansestors?
-    if MappingLabel.delete(params[:label_id]) > 0
-      render :nothing => true
-    else
-      render :text => 'Unable to delete label'
-    end
-  end
 
   def delete_folder
-    SiteMapping.destroy_tree(params[:mapping_id])
+    site_mapping = SiteMapping.find(params[:site_mapping_id])
+    parent_id = site_mapping.parent.id
 
-    render :update do |page|
-      page.redirect_to :action => 'index'
+    SiteMapping.destroy(site_mapping.id)
+
+    # redirect to exploring this folder's parent
+    render(:update) { |page| page.redirect_to :action => :explore, :id => parent_id }
+  end
+
+
+  def new_mapping_label
+    @mapping_label = MappingLabel.new
+
+    # creating a mapping label for the given SiteMapping id
+    if params[:site_mapping_id]
+      @mapping_label.site_mapping_id = params[:site_mapping_id]
+    # posting back a mapping label to create or edit
+    elsif params[:commit]
+      @mapping_label.site_mapping_id = params[:mapping_label][:site_mapping_id]
+      @mapping_label.name = params[:mapping_label][:name]
+      @mapping_label.value = params[:mapping_label][:value]
+
+      if @mapping_label.save
+        # give the user feedback
+        flash[:notice] = "The label '#{@mapping_label.name}' has been updated."
+
+        render :update do |page|
+          # reload the page to refresh
+          page.redirect_to ''
+        end
+
+        return
+      else
+        # give negative feedback in flash
+        flash[:warning] = 'Unable to update label'
+
+        render :update do |page|
+          # dynamically update flash
+          page.replace_html 'msg-warning', flash[:warning]
+        end
+      end
+    end
+
+    render :partial => 'edit_mapping_label'
+  end
+
+
+  def edit_mapping_label
+    # editing the given mapping label
+    if params[:mapping_label_id]
+      @mapping_label = MappingLabel.find(params[:mapping_label_id])
+    # creating a mapping label for the given SiteMapping id
+    elsif params[:site_mapping_id]
+      @mapping_label = MappingLabel.new
+      @mapping_label.site_mapping_id = params[:site_mapping_id]
+    # posting back a mapping label to create or edit
+    elsif params[:commit]
+      @mapping_label = MappingLabel.new
+
+      @mapping_label.site_mapping_id = params[:mapping_label][:site_mapping_id]
+      @mapping_label.name = params[:mapping_label][:name]
+      @mapping_label.value = params[:mapping_label][:value]
+
+      if @mapping_label.save
+        # give the user feedback
+        flash[:notice] = "The label '#{@mapping_label.name}' has been updated."
+
+        render :update do |page|
+          # reload the page to refresh
+          page.redirect_to ''
+        end
+
+        return
+      else
+        # give negative feedback in flash
+        flash[:warning] = 'Unable to update label'
+
+        render :update do |page|
+          # dynamically update flash
+          page.replace_html 'msg-warning', flash[:warning]
+        end
+      end
+    end
+
+    render :partial => 'edit_mapping_label'
+  end
+
+
+  def delete_mapping_label
+    # TODO: Delete from parents? Childern?
+    # TODO: What if the same label is set on multiple ansestors?
+    mapping_label = MappingLabel.find(params[:mapping_label_id])
+
+    if mapping_label.nil?
+      # give negative feedback in flash
+      flash[:warning] = "Unable to delete label '#{mapping_label.name}'"
+
+      render :update do |page|
+        # dynamically update flash
+        page.replace_html 'msg-warning', flash[:warning]
+      end
+    else
+      MappingLabel.delete(mapping_label.id)
+
+      # give positive feedback in flash
+      flash[:notice] = "Label '#{mapping_label.name}' has been deleted"
+
+      render :update do |page|
+        # reload the labels block
+        page.replace_html 'labels-content', list_labels(mapping_label.site_mapping)
+        # dynamically update flash
+        page.replace_html 'msg-notice', flash[:notice]
+      end
     end
   end
 
-  ###############################################################################
 
   def new_chunk
     @site_mapping = SiteMapping.new
@@ -162,11 +253,9 @@ class RailfrogAdminController < ApplicationController
     @chunk = Chunk.new
     @chunk_version = ChunkVersion.new
 
-    render :update do |page|
-      page.replace_html 'content', :partial => 'new_chunk'
-      page.show 'content'
-    end
+    render :partial => 'explore_block_new_chunk'
   end
+
 
   def create_chunk
     @chunk = Chunk.new(params[:chunk])
@@ -177,9 +266,7 @@ class RailfrogAdminController < ApplicationController
       @chunk.live_version = 1
       @chunk.mime_type = MimeType.find_by_file_name(params[:site_mapping][:path_segment])
       @chunk.save!
-      render :update do |page|
-        page.redirect_to :action => 'index'
-      end
+      render(:update) { |page| page.redirect_to :action => :explore }
     rescue
       render :update do |page|
         page.replace_html 'content', :partial => 'new_chunk'
@@ -188,17 +275,6 @@ class RailfrogAdminController < ApplicationController
     end
   end
 
-  def edit_chunk
-    @source = true if params[:source]
-    @site_mapping = SiteMapping.find(params[:site_mapping_id])
-    @chunk_version = @old_chunk_version = ChunkVersion.find(params[:chunk_version_id])
-    @chunk = @chunk_version.chunk
-
-    render :update do |page|
-      page.replace_html 'content', :partial => 'edit_chunk'
-      page.show 'content'
-    end
-  end
 
   def update_chunk
     @site_mapping = SiteMapping.find(params[:site_mapping][:id])
@@ -220,10 +296,8 @@ class RailfrogAdminController < ApplicationController
         @chunk.save!
         @site_mapping.save!
 
-        expire @site_mapping
-	  
         render :update do |page|
-          page.redirect_to :action => 'index'
+          page.redirect_to :action => 'explore', :id => @site_mapping.id
         end
       end
     rescue
@@ -234,6 +308,7 @@ class RailfrogAdminController < ApplicationController
     end
   end
 
+
   # See
   #  * [http://wiki.rubyonrails.org/rails/pages/HowtoUploadFiles HowtoUploadFiles]
   #  * [http://wiki.rubyonrails.org/rails/pages/Upload+Progress+Bar Upload Progress Bar]
@@ -242,7 +317,7 @@ class RailfrogAdminController < ApplicationController
   #  * [http://scottraymond.net/articles/2005/07/05/caching-images-in-rails Caching]
   def upload_file
     @site_mapping = SiteMapping.new
-    @site_mapping.parent_id = params[:mapping_id]
+    @site_mapping.parent_id = params[:site_mapping_id]
 
     @chunk = Chunk.new
     @chunk_version = ChunkVersion.new
@@ -252,6 +327,7 @@ class RailfrogAdminController < ApplicationController
       page.show 'content'
     end
   end
+
 
   def store_uploaded
     if params['chunk_version']['tmp_file'].nil? then
@@ -282,16 +358,15 @@ class RailfrogAdminController < ApplicationController
     end
   end
 
+
   def upload_new_version
+    site_mapping_id = params[:site_mapping_id]
     cv = ChunkVersion.find(params[:chunk_version_id], :include => :chunk)
     @chunk = cv.chunk
-    @site_mapping = SiteMapping.find(params[:mapping_id])
 
-    render :update do |page|
-      page.replace_html 'content', :partial => 'upload_new_version'
-      page.show 'content'
-    end
+    render :partial => 'explore_block_upload_version', :locals => { :site_mapping_id => site_mapping_id }
   end
+
 
   def store_uploaded_version
     if params['chunk_version']['tmp_file'].nil? then
@@ -308,12 +383,10 @@ class RailfrogAdminController < ApplicationController
       begin
         if params[:put][:live] == "1" then
           @chunk.live_version = @chunk_version.next_version
-          expire SiteMapping.find(params[:site_mapping][:id])
         end
 
         @chunk.mime_type_id = mime_type.id
         @chunk.save!
-
 
         redirect_to :action => 'index'
       rescue
@@ -325,53 +398,33 @@ class RailfrogAdminController < ApplicationController
     end
   end
 
-  def show_versions
-    cv = ChunkVersion.find(:all,
-      :include => :chunk,
-      :conditions => ["chunk_id = ?", params[:chunk_id].to_i],
-      :order => "version DESC")
-
-    render :update do |page|
-      page.replace_html 'content', :partial => 'chunk_versions',
-        :locals => { :chunk => cv[0].chunk, :chunk_versions => cv,
-	  :mapping_id => params[:mapping_id]}
-    end
-  end
 
   def put_live
-    c = Chunk.find(params[:chunk_id],
-      :include => :chunk_versions,
-      :order => "chunk_versions.version DESC" )
-    c.live_version = params[:version]
-    c.save!
-    chunk_versions = c.chunk_versions
+    chunk_version = ChunkVersion.find(params[:chunk_version_id])
 
-    @chunk_version = c.find_version
+    chunk = chunk_version.chunk
+    chunk.live_version = chunk_version.version
+    chunk.save!
 
-    expire SiteMapping.find(params[:mapping_id])
+    chunk_versions = ChunkVersion.find(:all,
+                                       :include => :chunk,
+                                       :conditions => ["chunk_id = ?", chunk.id],
+                                       :order => "version DESC")
 
-    render :update do |page|
-      page.replace_html 'chunk_version_summary', :partial => 'chunk_version_summary'
-      page.replace_html 'content', :partial => 'chunk_versions',
-        :locals => { :chunk => c, :chunk_versions => chunk_versions }
-    end
+    site_mapping = SiteMapping.find_by_chunk_id(chunk.id)
+
+    render :partial => 'explore_block_chunk_versions', :locals => { :chunk => chunk,
+                                                                    :chunk_versions => chunk_versions,
+                                                                    :site_mapping => site_mapping }
   end
+
 
   def delete_chunk
+    SiteMapping.destroy(params[:site_mapping_id])
     Chunk.destroy(params[:chunk_id])
-    sm = SiteMapping.find(params[:mapping_id])
-    expire sm
-    sm.destroy
-    render :update do |page|
-      page.redirect_to :action => "index"
-    end
+
+    redirect_to :action => 'explore'
   end
 
-  private
-  def expire(sm)
-    logger.info "Expiring #{sm.full_path}"
-    expire_page :controller => 'site_mapper', 
-      :action => 'show_chunk',
-      :path => sm.full_path.split('/')
-  end
+
 end

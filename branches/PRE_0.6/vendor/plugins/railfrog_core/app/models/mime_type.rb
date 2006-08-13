@@ -1,6 +1,7 @@
 class MimeType < ActiveRecord::Base
   has_many :file_extensions
 
+
   def self.create(mime_type, file_extensions)
     MimeType.new do |mt|
       mt.mime_type = mime_type
@@ -10,12 +11,13 @@ class MimeType < ActiveRecord::Base
       end
     end
   end
-  
+
+
   def self.find_by_file_name(filename)
     find_by_file_ext filename.chomp.split(/\./).pop
   end
-  
-  
+
+
   def self.find_default_mime_type
     if !@defult_mime_type then
       @defult_mime_type = MimeType.find(:first, 
@@ -23,7 +25,8 @@ class MimeType < ActiveRecord::Base
     end
     @defult_mime_type
   end
-  
+
+
   def self.find_by_file_ext(extension)
     mt = MimeType.find(:first, 
       :conditions => ["file_extensions.extension = ?", extension],
@@ -33,4 +36,33 @@ class MimeType < ActiveRecord::Base
     
     mt
   end
+
+
+  # TODO: is this the right thing to be doing to select mime 'classes' such as 'image' or 'media'?
+  def self.find_by_class(name)
+    types = Array.new
+  
+    case name
+      when 'html'
+        types << "= 'text/html'" << "= 'text/css'"
+      when 'image'
+        types << "LIKE 'image/%'"
+      when 'media'
+        types << "LIKE 'image/%'"
+      when 'other'
+        types << "= 'text/calendar'" << "= 'text/comma-separated-values'" << "'= 'text/directory'"
+        types << "= 'text/english'" << "= 'text/enriched'" << "= 'text/h323'"
+    end
+    
+    conditions = ''
+    
+    types.each_index do |i|
+      # FIXME: is this susceptible to SQL injection???
+      conditions << "(mime_type #{types[i]})"
+      conditions << ' OR ' if (i < types.length-1)
+    end
+
+    MimeType.find(:all, :conditions => conditions)
+  end
+
 end

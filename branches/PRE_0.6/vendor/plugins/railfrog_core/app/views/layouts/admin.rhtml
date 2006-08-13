@@ -21,10 +21,33 @@
         <div id="branding-tagline"><%# TODO: rf_labels['branding-tagline'] %>Design, Deploy and Maintain Websites with Joy</div>
       </div>
 
+      <div id="page-heading"><%= @page_heading %></div>
+
       <div id="navigation">
         <ul id="nav-main" class="horizontal-list">
-          <%# TODO: get the navigation items from somewhere %>
+          <%# FIXME: highlight navigation items in a better way than this %>
+          <li<%= ' class="active"' if params[:action] == 'dashboard' %>>
+            <%= link_to 'Dashboard', :action => 'dashboard' %>
+          </li>
+          <li<%= ' class="active"' if params[:action] == 'explore' %>>
+            <%= link_to 'Site Explorer', :action => 'explore' %>
+          </li>
+          <li<%= ' class="active"' if params[:action] == 'settings' %>>
+            <%= link_to 'Settings', :action => 'settings' %>
+          </li>
+          <li<%= ' class="active"' if params[:action] == 'users' %>>
+            <%= link_to 'User Administration', :action => 'users' %>
+          </li>
+          <li<%= ' class="active"' if params[:action] == 'plugins' %>>
+            <%= link_to 'Plugins', :action => 'plugins' %>
+          </li>
         </ul>
+        <% if @site_mapping %>
+        <span id="nav-section-title">Location:</span>
+        <ul id="nav-section" class="horizontal-list">
+          <%= print_site_mappings @site_mapping %>
+        </ul>
+        <% end %>
       </div>
 
       <div id="search">
