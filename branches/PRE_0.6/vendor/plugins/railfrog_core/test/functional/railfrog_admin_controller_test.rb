@@ -1,12 +1,12 @@
 require File.dirname(__FILE__) + '/../test_helper'
-require 'admin_controller'
+require 'railfrog_admin_controller'
 
 # Re-raise errors caught by the controller.
-class AdminController; def rescue_action(e) raise e end; end
+class RailfrogAdminController; def rescue_action(e) raise e end; end
 
-class AdminControllerTest < Test::Unit::TestCase
+class RailfrogAdminControllerTest < Test::Unit::TestCase
   def setup
-    @controller = AdminController.new
+    @controller = RailfrogAdminController.new
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
   end
