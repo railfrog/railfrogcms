@@ -13,7 +13,5 @@ namespace :spec do
     else
       t.spec_files = FileList['vendor/plugins/**/spec/**/*_spec.rb']
     end
-    t.spec_opts = ["-f h"]
-    t.out = "spec.html"
   end
 end
