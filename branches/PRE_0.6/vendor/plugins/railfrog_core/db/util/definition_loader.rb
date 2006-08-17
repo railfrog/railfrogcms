@@ -18,7 +18,7 @@ class SiteDefinitionLoader
     site_definition = YAML::load(File.open( file ))
     
     Dir.chdir("site/")
-    get_pages(site_definition["site"], SiteMapping.find_or_create_root)
+    get_pages(site_definition["site"], SiteMapping.root)
   end
   
   def self.get_pages(node, parent_sitemapping) 

@@ -20,7 +20,7 @@ class SiteLoader
     SiteDefinitionLoader.load_definition $SITE_YML
   
     puts "  Loading chunks from filesystem"
-    load_content_chunks(SiteMapping.find_or_create_root)
+    load_content_chunks(SiteMapping.root)
   end
 
   def self.load_content_chunks(parent)
