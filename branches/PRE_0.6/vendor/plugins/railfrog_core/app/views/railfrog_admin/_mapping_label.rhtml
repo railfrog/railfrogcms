@@ -6,8 +6,8 @@
   <td class="tag-action">
     <%= link_to_remote('edit',
                        :update => 'content-main',
-                       :url => { :action => 'create_or_edit_mapping_label',
-                                 :mapping_label_id => mapping_label.id }) %>    
+                       :url => { :action => 'edit_mapping_label',
+                                 :mapping_label_id => mapping_label.id }) %>
   </td>
   <td class="tag-action">
     <%= link_to_remote('delete',

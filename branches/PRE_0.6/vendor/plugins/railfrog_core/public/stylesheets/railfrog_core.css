@@ -1,5 +1,5 @@
 /**
- * --------------------------------------------------------------------------------------- THEME COLOURS --
+ * ---------------------------------------------------------------------------------------------- THEME COLOURS --
  *
  * White - #FFFFFF - backgrounds
  * Off White - #F7F4DF - backgrounds
@@ -10,37 +10,30 @@
  */
 
 /**
- * ------------------------------------------------------------------------------------------------ HTML --
+ * ------------------------------------------------------------------------------------------------------- HTML --
  */
 body {
-	margin: 0;
-	padding: 0;
-	background-color: #F7F4DF;
+  margin: 0;
+  padding: 0;
+  background-color: #F7F4DF;
 }
 
 html {
 }
 
-/**
-html div *:hover {
-    outline: 1px solid #004D99 !important;
-    background-color: #E0E0E0;
-}
-*/
-
 input {
-	border: 1px solid #10A010;
-	padding: 1px;
-	background: #F7F4DF;
+  border: 1px solid #10A010;
+  padding: 1px;
+  background: #F7F4DF;
 }
 
 input:hover,input:focus {
-	border: 2px solid #ABDA4E;
-	padding: 0;
+  border: 2px solid #ABDA4E;
+  padding: 0;
 }
 
 body, div, p, li, dd, td, th {
-	font-family: "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+  font-family: "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
 }
 
 a,a:visited,a:active {
@@ -59,15 +52,8 @@ th {
     text-align: left;
 }
 
-/** Devlopment **/
 /**
-* {
-    outline: 1px dotted grey !important;
-}
-*/
-
-/**
- * --------------------------------------------------------------------------------------------- LAYOUT --
+ * ----------------------------------------------------------------------------------------------------- LAYOUT --
  */
 #branding {
     clear: both;
@@ -148,16 +134,14 @@ th {
 
 #search {
     position: relative;
-    top: -15px;
+    top: -20px;
+    float: right;
     text-align: right;
     clear: right;
 }
 
-#search-input {
-}
-
-#search-output {
-}
+#search-input {}
+#search-output {}
 
 #siteinfo {
     clear: both;
@@ -183,7 +167,7 @@ th {
 }
 
 /**
- * -------------------------------------------------------------------------------------- FLASH MESSAGES --
+ * --------------------------------------------------------------------------------------------- FLASH MESSAGES --
  */
 /* area containing the flash messages */
 #msg-area-flash {
@@ -193,6 +177,8 @@ th {
 /* notice messages (positive feedback) - flash[:notice] */
 #msg-notice {
     color: #00FF00;
+    background: #000000;
+    font-weight: bold;
 }
 
 /* normal messages (neutral feedback) - flash[:message] */
@@ -202,10 +188,12 @@ th {
 #msg-warning {
     font-style: italic;
     color: #FF0000;
+    background: #000000;
+    font-weight: bold;
 }
 
 /**
- * ---------------------------------------------------------------------------------------------- COMMON --
+ * ----------------------------------------------------------------------------------------------------- COMMON --
  */
 #content {}
 
@@ -218,18 +206,18 @@ th {
 }
 
 #page-heading {
-	font-size: 160%;
-	font-weight: bold;
+  font-size: 160%;
+  font-weight: bold;
 }
 
 /* elements that are collapsed (showing an expand icon) */
 .collapsed {
-	background-image: url(/images/collapsed.png);
+  background-image: url(/images/collapsed.png);
 }
 
 /* elements that are expanded (showing a collapse icon) */
 .expanded {
-	background-image: url(/images/expanded.png);
+  background-image: url(/images/expanded.png);
     padding: 0 10px 0 0;
 }
 
@@ -261,7 +249,7 @@ th {
 }
 
 /**
- * ---------------------------------------------------------------------------------------------- BLOCKS --
+ * ----------------------------------------------------------------------------------------------------- BLOCKS --
  */
 /* button to expand and collapse blocks */
 .action-collapse {}
@@ -333,15 +321,16 @@ th {
 }
 
 /**
- * ---------------------------------------------------------------------------------------------- ADMIN --
+ * ------------------------------------------------------------------------------------------------------ ADMIN --
  */
 #folders-block {}
 #folders-title {}
 #folders-actions {}
 #folders-nav {}
 #folders-content {}
-#folders-content li {
-    padding: 0 0 0 10px;
+
+.folder-item img {
+    border: none;
 }
 
 
@@ -402,18 +391,18 @@ th {
 .tag-action {}
 
 /**
- * ---------------------------------------------------------------------------------------- OLD ELEMENTS --
+ * ----------------------------------------------------------------------------------------------- OLD ELEMENTS --
  * FIXME: to be migrated
  */
 table.versions {
-	 border: 2px #AFAFAF solid;
-	 border-spacing: 0;
-	 border-collapse: collapse;
+   border: 2px #AFAFAF solid;
+   border-spacing: 0;
+   border-collapse: collapse;
 }
 
-table.versions td,th { 
-	border: 1px #AFAFAF solid;
-	padding: .2em; 
+table.versions td,th {
+  border: 1px #AFAFAF solid;
+  padding: .2em;
 }
 
 div.uploadStatus {

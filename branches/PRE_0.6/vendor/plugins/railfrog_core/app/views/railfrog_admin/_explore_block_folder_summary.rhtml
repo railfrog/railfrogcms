@@ -2,8 +2,11 @@
   <%# don't allow rename or delete for root SiteMapping %>
   <% unless folder.root? then %>
     <%= block_nav_start 'folder' %>
-      <%= block_nav_action { link_to_remote('rename', :url => { :action => 'rename_folder',
-                                                                :site_mapping_id => folder.id }) } %>
+      <%= block_nav_action { link_to_remote 'rename',
+                                            { :url => { :action => 'edit_folder', :site_mapping_id => folder.id },
+                                              :update => 'content-main',
+                                              :complete => "Field.focus('site_mapping_path_segment');"
+                                            } } %>
       <%= block_nav_action { link_to_remote('delete',
                                             :url => { :action => 'delete_folder', :site_mapping_id => folder.id },
                                             :confirm => "Are you sure you want to delete the folder " +

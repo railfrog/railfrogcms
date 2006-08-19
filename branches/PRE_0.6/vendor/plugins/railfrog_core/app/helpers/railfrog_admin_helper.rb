@@ -13,7 +13,7 @@ module RailfrogAdminHelper
 
 
   def block_start(dom_id_segment, heading)
-    html =  "<div id=\"#{dom_id_segment}-block\" class=\"block\">"
+    html =  "<div id=\"#{dom_id_segment}-block\" class=\"block\"><div>"
     html << "  <h2 id=\"#{dom_id_segment}-title\" class=\"block-title\">#{heading}</h2>"
 
     html << "  <ul id=\"#{dom_id_segment}-actions\" class=\"block-actions horizontal-list\">"
@@ -25,7 +25,7 @@ module RailfrogAdminHelper
 
 
   def block_end
-    html = "</div>"
+    html = "</div></div>"
 
     return html
   end
@@ -96,19 +96,10 @@ module RailfrogAdminHelper
 
   # Lists the folders under the given SiteMapping.
   def list_folders(site_mapping)
-    html = '<ul id="folders-list" class="relatedcontent">'
+    html = '<ul id="folders-list-#{site_mapping.id}" class="folders-list relatedcontent">'
+    html << folder_tree(site_mapping)
 
-    # the number of folders found
-    count = 0
-
-    #site_mapping.direct_children.each do |child|
-    site_mapping.child_folders.each do |child|
-      count += 1
-
-      html << folder_row(child)
-    end
-
-    if count == 0
+    if site_mapping.child_folders.size == 0
       html << 'No Folders'
       # there are no folders, so hide this block's content
       html << hide_block('folders')
@@ -120,45 +111,74 @@ module RailfrogAdminHelper
   end
 
 
-  def folder_row(site_mapping)
+  def folder_tree(site_mapping)
     html = ''
-    child_folders = Array.new
 
-    # default to empty class (no children that are folders)
-    e_class = 'empty'
+    site_mapping.child_folders.each do |folder|
+      html << "<li id=\"folder-item-#{folder.id}\" class=\"folder-item\">"
 
-    # check if this SiteMapping has children, and assign an appropriate class
-    if site_mapping.direct_children.length > 0
-      # check if any of the children are folders
-      site_mapping.direct_children.each do |child|
-        next if not child.folder?
-
-        e_class = 'expanded'
-
-        # push the child folder onto the stack of child folders to render
-        child_folders << child
+      if folder.child_folders.size > 0
+        html << folder_loading_img(folder, true)
+        html << folder_expand_link(folder)
+        html << folder_collapse_link(folder, true)
+      else
+        html << image_tag('empty')
       end
+
+      html << link_to(folder.path_segment, { :action => 'explore', :id => folder.id })
+
+      if folder.child_folders.size > 0
+        html << "<div id=\"folder-tree-#{folder.id}\" class=\"folder-tree\">"
+        html <<   "<ul id=\"folder-tree-list-#{folder.id}\" class=\"folder-tree-list relatedcontent\"></ul>"
+        html << '</div>'
+      end
+
+      html << '</li>'
     end
 
-    html << render(:partial => 'folder_item',
-                   :locals => { :site_mapping => site_mapping, :e_class => e_class })
+    return html
+  end
 
 
-    html << "<ul id=\"folder-tree-#{site_mapping.id}\" class=\"relatedcontent\">"
-    child_folders.each { |child| html << folder_row(child) }
-    html << '</ul>'
-
-    # we only want the collapsed class if JS is available, and the element has children
-    # and use JS to hide the element if it has children (so it remains visible without JS)
-    html << javascript_tag("if (Element.hasClassName('folder-#{site_mapping.id}', 'expanded')) {" +
-                             "Element.addClassName('folder-#{site_mapping.id}', 'collapsed');" +
-                             "Element.removeClassName('folder-#{site_mapping.id}', 'expanded');" +
-                           "}" +
-                           "if (Element.hasClassName('folder-#{site_mapping.id}', 'collapsed')) {" +
-                             "Element.hide('folder-tree-#{site_mapping.id}');" +
-                           "}")
+  def folder_expand_link(folder, hidden=false)
+    html = "<span id=\"folder-expand-link-#{folder.id}\"" + (hidden ? ' style="display: none;">' : '>')
+    html << link_to_remote(image_tag('collapsed', :id => "folder-expand-img-#{folder.id}", :alt => '>'),
+                           { :url => { :action => 'folder_tree', :site_mapping_id => folder.id },
+                             :loading => "Element.hide('folder-expand-link-#{folder.id}');" +
+                                         "Element.show('folder-loading-img-#{folder.id}');" +
+                                         "Element.hide('folder-tree-#{folder.id}');",
+                             :update => "folder-tree-list-#{folder.id}",
+                             :success => "setTimeout('Element.hide(\"folder-loading-img-#{folder.id}\");" +
+                                                     "Element.show(\"folder-collapse-link-#{folder.id}\")', 500);",
+                             :failure => "Element.hide('folder-loading-img-#{folder.id}');" +
+                                         "Element.show('folder-expand-link-#{folder.id}');",
+                             :complete => visual_effect(:slide_down, "folder-tree-#{folder.id}", :duration => 0.5)
+                           })
+    html << '</span>'
 
     return html
+  end
+
+
+  def folder_collapse_link(folder, hidden=false)
+    html = "<span id=\"folder-collapse-link-#{folder.id}\"" + (hidden ? ' style="display: none;">' : '>')
+    html << link_to_function(image_tag('expanded', :id => "folder-collapse-img-#{folder.id}", :alt => 'V'),
+                             "Element.hide('folder-collapse-link-#{folder.id}');" +
+                             "Element.show('folder-loading-img-#{folder.id}');" +
+                             "Effect.SlideUp('folder-tree-#{folder.id}', {duration:0.5});" +
+                             "setTimeout('$(\"folder-tree-list-#{folder.id}\").innerHTML = \"\";" +
+                                         "Element.hide(\"folder-loading-img-#{folder.id}\");" +
+                                         "Element.show(\"folder-expand-link-#{folder.id}\")', 500);")
+    html << '</span>'
+
+    return html
+  end
+
+
+  def folder_loading_img(folder, hidden=false)
+    return image_tag('folder-loading.gif',
+                     :id => "folder-loading-img-#{folder.id}",
+                     :style => (hidden ? 'display: none;' : ''))
   end
 
 

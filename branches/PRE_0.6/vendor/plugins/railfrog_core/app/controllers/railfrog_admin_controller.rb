@@ -105,12 +105,10 @@ class RailfrogAdminController < ApplicationController
   end
 
 
-  def rename_folder
+  def edit_folder
     @site_mapping = SiteMapping.find(params[:site_mapping_id])
 
-    render :update do |page|
-      page.replace_html 'content-main', :partial => 'rename_folder'
-    end
+    render :partial => 'explore_block_edit_folder'
   end
 
 
@@ -118,13 +116,9 @@ class RailfrogAdminController < ApplicationController
     @site_mapping = SiteMapping.find(params[:site_mapping][:id])
     begin
       @site_mapping.update_attributes(params[:site_mapping])
-      render :update do |page|
-        page.redirect_to ''
-      end
+      render(:update) { |page| page.redirect_to '' }
     rescue
-      render :update do |page|
-        page.replace_html 'content-main', :partial => 'rename_folder'
-      end
+      render(:update) { |page| page.replace_html 'content-main', :partial => 'rename_folder' }
     end
   end
 
@@ -142,79 +136,39 @@ class RailfrogAdminController < ApplicationController
 
   def new_mapping_label
     @mapping_label = MappingLabel.new
+    @mapping_label.site_mapping_id = params[:site_mapping_id]
 
-    # creating a mapping label for the given SiteMapping id
-    if params[:site_mapping_id]
-      @mapping_label.site_mapping_id = params[:site_mapping_id]
-    # posting back a mapping label to create or edit
-    elsif params[:commit]
-      @mapping_label.site_mapping_id = params[:mapping_label][:site_mapping_id]
-      @mapping_label.name = params[:mapping_label][:name]
-      @mapping_label.value = params[:mapping_label][:value]
+    render :partial => 'explore_block_new_mapping_label'
+  end
 
-      if @mapping_label.save
-        # give the user feedback
-        flash[:notice] = "The label '#{@mapping_label.name}' has been updated."
 
-        render :update do |page|
-          # reload the page to refresh
-          page.redirect_to ''
-        end
-
-        return
-      else
-        # give negative feedback in flash
-        flash[:warning] = 'Unable to update label'
-
-        render :update do |page|
-          # dynamically update flash
-          page.replace_html 'msg-warning', flash[:warning]
-        end
-      end
+  def create_mapping_label
+    begin
+      @mapping_label = MappingLabel.create(params[:mapping_label])
+      flash[:notice] = "The label '#{@mapping_label.name}' has been updated."
+      render(:update) { |page| page.redirect_to '' }
+    rescue
+      render(:update) { |page| page.replace_html 'content-main', :partial => 'explore_block_new_mapping_label' }
     end
-
-    render :partial => 'edit_mapping_label'
   end
 
 
   def edit_mapping_label
-    # editing the given mapping label
-    if params[:mapping_label_id]
-      @mapping_label = MappingLabel.find(params[:mapping_label_id])
-    # creating a mapping label for the given SiteMapping id
-    elsif params[:site_mapping_id]
-      @mapping_label = MappingLabel.new
-      @mapping_label.site_mapping_id = params[:site_mapping_id]
-    # posting back a mapping label to create or edit
-    elsif params[:commit]
-      @mapping_label = MappingLabel.new
+    @mapping_label = MappingLabel.find(params[:mapping_label_id])
 
-      @mapping_label.site_mapping_id = params[:mapping_label][:site_mapping_id]
-      @mapping_label.name = params[:mapping_label][:name]
-      @mapping_label.value = params[:mapping_label][:value]
+    render :partial => 'explore_block_edit_mapping_label'
+  end
 
-      if @mapping_label.save
-        # give the user feedback
-        flash[:notice] = "The label '#{@mapping_label.name}' has been updated."
 
-        render :update do |page|
-          # reload the page to refresh
-          page.redirect_to ''
-        end
+  def update_mapping_label
+    @mapping_label = MappingLabel.find(params[:mapping_label][:id])
 
-        return
-      else
-        # give negative feedback in flash
-        flash[:warning] = 'Unable to update label'
-
-        render :update do |page|
-          # dynamically update flash
-          page.replace_html 'msg-warning', flash[:warning]
-        end
-      end
+    begin
+      @mapping_label.update_attributes(params[:mapping_label])
+      render(:update) { |page| page.redirect_to '' }
+    rescue
+      render(:update) { |page| page.replace_html 'content-main', :partial => 'explore_block_edit_mapping_label' }
     end
-
-    render :partial => 'edit_mapping_label'
   end
 
 
@@ -426,5 +380,10 @@ class RailfrogAdminController < ApplicationController
     redirect_to :action => 'explore'
   end
 
+
+  # Renders the folder tree for the given SiteMapping
+  def folder_tree
+    render :partial => 'folder_tree', :locals => { :site_mapping => SiteMapping.find(params[:site_mapping_id]) }
+  end
 
 end

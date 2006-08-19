@@ -3,8 +3,10 @@
     <%# The 'up' button is only shown if we are not at the root SiteMapping %>
     <%= block_nav_action { link_to('up', { :id => folder.parent_id }) } if not folder.root? %>
     <%= block_nav_action { link_to_remote 'new',
-                                          :update => 'content-main',
-                                          :url => { :action => 'new_folder', :site_mapping_id => folder.id } } %>
+                                          { :url => { :action => 'new_folder', :site_mapping_id => folder.id },
+                                            :update => 'content-main',
+                                            :complete => "Field.focus('site_mapping_path_segment');"
+                                          } } %>
   <%= block_nav_end %>
 
   <%= block_content_start 'folders' %>

@@ -9,7 +9,7 @@ class SiteMapping < ActiveRecord::Base
   belongs_to :chunk
   has_many :mapping_labels, :dependent => :destroy
 
-  validates_uniqueness_of :path_segment, :scope => "parent_id"
+  validates_uniqueness_of :path_segment, :scope => 'parent_id'
 
 
   def self.get_all_tree
