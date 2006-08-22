@@ -157,9 +157,11 @@ class RailfrogAdminController < ApplicationController
     @site_mapping.parent_id = params[:parent_id]
     @chunk = Chunk.new
     @chunk_version = ChunkVersion.new
+    @use_xinha_editor = true
 
     render :update do |page|
       page.replace_html 'content', :partial => 'new_chunk'
+      page << XINHA_RUNNER_SCRIPT
       page.show 'content'
     end
   end
@@ -194,40 +196,7 @@ class RailfrogAdminController < ApplicationController
       page.replace_html 'content', :partial => 'edit_chunk'
 
       if @use_xinha_editor
-        xinha_runner_script =<<END_OF_SCRIPT
-
-        //
-        // the code snippet got from the http://xinha.gogo.co.nz/punbb/viewtopic.php?id=651
-        //
-
-        // array for editors
-        xinha_editors = new Array();
-
-        // array for plugins
-        xinha_editors_plugins = new Array();
-
-        var xinha_text_area = 'XinhaTextArea';
-        // make it a new element in the xinha_editors-array
-        xinha_editors.push(xinha_text_area);
-
-        // also in the plugins-array
-        xinha_editors_plugins.push(xinha_text_area);
-        xinha_editors_plugins[xinha_text_area] = [
-          'CharacterMap', 'ContextMenu', 'FullScreen',
-          'ListType', 'SpellChecker', 'Stylist',
-          'SuperClean', 'TableOperations'];
-
-        // make the editors
-        xinha_editors   = HTMLArea.makeEditors(xinha_editors, xinha_config);
-
-        // set the plugins for the editors
-        xinha_editors[xinha_text_area].registerPlugins(xinha_editors_plugins[xinha_text_area]);
-
-        // show the editor
-        HTMLArea.startEditors(xinha_editors);
-END_OF_SCRIPT
-
-        page << xinha_runner_script
+        page << XINHA_RUNNER_SCRIPT
       end
 
       page.show 'content'
