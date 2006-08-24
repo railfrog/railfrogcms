@@ -28,9 +28,24 @@ module RailFrog
           raise PluginIsAlreadyEnabledException
         else
           begin
-            source = File.join(path_to_the_plugin_in_the_railfrog_plugins_directory, ".")
-            dest = path_to_the_plugin_in_the_railsengines_plugins_directory
-            FileUtils.cp_r source, dest
+            unless File.exist?(path_to_the_plugin_in_the_railsengines_plugins_directory)
+              FileUtils.mkdir(path_to_the_plugin_in_the_railsengines_plugins_directory)
+            end
+            Dir.chdir(path_to_the_plugin_in_the_railfrog_plugins_directory) do
+              Dir["**/*"].each do |file_or_directory|
+                dest = File.join(
+                  path_to_the_plugin_in_the_railsengines_plugins_directory,
+                  file_or_directory
+                )
+                unless File.exist?(dest)
+                  if File.file?(file_or_directory)
+                    FileUtils.cp(file_or_directory, dest)                
+                  elsif File.directory?(file_or_directory)
+                    FileUtils.mkdir(dest)
+                  end
+                end
+              end
+            end            
             @database.enabled = true
             @database.save!
           rescue
@@ -51,7 +66,10 @@ module RailFrog
           raise PluginIsAlreadyDisabledException
         else
           begin
-            FileUtils.rm_rf path_to_the_plugin_in_the_railsengines_plugins_directory
+            FileUtils.rm_rf(
+              path_to_the_plugin_in_the_railsengines_plugins_directory,
+              :secure => true
+            )
             @database.enabled = false
             @database.save!
           rescue
@@ -93,11 +111,15 @@ module RailFrog
       end
       
       def path_to_the_plugin_in_the_railfrog_plugins_directory
-        File.expand_path(File.join(RailFrog::PluginSystem::Base.root, specification.full_name))
+        File.expand_path(
+          File.join(RailFrog::PluginSystem::Base.root, specification.full_name)
+        )
       end
       
       def path_to_the_plugin_in_the_railsengines_plugins_directory
-        File.expand_path(File.join(Engines.config(:root), "railfrog_#{specification.name}"))
+        File.expand_path(
+          File.join(Engines.config(:root), "railfrog_#{specification.name}")
+        )
       end
     end
   end

@@ -52,7 +52,7 @@ context "A disabled plugin" do
   setup do
     helloworld_spec = File.join(RailFrog::PluginSystem::Base.root, "..", "specifications", "hello_world-0.0.1.gemspec")
     @disabled_plugin = RailFrog::PluginSystem::Plugin.new(helloworld_spec)
-    FileUtils.rm_rf File.join(Engines.config(:root), "railfrog_hello_world")
+    FileUtils.rm_rf(File.join(Engines.config(:root), "railfrog_hello_world"), :secure => true) if File.exist?(File.join(Engines.config(:root), "railfrog_hello_world"))
   end
   
   specify "should be disabled" do
@@ -79,13 +79,14 @@ context "A disabled plugin" do
     @disabled_plugin.should_be_enabled
     File.exist?(@disabled_plugin.path_to_the_plugin_in_the_railfrog_plugins_directory).should_be true
     File.directory?(@disabled_plugin.path_to_the_plugin_in_the_railfrog_plugins_directory).should_be true
-    Dir.chdir(@disabled_plugin.path_to_the_plugin_in_the_railfrog_plugins_directory)
-    Dir["**/*"].each do |file|
-      a = File.join(@disabled_plugin.path_to_the_plugin_in_the_railfrog_plugins_directory, file)
-      b = File.join(@disabled_plugin.path_to_the_plugin_in_the_railsengines_plugins_directory, file)
-      File.exist?(b).should_be true
-      if File.file?(b)
-        FileUtils.compare_file(a, b).should_be true
+    Dir.chdir(@disabled_plugin.path_to_the_plugin_in_the_railfrog_plugins_directory) do
+      Dir["**/*"].each do |file|
+        a = File.join(@disabled_plugin.path_to_the_plugin_in_the_railfrog_plugins_directory, file)
+        b = File.join(@disabled_plugin.path_to_the_plugin_in_the_railsengines_plugins_directory, file)
+        File.exist?(b).should_be true
+        if File.file?(b)
+          FileUtils.compare_file(a, b).should_be true
+        end
       end
     end
   end
@@ -96,11 +97,6 @@ context "A disabled plugin" do
     File.exist?(@disabled_plugin.path_to_the_plugin_in_the_railsengines_plugins_directory).should_be false
     File.exist?(@disabled_plugin.path_to_the_plugin_in_the_railfrog_plugins_directory).should_be false
   end
-  
-  def teardown
-    Plugin.destroy_all
-    FileUtils.rm_rf File.join(Engines.config(:root), "railfrog_hello_world")
-  end
 end
 
 context "An enabled plugin" do
@@ -108,20 +104,22 @@ context "An enabled plugin" do
     helloworld_spec = File.join(RailFrog::PluginSystem::Base.root, "..", "specifications", "hello_world-0.0.1.gemspec")
     @enabled_plugin = RailFrog::PluginSystem::Plugin.new(helloworld_spec)
     #Is it ok to use .enable here?
-    @enabled_plugin.enable
+    FileUtils.rm_rf(File.join(Engines.config(:root), "railfrog_hello_world"), :secure => true) if File.exist?(File.join(Engines.config(:root), "railfrog_hello_world"))
+    @enabled_plugin.enable if @enabled_plugin.disabled?
   end
   
   specify "should be enabled" do
     @enabled_plugin.should_be_enabled
     File.exist?(@enabled_plugin.path_to_the_plugin_in_the_railfrog_plugins_directory).should_be true
     File.directory?(@enabled_plugin.path_to_the_plugin_in_the_railfrog_plugins_directory).should_be true
-    Dir.chdir(@enabled_plugin.path_to_the_plugin_in_the_railfrog_plugins_directory)
-    Dir["**/*"].each do |file|
-      a = File.join(@enabled_plugin.path_to_the_plugin_in_the_railfrog_plugins_directory, file)
-      b = File.join(@enabled_plugin.path_to_the_plugin_in_the_railsengines_plugins_directory, file)
-      File.exist?(b).should_be true
-      if File.file?(b)
-        FileUtils.compare_file(a, b).should_be true
+    Dir.chdir(@enabled_plugin.path_to_the_plugin_in_the_railfrog_plugins_directory) do
+      Dir["**/*"].each do |file|
+        a = File.join(@enabled_plugin.path_to_the_plugin_in_the_railfrog_plugins_directory, file)
+        b = File.join(@enabled_plugin.path_to_the_plugin_in_the_railsengines_plugins_directory, file)
+        File.exist?(b).should_be true
+        if File.file?(b)
+          FileUtils.compare_file(a, b).should_be true
+        end
       end
     end
   end
@@ -149,11 +147,6 @@ context "An enabled plugin" do
     File.exist?(@enabled_plugin.path_to_the_plugin_in_the_railfrog_plugins_directory).should_be true
     @enabled_plugin.database.should_not_be nil
   end
-  
-  def teardown
-    Plugin.destroy_all
-    FileUtils.rm_rf File.join(Engines.config(:root), "railfrog_hello_world")
-  end
 end
 
 context "A started plugin" do  
@@ -162,7 +155,7 @@ context "A started plugin" do
     helloworld_spec = File.join(RailFrog::PluginSystem::Base.root, "..", "specifications", "hello_world-0.0.1.gemspec")
     @started_plugin = RailFrog::PluginSystem::Plugin.new(helloworld_spec)
     #Is it ok to use .enable here?
-    @started_plugin.enable
+    @started_plugin.enable if @started_plugin.disabled?
   end
   
   specify "should be enabled" do
@@ -180,10 +173,5 @@ context "A started plugin" do
   
   specify "should have more specifications" do
     violated "not enough specs"
-  end
-  
-  def teardown
-    Plugin.destroy_all
-    FileUtils.rm_rf File.join(Engines.config(:root), "railfrog_hello_world")
   end
 end
