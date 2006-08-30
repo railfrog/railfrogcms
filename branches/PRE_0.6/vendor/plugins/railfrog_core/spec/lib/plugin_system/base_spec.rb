@@ -1,41 +1,67 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
 
-context "A PluginSystem" do
+@plugin_system = RailFrog::PluginSystem::Base.instance
+
+context "The started plugin system with no installed and no registered plugins" do
   setup do
-    @plugin_system = RailFrog::PluginSystem::Base.new
+  end
+  
+  specify "should have no installed plugins" do
+    @plugin_system.installed_plugins.should_be_empty
+  end
+  
+  specify "should have no registered plugins" do
+    @plugin_system.registered_plugins.should_be_empty
   end
   
   specify "should have more specifications" do
     violated "not enough specs"
   end
 end
-#
-#context "The plugins list" do
-#  setup do
-#    @plugin_system = RailFrog::PluginSystem::Base.new
-#    @plugins = @plugin_system.plugins
-#  end
-#  
-#  specify "should be a Hash" do
-#    @plugins.should_be_an_instance_of Hash
-#  end
-#  
-#  specify "should have values that are descendants of RailFrog::PluginSystem::Plugin" do
-#    #TODO?: Use first element of @plugins instead of iterating over all?
-#    @plugins.each_value do |value|
-#      value.should_be_a_kind_of RailFrog::PluginSystem::Plugin
-#    end
-#  end
-#  
-#  specify "should have keys of type Array with the structure [<plugin_name>,<plugin_version>]" do
-#    #TODO?: Use first element of @plugins instead of iterating over all?
-#    @plugins.each do |key, value|
-#      key.should_be_an_instance_of Array
-#      key[0].should_be_equal RailFrog::PluginSystem::Plugin.name
-#      key[1].should_be_equal RailFrog::PluginSystem::Plugin.version.to_s
-#    end
-#  end
-#  
-#  specify "should be a list of all registered plugins" do
-#  end
-#end
+
+context "The started plugin system with 2 installed but no registered plugins" do
+  setup do
+  end
+  
+  specify "should have 2 installed plugins" do
+    @plugin_system.installed_plugins.size.should_be 2
+  end
+  
+  specify "should have registered the installed plugins" do
+    @plugin_system.registered_plugins.size.should_be 2
+  end
+  
+  specify "should have more specifications" do
+    violated "not enough specs"
+  end
+end
+
+context "The started plugin system with no installed but <> registered plugins" do
+  setup do
+  end
+  
+  specify "should have no installed plugins" do
+    @plugin_system.installed_plugins.should_be_empty
+  end
+  
+  specify "should have unregistered all uninstalled plugins" do
+    @plugin_system.registered_plugins.should_be_empty
+  end
+  
+  specify "should have more specifications" do
+    violated "not enough specs"
+  end
+end
+
+context "The started plugin system with 2 installed and registered plugins" do
+  setup do
+  end
+  
+  specify "should have 2 installed plugins" do
+    @plugin_system.installed_plugins.size.should_be 2
+  end
+  
+  specify "should have 2 registered plugins" do
+    @plugin_system.registered_plugins.size.should_be 2
+  end
+end
