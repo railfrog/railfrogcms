@@ -1,8 +1,12 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
 
-#TODO: give instances of RailFrog::PluginSystem::Plugin better/more readable names? i.e. @helloworld_0_0_1 instead of @new_plugin
+RailFrog::PluginSystem::Base.root = File.expand_path(File.join(RAILS_ROOT, "vendor", "plugins", "railfrog_core", "spec", "lib", "plugin_system", "data", "gems"))
 
-context "A new plugin" do
+#TODO: give instances of RailFrog::PluginSystem::Plugin better/more readable names? i.e. @helloworld_0_0_1 instead of @new_plugin
+#FIXME: remove 'railfrog_hello_world' directory as soon as it's not needed anymore
+#       FileUtils.rm_rf(File.join(Engines.config(:root), "railfrog_hello_world"), :secure => true)
+
+context "A plugin (in general)" do
   setup do
     helloworld_spec = File.join(RailFrog::PluginSystem::Base.root, "..", "specifications", "hello_world-0.0.1.gemspec")
     @new_plugin = RailFrog::PluginSystem::Plugin.new(helloworld_spec)
@@ -27,8 +31,7 @@ context "A new plugin" do
   end
   
   specify "should be installed" do
-    File.exist?(@new_plugin.path_to_the_plugin_in_the_railfrog_plugins_directory).should_be true
-    File.directory?(@new_plugin.path_to_the_plugin_in_the_railfrog_plugins_directory).should_be true
+    RailFrog::PluginSystem::Base.installed_plugins.should_include [@new_plugin.name, @new_plugin.version]
   end
   
   specify "should be disabled" do
@@ -36,10 +39,6 @@ context "A new plugin" do
   end
   
   specify "enabled? should redirect the call to database.enabled?" do
-    violated
-  end
-  
-  specify "disabled? should be the negation of enabled?" do
     violated
   end
   
@@ -105,7 +104,7 @@ context "An enabled plugin" do
     @enabled_plugin = RailFrog::PluginSystem::Plugin.new(helloworld_spec)
     #Is it ok to use .enable here?
     FileUtils.rm_rf(File.join(Engines.config(:root), "railfrog_hello_world"), :secure => true) if File.exist?(File.join(Engines.config(:root), "railfrog_hello_world"))
-    @enabled_plugin.enable if @enabled_plugin.disabled?
+    @enabled_plugin.enable unless @enabled_plugin.enabled?
   end
   
   specify "should be enabled" do
@@ -151,11 +150,11 @@ end
 
 context "A started plugin" do  
   setup do
-    #TODO: correctly initialize @started_plugin
     helloworld_spec = File.join(RailFrog::PluginSystem::Base.root, "..", "specifications", "hello_world-0.0.1.gemspec")
     @started_plugin = RailFrog::PluginSystem::Plugin.new(helloworld_spec)
     #Is it ok to use .enable here?
     @started_plugin.enable if @started_plugin.disabled?
+    @started_plugin.start
   end
   
   specify "should be enabled" do

@@ -6,8 +6,6 @@ module RailFrog
     class CannotStartDisabledPluginException < RailFrog::Exception; end
     class CannotUninstallEnabledPluginException < RailFrog::Exception; end
     class SpecificationFileDoesNotExistException < RailFrog::Exception; end
-    class FailedToEnablePluginException < RailFrog::Exception; end
-    class FailedToDisablePluginException < RailFrog::Exception; end
     class FailedToStartPluginException < RailFrog::Exception; end
     
     class Plugin      
@@ -27,30 +25,26 @@ module RailFrog
         if self.enabled?
           raise PluginIsAlreadyEnabledException
         else
-          begin
-            unless File.exist?(path_to_the_plugin_in_the_railsengines_plugins_directory)
-              FileUtils.mkdir(path_to_the_plugin_in_the_railsengines_plugins_directory)
-            end
-            Dir.chdir(path_to_the_plugin_in_the_railfrog_plugins_directory) do
-              Dir["**/*"].each do |file_or_directory|
-                dest = File.join(
-                  path_to_the_plugin_in_the_railsengines_plugins_directory,
-                  file_or_directory
-                )
-                unless File.exist?(dest)
-                  if File.file?(file_or_directory)
-                    FileUtils.cp(file_or_directory, dest)                
-                  elsif File.directory?(file_or_directory)
-                    FileUtils.mkdir(dest)
-                  end
+          unless File.exist?(path_to_the_plugin_in_the_railsengines_plugins_directory)
+            FileUtils.mkdir(path_to_the_plugin_in_the_railsengines_plugins_directory)
+          end
+          Dir.chdir(path_to_the_plugin_in_the_railfrog_plugins_directory) do
+            Dir["**/*"].each do |file_or_directory|
+              dest = File.join(
+                path_to_the_plugin_in_the_railsengines_plugins_directory,
+                file_or_directory
+              )
+              unless File.exist?(dest)
+                if File.file?(file_or_directory)
+                  FileUtils.cp(file_or_directory, dest)                
+                elsif File.directory?(file_or_directory)
+                  FileUtils.mkdir(dest)
                 end
               end
-            end            
-            @database.enabled = true
-            @database.save!
-          rescue
-            raise FailedToEnablePluginException
-          end
+            end
+          end            
+          @database.enabled = true
+          @database.save!
         end
       end
       
@@ -65,16 +59,12 @@ module RailFrog
         if self.disabled?
           raise PluginIsAlreadyDisabledException
         else
-          begin
-            FileUtils.rm_rf(
-              path_to_the_plugin_in_the_railsengines_plugins_directory,
-              :secure => true
-            )
-            @database.enabled = false
-            @database.save!
-          rescue
-            raise FailedToDisablePluginException
-          end
+          FileUtils.rm_rf(
+            path_to_the_plugin_in_the_railsengines_plugins_directory,
+            :secure => true
+          )
+          @database.enabled = false
+          @database.save!
         end
       end
       
@@ -89,7 +79,7 @@ module RailFrog
           raise PluginIsAlreadyStartedException
         else
           begin
-            Engines.start "railfrog_#{specification.name}"
+            #Engines.start "railfrog_#{specification.name}"
             @started = true
           rescue
             raise FailedToStartPluginException

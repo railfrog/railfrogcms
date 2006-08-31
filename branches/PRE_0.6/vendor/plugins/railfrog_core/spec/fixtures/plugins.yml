@@ -1,5 +1,8 @@
-# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
-first:
+hello_world_001:
   id: 1
-another:
+  name: hello_world
+  version: 0.0.1
+hello_universe_003:
   id: 2
+  name: hello_universe
+  version: 0.0.3
