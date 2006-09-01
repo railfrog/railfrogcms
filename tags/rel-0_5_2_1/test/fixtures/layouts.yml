@@ -1,0 +1,9 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+--- !omap
+- default_layout:
+    id:           1
+    name:         default
+  
+- another_layout:
+    id:           2
+    name:         another

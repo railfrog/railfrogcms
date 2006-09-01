@@ -1,0 +1,34 @@
+image/cgm
+image/g3fax
+image/gif					gif
+image/ief					ief
+image/jpeg					jpeg jpg jpe
+image/naplps
+image/pcx					pcx
+image/png					png
+image/prs.btif
+image/prs.pti
+image/svg+xml					svg svgz
+image/tiff					tiff tif
+
+text/calendar					ics icz
+text/comma-separated-values			csv
+text/css					css
+text/directory
+text/english
+text/enriched
+text/h323					323
+text/html					html htm shtml
+
+application/x-javascript			js
+application/msword				doc dot
+application/pdf					pdf
+application/xml					xml xsl
+application/zip					zip
+audio/mpeg					mpga mpega mp2 mp3 m4a
+text/plain					asc txt text diff pot
+video/mpeg					mpeg mpg mpe
+video/mp4					mp4
+video/quicktime					qt mov
+
+
