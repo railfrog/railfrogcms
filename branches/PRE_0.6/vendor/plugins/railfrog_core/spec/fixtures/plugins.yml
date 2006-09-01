@@ -1,8 +1,14 @@
-hello_world_001:
+the_first_plugin_001:
   id: 1
-  name: hello_world
+  name: the_first_plugin
   version: 0.0.1
-hello_universe_003:
+
+another_plugin_001:
   id: 2
-  name: hello_universe
+  name: another_plugin
+  version: 0.0.1
+
+yet_another_plugin_003:
+  id: 3
+  name: yet_another_plugin
   version: 0.0.3

@@ -2,14 +2,15 @@ require File.dirname(__FILE__) + '/../../spec_helper'
 
 RailFrog::PluginSystem::Base.root = File.expand_path(File.join(RAILS_ROOT, "vendor", "plugins", "railfrog_core", "spec", "lib", "plugin_system", "data", "gems"))
 
-#TODO: give instances of RailFrog::PluginSystem::Plugin better/more readable names? i.e. @helloworld_0_0_1 instead of @new_plugin
-#FIXME: remove 'railfrog_hello_world' directory as soon as it's not needed anymore
-#       FileUtils.rm_rf(File.join(Engines.config(:root), "railfrog_hello_world"), :secure => true)
+#TODO:  Give instances of RailFrog::PluginSystem::Plugin better/more readable names? i.e. @helloworld_0_0_1 instead of @new_plugin
+#TODO:  Make PluginSystem specs independent of Rails Engines
+#FIXME: Remove 'railfrog_the_first_plugin' directory as soon as it's not needed anymore
+#       i.e. FileUtils.rm_rf(File.join(Engines.config(:root), "railfrog_the_first_plugin"), :secure => true)
 
 context "A plugin (in general)" do
   setup do
-    helloworld_spec = File.join(RailFrog::PluginSystem::Base.root, "..", "specifications", "hello_world-0.0.1.gemspec")
-    @new_plugin = RailFrog::PluginSystem::Plugin.new(helloworld_spec)
+    the_first_plugin_spec = File.join(RailFrog::PluginSystem::Base.root, "..", "specifications", "the_first_plugin-0.0.1.gemspec")
+    @new_plugin = RailFrog::PluginSystem::Plugin.new(the_first_plugin_spec)
   end
   
   specify "should be a RailFrog::PluginSystem::Plugin object" do
@@ -31,7 +32,7 @@ context "A plugin (in general)" do
   end
   
   specify "should be installed" do
-    RailFrog::PluginSystem::Base.installed_plugins.should_include [@new_plugin.name, @new_plugin.version]
+    RailFrog::PluginSystem::Base.installed_plugins.should_include ["the_first_plugin", "0.0.1"]
   end
   
   specify "should be disabled" do
@@ -49,9 +50,9 @@ end
 
 context "A disabled plugin" do  
   setup do
-    helloworld_spec = File.join(RailFrog::PluginSystem::Base.root, "..", "specifications", "hello_world-0.0.1.gemspec")
-    @disabled_plugin = RailFrog::PluginSystem::Plugin.new(helloworld_spec)
-    FileUtils.rm_rf(File.join(Engines.config(:root), "railfrog_hello_world"), :secure => true) if File.exist?(File.join(Engines.config(:root), "railfrog_hello_world"))
+    the_first_plugin_spec = File.join(RailFrog::PluginSystem::Base.root, "..", "specifications", "the_first_plugin-0.0.1.gemspec")
+    @disabled_plugin = RailFrog::PluginSystem::Plugin.new(the_first_plugin_spec)
+    FileUtils.rm_rf(File.join(Engines.config(:root), "railfrog_the_first_plugin"), :secure => true) if File.exist?(File.join(Engines.config(:root), "railfrog_the_first_plugin"))
   end
   
   specify "should be disabled" do
@@ -100,10 +101,10 @@ end
 
 context "An enabled plugin" do
   setup do
-    helloworld_spec = File.join(RailFrog::PluginSystem::Base.root, "..", "specifications", "hello_world-0.0.1.gemspec")
-    @enabled_plugin = RailFrog::PluginSystem::Plugin.new(helloworld_spec)
-    #Is it ok to use .enable here?
-    FileUtils.rm_rf(File.join(Engines.config(:root), "railfrog_hello_world"), :secure => true) if File.exist?(File.join(Engines.config(:root), "railfrog_hello_world"))
+    the_first_plugin_spec = File.join(RailFrog::PluginSystem::Base.root, "..", "specifications", "the_first_plugin-0.0.1.gemspec")
+    @enabled_plugin = RailFrog::PluginSystem::Plugin.new(the_first_plugin_spec)
+    #FIXME: Is it OK to use .enable here?
+    FileUtils.rm_rf(File.join(Engines.config(:root), "railfrog_the_first_plugin"), :secure => true) if File.exist?(File.join(Engines.config(:root), "railfrog_the_first_plugin"))
     @enabled_plugin.enable unless @enabled_plugin.enabled?
   end
   
@@ -150,9 +151,9 @@ end
 
 context "A started plugin" do  
   setup do
-    helloworld_spec = File.join(RailFrog::PluginSystem::Base.root, "..", "specifications", "hello_world-0.0.1.gemspec")
-    @started_plugin = RailFrog::PluginSystem::Plugin.new(helloworld_spec)
-    #Is it ok to use .enable here?
+    the_first_plugin_spec = File.join(RailFrog::PluginSystem::Base.root, "..", "specifications", "the_first_plugin-0.0.1.gemspec")
+    @started_plugin = RailFrog::PluginSystem::Plugin.new(the_first_plugin_spec)
+    #FIXME: Is it OK to use .enable here?
     @started_plugin.enable if @started_plugin.disabled?
     @started_plugin.start
   end
@@ -163,14 +164,12 @@ context "A started plugin" do
   
   specify "should be started" do
     @started_plugin.should_be_started
+    #TODO: Make this independent of Rails Engines (i.e. specs like "controllers should be accessible")
+    Engines[:railfrog_the_first_plugin].should_be_an_instance_of Engine
   end
   
   specify "cannot be started" do
     lambda { @started_plugin.start }.should_raise RailFrog::PluginSystem::PluginIsAlreadyStartedException
     @started_plugin.should_be_started
-  end
-  
-  specify "should have more specifications" do
-    violated "not enough specs"
   end
 end

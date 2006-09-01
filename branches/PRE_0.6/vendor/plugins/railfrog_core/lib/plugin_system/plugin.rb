@@ -17,7 +17,7 @@ module RailFrog
           @database = ::Plugin.find_or_create_by_name_and_version(specification.name, specification.version.to_s)
           @started = false
         else
-          raise SpecificationFileDoesNotExistException 
+          raise SpecificationFileDoesNotExistException, "Specification file #{specification_file} does not exist."
         end
       end
       
@@ -79,7 +79,7 @@ module RailFrog
           raise PluginIsAlreadyStartedException
         else
           begin
-            #Engines.start "railfrog_#{specification.name}"
+            Engines.start "railfrog_#{specification.name}"
             @started = true
           rescue
             raise FailedToStartPluginException

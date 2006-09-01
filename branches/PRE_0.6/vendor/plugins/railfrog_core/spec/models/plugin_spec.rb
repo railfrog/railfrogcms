@@ -2,10 +2,6 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 context "Plugin class with fixtures loaded" do
   fixtures :plugins
-
-  specify "should have more specifications" do
-    violated "not enough specs"
-  end
   
   specify "name-version pair should be unique" do
     2.times do
