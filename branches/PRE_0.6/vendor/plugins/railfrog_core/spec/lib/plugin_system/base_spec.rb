@@ -1,19 +1,19 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
 
-#FIXME: remove 'railfrog_hello_world' directory as soon as it's not needed anymore
+#FIXME: Remove 'railfrog_hello_world' directory as soon as it's not needed anymore
 #       FileUtils.rm_rf(File.join(Engines.config(:root), "railfrog_hello_world"), :secure => true)
+#TODO:  Refactor setup and teardown methods
 
 context "The plugin system (in general)" do
   setup do
-    @plugin_system = RailFrog::PluginSystem::Base
   end
 end
 
-context "The started plugin system with no installed and no registered plugins" do
+context "The initialized plugin system with no installed and no registered plugins" do
   setup do
     @plugin_system = RailFrog::PluginSystem::Base
     @plugin_system.root = File.expand_path(File.join(RAILS_ROOT, "vendor", "plugins", "railfrog_core", "spec", "lib", "plugin_system", "no_plugins", "gems"))
-    @plugin_system.startup
+    @plugin_system.init
   end
   
   specify "should have no installed plugins" do
@@ -29,11 +29,11 @@ context "The started plugin system with no installed and no registered plugins" 
   end
 end
 
-context "The started plugin system with 3 installed but no registered plugins" do
+context "The initialized plugin system with 3 installed but no registered plugins" do
   setup do
     @plugin_system = RailFrog::PluginSystem::Base
     @plugin_system.root = File.expand_path(File.join(RAILS_ROOT, "vendor", "plugins", "railfrog_core", "spec", "lib", "plugin_system", "data", "gems"))
-    @plugin_system.startup
+    @plugin_system.init
   end
   
   specify "should have 3 installed plugins" do
@@ -52,13 +52,13 @@ context "The started plugin system with 3 installed but no registered plugins" d
   end
 end
 
-context "The started plugin system with no installed but 3 registered plugins" do
+context "The initialized plugin system with no installed but 3 registered plugins" do
   fixtures :plugins
   
   setup do
     @plugin_system = RailFrog::PluginSystem::Base
     @plugin_system.root = File.expand_path(File.join(RAILS_ROOT, "vendor", "plugins", "railfrog_core", "spec", "lib", "plugin_system", "no_plugins", "gems"))
-    @plugin_system.startup
+    @plugin_system.init
   end
   
   specify "should have no installed plugins" do
@@ -74,16 +74,17 @@ context "The started plugin system with no installed but 3 registered plugins" d
   end
 end
 
-context "The started plugin system with 3 installed and registered (1 enabled) plugins" do
+#TODO:  Plugin can only be enabled when all plugins it depends are enabled (create .enable(plugin), also .enabled?(plugin))
+#TODO:  Plugin can only be disabled when all plugins that depend on it are disabled (create .disable(plugin), also .disabled?(plugin))
+#TODO:  Plugin can only be started when all associated dependencies are met (create .start(plugin), also .started?(plugin))
+
+context "The initialized plugin system with 3 installed and registered plugins (in general)" do
   fixtures :plugins
   
   setup do
     @plugin_system = RailFrog::PluginSystem::Base
     @plugin_system.root = File.expand_path(File.join(RAILS_ROOT, "vendor", "plugins", "railfrog_core", "spec", "lib", "plugin_system", "data", "gems"))
-    the_first_plugin_spec = File.join(RailFrog::PluginSystem::Base.root, "..", "specifications", "the_first_plugin-0.0.1.gemspec")
-    the_first_plugin = RailFrog::PluginSystem::Plugin.new(the_first_plugin_spec)
-    the_first_plugin.enable unless the_first_plugin.enabled?
-    @plugin_system.startup
+    @plugin_system.init
   end
   
   specify "should have 3 installed plugins" do
@@ -94,11 +95,73 @@ context "The started plugin system with 3 installed and registered (1 enabled) p
     @plugin_system.should_have(3).registered_plugins
   end
   
-  specify "should have started the enabled plugin" do
-    #FIXME: test if a specific plugins is started instead of any
-    @plugin_system.should_satisfy do |plugin_system|
-      plugin_system.plugins.any? { |plugin| plugin.started? }
-    end
+#  specify "can enable <plugin>" do
+#  end
+#  
+#  specify "cannot enable <plugin>" do
+#  end
+#  
+#  specify "can disable <plugin>" do
+#  end
+#  
+#  specify "cannot disable <plugin>" do
+#  end
+#  
+#  specify "can start <plugin>" do
+#  end
+#  
+#  specify "cannot start <plugin>" do
+#  end
+    
+  teardown do
+    @plugin_system.shutdown
+  end
+end
+
+context "The plugin system with 3 installed and registered plugins (yet_another_plugin enabled)" do
+  fixtures :plugins
+  
+  setup do
+    @plugin_system = RailFrog::PluginSystem::Base
+    @plugin_system.root = File.expand_path(File.join(RAILS_ROOT, "vendor", "plugins", "railfrog_core", "spec", "lib", "plugin_system", "data", "gems"))
+    @plugin_system.init
+
+    @yet_another_plugin = RailFrog::PluginSystem::Base.plugins("yet_another_plugin", "0.0.3")
+    @yet_another_plugin.enable unless @yet_another_plugin.enabled?
+    @another_plugin = RailFrog::PluginSystem::Base.plugins("another_plugin", "0.0.1")
+       
+    @plugin_system.startup
+  end
+  
+  specify "should not have started any plugins" do
+    @yet_another_plugin.should_not_be_started
+    @another_plugin.should_not_be_started
+  end
+  
+  teardown do
+    @plugin_system.shutdown
+  end
+end
+
+context "The started plugin system with 3 installed and registered plugins (yet_another_plugin and another_plugin enabled)" do
+  fixtures :plugins
+  
+  setup do
+    @plugin_system = RailFrog::PluginSystem::Base
+    @plugin_system.root = File.expand_path(File.join(RAILS_ROOT, "vendor", "plugins", "railfrog_core", "spec", "lib", "plugin_system", "data", "gems"))
+    @plugin_system.init
+    
+    @yet_another_plugin = RailFrog::PluginSystem::Base.plugins("yet_another_plugin", "0.0.3")
+    @yet_another_plugin.enable unless @yet_another_plugin.enabled?
+    @another_plugin = RailFrog::PluginSystem::Base.plugins("another_plugin", "0.0.1")
+    @another_plugin.enable unless @another_plugin.enabled?
+    
+    @plugin_system.startup
+  end
+  
+  specify "should have started the enabled plugins" do
+    @yet_another_plugin.should_be_started
+    @another_plugin.should_be_started
   end
   
   teardown do

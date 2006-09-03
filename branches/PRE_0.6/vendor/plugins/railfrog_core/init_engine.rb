@@ -1,6 +1,5 @@
-require 'railfrog_core'
-
-require 'plugin_system/base'
+require 'railfrog'
+require 'railfrog/plugin_system'
 
 # start plugin system
 RailFrog::PluginSystem::Base.startup

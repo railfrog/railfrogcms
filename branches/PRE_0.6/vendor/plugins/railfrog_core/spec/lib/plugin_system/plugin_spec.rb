@@ -4,6 +4,7 @@ RailFrog::PluginSystem::Base.root = File.expand_path(File.join(RAILS_ROOT, "vend
 
 #TODO:  Give instances of RailFrog::PluginSystem::Plugin better/more readable names? i.e. @helloworld_0_0_1 instead of @new_plugin
 #TODO:  Make PluginSystem specs independent of Rails Engines
+#TODO:  Migrate database when enabling plugin
 #FIXME: Remove 'railfrog_the_first_plugin' directory as soon as it's not needed anymore
 #       i.e. FileUtils.rm_rf(File.join(Engines.config(:root), "railfrog_the_first_plugin"), :secure => true)
 
