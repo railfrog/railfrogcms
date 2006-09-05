@@ -45,6 +45,7 @@ module RailFrog
           end
         end
         
+        #TODO: stop plugins
         def shutdown
           plugins.clear
           @started = false

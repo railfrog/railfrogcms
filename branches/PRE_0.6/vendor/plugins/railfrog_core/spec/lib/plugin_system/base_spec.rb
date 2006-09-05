@@ -29,22 +29,27 @@ context "The initialized plugin system with no installed and no registered plugi
   end
 end
 
-context "The initialized plugin system with 3 installed but no registered plugins" do
+context "The initialized plugin system with 4 installed but no registered plugins" do
   setup do
     @plugin_system = RailFrog::PluginSystem::Base
     @plugin_system.root = File.expand_path(File.join(RAILS_ROOT, "vendor", "plugins", "railfrog_core", "spec", "lib", "plugin_system", "data", "gems"))
     @plugin_system.init
   end
   
-  specify "should have 3 installed plugins" do
-    @plugin_system.should_have(3).installed_plugins
-    @plugin_system.installed_plugins.should_include ["the_first_plugin", "0.0.1"]
-    @plugin_system.installed_plugins.should_include ["another_plugin", "0.0.1"]
-    @plugin_system.installed_plugins.should_include ["yet_another_plugin", "0.0.3"]
+  specify "should have 4 installed plugins" do
+    @plugin_system.installed_plugins.should_equal([
+      ["another_plugin", "0.0.1"],
+      ["another_plugin", "0.0.2"],
+      ["the_first_plugin", "0.0.1"],
+      ["yet_another_plugin", "0.0.3"]])
   end
   
-  specify "should have registered the installed plugins (resulting in 3 registered plugins)" do
-    @plugin_system.should_have(3).registered_plugins
+  specify "should have registered the installed plugins (resulting in 4 registered plugins)" do
+    @plugin_system.registered_plugins.should_equal([
+      ["another_plugin", "0.0.1"],
+      ["another_plugin", "0.0.2"],
+      ["the_first_plugin", "0.0.1"],
+      ["yet_another_plugin", "0.0.3"]])
   end
   
   teardown do
@@ -52,7 +57,7 @@ context "The initialized plugin system with 3 installed but no registered plugin
   end
 end
 
-context "The initialized plugin system with no installed but 3 registered plugins" do
+context "The initialized plugin system with no installed but 4 registered plugins" do
   fixtures :plugins
   
   setup do
@@ -78,7 +83,7 @@ end
 #TODO:  Plugin can only be disabled when all plugins that depend on it are disabled (create .disable(plugin), also .disabled?(plugin))
 #TODO:  Plugin can only be started when all associated dependencies are met (create .start(plugin), also .started?(plugin))
 
-context "The initialized plugin system with 3 installed and registered plugins (in general)" do
+context "The initialized plugin system with 4 installed and registered plugins (in general)" do
   fixtures :plugins
   
   setup do
@@ -87,12 +92,12 @@ context "The initialized plugin system with 3 installed and registered plugins (
     @plugin_system.init
   end
   
-  specify "should have 3 installed plugins" do
-    @plugin_system.should_have(3).installed_plugins
+  specify "should have 4 installed plugins" do
+    @plugin_system.should_have(4).installed_plugins
   end
   
-  specify "should have 3 registered plugins" do
-    @plugin_system.should_have(3).registered_plugins
+  specify "should have 4 registered plugins" do
+    @plugin_system.should_have(4).registered_plugins
   end
   
 #  specify "can enable <plugin>" do
@@ -118,7 +123,7 @@ context "The initialized plugin system with 3 installed and registered plugins (
   end
 end
 
-context "The plugin system with 3 installed and registered plugins (yet_another_plugin enabled)" do
+context "The plugin system with 4 installed and registered plugins (yet_another_plugin enabled)" do
   fixtures :plugins
   
   setup do
@@ -128,7 +133,7 @@ context "The plugin system with 3 installed and registered plugins (yet_another_
 
     @yet_another_plugin = RailFrog::PluginSystem::Base.plugins("yet_another_plugin", "0.0.3")
     @yet_another_plugin.enable unless @yet_another_plugin.enabled?
-    @another_plugin = RailFrog::PluginSystem::Base.plugins("another_plugin", "0.0.1")
+    @another_plugin = RailFrog::PluginSystem::Base.plugins("another_plugin", "0.0.2")
        
     @plugin_system.startup
   end
@@ -143,7 +148,7 @@ context "The plugin system with 3 installed and registered plugins (yet_another_
   end
 end
 
-context "The started plugin system with 3 installed and registered plugins (yet_another_plugin and another_plugin enabled)" do
+context "The started plugin system with 4 installed and registered plugins (yet_another_plugin and another_plugin enabled)" do
   fixtures :plugins
   
   setup do
@@ -153,7 +158,7 @@ context "The started plugin system with 3 installed and registered plugins (yet_
     
     @yet_another_plugin = RailFrog::PluginSystem::Base.plugins("yet_another_plugin", "0.0.3")
     @yet_another_plugin.enable unless @yet_another_plugin.enabled?
-    @another_plugin = RailFrog::PluginSystem::Base.plugins("another_plugin", "0.0.1")
+    @another_plugin = RailFrog::PluginSystem::Base.plugins("another_plugin", "0.0.2")
     @another_plugin.enable unless @another_plugin.enabled?
     
     @plugin_system.startup

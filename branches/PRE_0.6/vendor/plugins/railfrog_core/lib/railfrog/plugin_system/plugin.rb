@@ -6,16 +6,15 @@ module RailFrog
     class CannotStartDisabledPluginException < RailFrog::Exception; end
     class CannotUninstallEnabledPluginException < RailFrog::Exception; end
     class SpecificationFileDoesNotExistException < RailFrog::Exception; end
-    class FailedToStartPluginException < RailFrog::Exception; end
     
-    class Plugin      
+    class Plugin
       attr_reader :database, :specification
       
       def initialize(specification_file)
         if File.exists? specification_file
           @specification = Gem::Specification.load(specification_file)
-          @database = ::Plugin.find_or_create_by_name_and_version(specification.name, specification.version.to_s)
           @started = false
+          @database = ::Plugin.find_or_create_by_name_and_version(specification.name, specification.version.to_s)
         else
           raise SpecificationFileDoesNotExistException, "Specification file #{specification_file} does not exist."
         end
@@ -32,8 +31,7 @@ module RailFrog
             Dir["**/*"].each do |file_or_directory|
               dest = File.join(
                 path_to_the_plugin_in_the_railsengines_plugins_directory,
-                file_or_directory
-              )
+                file_or_directory)
               unless File.exist?(dest)
                 if File.file?(file_or_directory)
                   FileUtils.cp(file_or_directory, dest)                
@@ -43,8 +41,8 @@ module RailFrog
               end
             end
           end            
-          @database.enabled = true
-          @database.save!
+          database.enabled = true
+          database.save!
         end
       end
       
@@ -52,7 +50,7 @@ module RailFrog
       #whether a plugin is enabled or not by trying to find it in the 
       #railsengines root?
       def enabled?
-        @database.enabled?
+        database.enabled?
       end
 
       def disable
@@ -61,10 +59,9 @@ module RailFrog
         else
           FileUtils.rm_rf(
             path_to_the_plugin_in_the_railsengines_plugins_directory,
-            :secure => true
-          )
-          @database.enabled = false
-          @database.save!
+            :secure => true)
+          database.enabled = false
+          database.save!
         end
       end
       
@@ -78,12 +75,8 @@ module RailFrog
         elsif self.started?
           raise PluginIsAlreadyStartedException
         else
-          begin
-            Engines.start "railfrog_#{specification.name}"
-            @started = true
-          rescue
-            raise FailedToStartPluginException
-          end
+          Engines.start "railfrog_#{specification.name}"
+          @started = true
         end
       end
       
@@ -95,21 +88,18 @@ module RailFrog
         if self.enabled?
           raise CannotUninstallEnabledPluginException
         else
-          @database.destroy
-          @database = nil
+          database.destroy
         end
       end
       
       def path_to_the_plugin_in_the_railfrog_plugins_directory
         File.expand_path(
-          File.join(RailFrog::PluginSystem::Base.root, specification.full_name)
-        )
+          File.join(RailFrog::PluginSystem::Base.root, specification.full_name))
       end
       
       def path_to_the_plugin_in_the_railsengines_plugins_directory
         File.expand_path(
-          File.join(Engines.config(:root), "railfrog_#{specification.name}")
-        )
+          File.join(Engines.config(:root), "railfrog_#{specification.name}"))
       end
     end
   end

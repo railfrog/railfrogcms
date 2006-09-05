@@ -44,6 +44,13 @@ context "A plugin (in general)" do
     violated
   end
   
+  specify "should reflect changes made to the corresponding database entry immidately" do
+    @new_plugin.database.should_not_be_enabled
+    the_first_plugin = Plugin.find_by_name_and_version("the_first_plugin", "0.0.1")
+    the_first_plugin.update_attribute(:enabled, true)
+    @new_plugin.database.should_be_enabled
+  end
+  
   def teardown
     Plugin.destroy_all
   end

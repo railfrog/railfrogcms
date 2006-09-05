@@ -7,8 +7,8 @@ RailFrog::PluginSystem::Base.root = File.expand_path(File.join(RAILS_ROOT, "vend
 context "A dependency list with one plugin and no dependencies" do
   setup do
     another_plugin_spec = File.join(RailFrog::PluginSystem::Base.root, "..", "specifications", "another_plugin-0.0.1.gemspec")
-    plugins = [RailFrog::PluginSystem::Plugin.new(another_plugin_spec)]
-    @deps = RailFrog::PluginSystem::DependencyList.from_plugin_list(plugins)
+    @deps = RailFrog::PluginSystem::DependencyList.from_plugin_list(
+              [RailFrog::PluginSystem::Plugin.new(another_plugin_spec)])
   end
   
   specify "should meet dependencies" do
@@ -18,9 +18,9 @@ end
 
 context "A dependency list with one plugin and (unmet) dependencies" do
   setup do
-    yet_another_plugin_spec = File.join(RailFrog::PluginSystem::Base.root, "..", "specifications", "yet_another_plugin-0.0.3.gemspec")
-    plugins = [RailFrog::PluginSystem::Plugin.new(yet_another_plugin_spec)]
-    @deps = RailFrog::PluginSystem::DependencyList.from_plugin_list(plugins)
+    the_first_plugin_spec = File.join(RailFrog::PluginSystem::Base.root, "..", "specifications", "the_first_plugin-0.0.1.gemspec")
+    @deps = RailFrog::PluginSystem::DependencyList.from_plugin_list([
+              RailFrog::PluginSystem::Plugin.new(the_first_plugin_spec)])
   end
   
   specify "should not meet dependencies" do
@@ -30,11 +30,11 @@ end
 
 context "A dependency list with two plugins and met dependencies" do
   setup do
-    another_plugin_spec = File.join(RailFrog::PluginSystem::Base.root, "..", "specifications", "another_plugin-0.0.1.gemspec")
+    another_plugin_spec = File.join(RailFrog::PluginSystem::Base.root, "..", "specifications", "another_plugin-0.0.2.gemspec")
     yet_another_plugin_spec = File.join(RailFrog::PluginSystem::Base.root, "..", "specifications", "yet_another_plugin-0.0.3.gemspec")
-    plugins = [@another_plugin = RailFrog::PluginSystem::Plugin.new(another_plugin_spec),
-               @yet_another_plugin = RailFrog::PluginSystem::Plugin.new(yet_another_plugin_spec)]
-    @deps = RailFrog::PluginSystem::DependencyList.from_plugin_list(plugins)
+    @deps = RailFrog::PluginSystem::DependencyList.from_plugin_list([
+              @another_plugin = RailFrog::PluginSystem::Plugin.new(another_plugin_spec),
+              @yet_another_plugin = RailFrog::PluginSystem::Plugin.new(yet_another_plugin_spec)])
   end
   
   specify "should meet dependencies" do
@@ -51,9 +51,9 @@ context "A dependency list with two plugins and unmet dependencies" do
   setup do
     the_first_plugin_spec = File.join(RailFrog::PluginSystem::Base.root, "..", "specifications", "the_first_plugin-0.0.1.gemspec")
     yet_another_plugin_spec = File.join(RailFrog::PluginSystem::Base.root, "..", "specifications", "yet_another_plugin-0.0.3.gemspec")
-    plugins = [RailFrog::PluginSystem::Plugin.new(the_first_plugin_spec),
-               RailFrog::PluginSystem::Plugin.new(yet_another_plugin_spec)]
-    @deps = RailFrog::PluginSystem::DependencyList.from_plugin_list(plugins)
+    @deps = RailFrog::PluginSystem::DependencyList.from_plugin_list([
+              RailFrog::PluginSystem::Plugin.new(the_first_plugin_spec),
+              RailFrog::PluginSystem::Plugin.new(yet_another_plugin_spec)])
   end
   
   specify "should not meet dependencies" do
