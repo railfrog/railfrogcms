@@ -1,26 +1,24 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
 
-RailFrog::PluginSystem::Base.root = File.expand_path(File.join(RAILS_ROOT, "vendor", "plugins", "railfrog_core", "spec", "lib", "plugin_system", "data", "gems"))
+PluginSystem::Base.root = File.expand_path(File.join(RAILS_ROOT, "vendor", "plugins", "railfrog_core", "spec", "lib", "plugin_system", "data"))
 
-#TODO:  Give instances of RailFrog::PluginSystem::Plugin better/more readable names? i.e. @helloworld_0_0_1 instead of @new_plugin
+#TODO:  Give instances of PluginSystem::Plugin better/more readable names? i.e. @helloworld_0_0_1 instead of @new_plugin
 #TODO:  Make PluginSystem specs independent of Rails Engines
 #TODO:  Migrate database when enabling plugin
-#FIXME: Remove 'railfrog_the_first_plugin' directory as soon as it's not needed anymore
-#       i.e. FileUtils.rm_rf(File.join(Engines.config(:root), "railfrog_the_first_plugin"), :secure => true)
 
 context "A plugin (in general)" do
   setup do
-    the_first_plugin_spec = File.join(RailFrog::PluginSystem::Base.root, "..", "specifications", "the_first_plugin-0.0.1.gemspec")
-    @new_plugin = RailFrog::PluginSystem::Plugin.new(the_first_plugin_spec)
+    the_first_plugin_spec = File.join(PluginSystem::Base.path_to_specs, "the_first_plugin-0.0.1.gemspec")
+    @new_plugin = PluginSystem::Plugin.new(the_first_plugin_spec)
   end
   
-  specify "should be a RailFrog::PluginSystem::Plugin object" do
-    @new_plugin.should_be_a_kind_of RailFrog::PluginSystem::Plugin
+  specify "should be a PluginSystem::Plugin object" do
+    @new_plugin.should_be_a_kind_of PluginSystem::Plugin
   end
   
   specify "should raise exception if specification file does not exist" do
-    inexistent_spec = File.join(RailFrog::PluginSystem::Base.root, "..", "specifications", "inexistent.gemspec")
-    lambda { @inexistent_plugin = RailFrog::PluginSystem::Plugin.new(inexistent_spec) }.should_raise RailFrog::PluginSystem::SpecificationFileDoesNotExistException
+    inexistent_spec = File.join(PluginSystem::Base.path_to_specs, "inexistent.gemspec")
+    lambda { @inexistent_plugin = PluginSystem::Plugin.new(inexistent_spec) }.should_raise PluginSystem::SpecificationFileDoesNotExistException
     @inexistent_plugin.should_be nil
   end
   
@@ -28,38 +26,15 @@ context "A plugin (in general)" do
     @new_plugin.specification.should_be_kind_of Gem::Specification
   end
   
-  specify "should be registered" do
-    @new_plugin.database.should_be_kind_of Plugin
-  end
-  
   specify "should be installed" do
-    RailFrog::PluginSystem::Base.installed_plugins.should_include ["the_first_plugin", "0.0.1"]
-  end
-  
-  specify "should be disabled" do
-    @new_plugin.should_be_disabled
-  end
-  
-  specify "enabled? should redirect the call to database.enabled?" do
-    violated
-  end
-  
-  specify "should reflect changes made to the corresponding database entry immidately" do
-    @new_plugin.database.should_not_be_enabled
-    the_first_plugin = Plugin.find_by_name_and_version("the_first_plugin", "0.0.1")
-    the_first_plugin.update_attribute(:enabled, true)
-    @new_plugin.database.should_be_enabled
-  end
-  
-  def teardown
-    Plugin.destroy_all
+    PluginSystem::Base.installed_plugins.should_include ["the_first_plugin", "0.0.1"]
   end
 end
 
 context "A disabled plugin" do  
   setup do
-    the_first_plugin_spec = File.join(RailFrog::PluginSystem::Base.root, "..", "specifications", "the_first_plugin-0.0.1.gemspec")
-    @disabled_plugin = RailFrog::PluginSystem::Plugin.new(the_first_plugin_spec)
+    the_first_plugin_spec = File.join(PluginSystem::Base.path_to_specs, "the_first_plugin-0.0.1.gemspec")
+    @disabled_plugin = PluginSystem::Plugin.new(the_first_plugin_spec)
     FileUtils.rm_rf(File.join(Engines.config(:root), "railfrog_the_first_plugin"), :secure => true) if File.exist?(File.join(Engines.config(:root), "railfrog_the_first_plugin"))
   end
   
@@ -69,7 +44,7 @@ context "A disabled plugin" do
   end
   
   specify "cannot be disabled" do
-    lambda { @disabled_plugin.disable }.should_raise RailFrog::PluginSystem::PluginIsAlreadyDisabledException
+    lambda { @disabled_plugin.disable }.should_raise PluginSystem::PluginIsAlreadyDisabledException
     @disabled_plugin.should_be_disabled
   end
   
@@ -78,7 +53,7 @@ context "A disabled plugin" do
   end
   
   specify "cannot be started" do
-    lambda { @disabled_plugin.start }.should_raise RailFrog::PluginSystem::CannotStartDisabledPluginException
+    lambda { @disabled_plugin.start }.should_raise PluginSystem::CannotStartDisabledPluginException
     @disabled_plugin.should_not_be_started
   end
   
@@ -100,20 +75,19 @@ context "A disabled plugin" do
   end
   
   specify "can be uninstalled" do
-    lambda { @disabled_plugin.uninstall }.should_not_raise
-    @disabled_plugin.database.should_be nil
-    File.exist?(@disabled_plugin.path_to_the_plugin_in_the_railsengines_plugins_directory).should_be false
-    File.exist?(@disabled_plugin.path_to_the_plugin_in_the_railfrog_plugins_directory).should_be false
+    violated
+  end
+  
+  def teardown
+    FileUtils.rm_rf(File.join(Engines.config(:root), "railfrog_the_first_plugin"), :secure => true)
   end
 end
 
 context "An enabled plugin" do
   setup do
-    the_first_plugin_spec = File.join(RailFrog::PluginSystem::Base.root, "..", "specifications", "the_first_plugin-0.0.1.gemspec")
-    @enabled_plugin = RailFrog::PluginSystem::Plugin.new(the_first_plugin_spec)
-    #FIXME: Is it OK to use .enable here?
-    FileUtils.rm_rf(File.join(Engines.config(:root), "railfrog_the_first_plugin"), :secure => true) if File.exist?(File.join(Engines.config(:root), "railfrog_the_first_plugin"))
-    @enabled_plugin.enable unless @enabled_plugin.enabled?
+    the_first_plugin_spec = File.join(PluginSystem::Base.path_to_specs, "the_first_plugin-0.0.1.gemspec")
+    @enabled_plugin = PluginSystem::Plugin.new(the_first_plugin_spec)
+    @enabled_plugin.enable
   end
   
   specify "should be enabled" do
@@ -133,7 +107,7 @@ context "An enabled plugin" do
   end
   
   specify "cannot be enabled" do
-    lambda { @enabled_plugin.enable }.should_raise RailFrog::PluginSystem::PluginIsAlreadyEnabledException
+    lambda { @enabled_plugin.enable }.should_raise PluginSystem::PluginIsAlreadyEnabledException
     @enabled_plugin.should_be_enabled
   end
   
@@ -150,19 +124,20 @@ context "An enabled plugin" do
   
   specify "cannot be uninstalled" do
     @enabled_plugin.should_be_enabled
-    lambda { @enabled_plugin.uninstall }.should_raise RailFrog::PluginSystem::CannotUninstallEnabledPluginException
-    File.exist?(@enabled_plugin.path_to_the_plugin_in_the_railsengines_plugins_directory).should_be true
-    File.exist?(@enabled_plugin.path_to_the_plugin_in_the_railfrog_plugins_directory).should_be true
-    @enabled_plugin.database.should_not_be nil
+    lambda { @enabled_plugin.uninstall }.should_raise PluginSystem::CannotUninstallEnabledPluginException
+    #TODO: add code to check if plugin is really not uninstalled
+  end
+  
+  def teardown
+    FileUtils.rm_rf(File.join(Engines.config(:root), "railfrog_the_first_plugin"), :secure => true)
   end
 end
 
 context "A started plugin" do  
   setup do
-    the_first_plugin_spec = File.join(RailFrog::PluginSystem::Base.root, "..", "specifications", "the_first_plugin-0.0.1.gemspec")
-    @started_plugin = RailFrog::PluginSystem::Plugin.new(the_first_plugin_spec)
-    #FIXME: Is it OK to use .enable here?
-    @started_plugin.enable if @started_plugin.disabled?
+    the_first_plugin_spec = File.join(PluginSystem::Base.path_to_specs, "the_first_plugin-0.0.1.gemspec")
+    @started_plugin = PluginSystem::Plugin.new(the_first_plugin_spec)
+    @started_plugin.enable
     @started_plugin.start
   end
   
@@ -177,7 +152,11 @@ context "A started plugin" do
   end
   
   specify "cannot be started" do
-    lambda { @started_plugin.start }.should_raise RailFrog::PluginSystem::PluginIsAlreadyStartedException
+    lambda { @started_plugin.start }.should_raise PluginSystem::PluginIsAlreadyStartedException
     @started_plugin.should_be_started
+  end
+  
+  def teardown
+    FileUtils.rm_rf(File.join(Engines.config(:root), "railfrog_the_first_plugin"), :secure => true)
   end
 end

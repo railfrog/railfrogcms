@@ -1,6 +1,7 @@
 require 'hash_extension'
 require 'railfrog'
-require 'railfrog/plugin_system'
+require 'plugin_system'
 
 # start plugin system
-RailFrog::PluginSystem::Base.startup
+PluginSystem::Base.root = File.expand_path(File.join(RAILS_ROOT, "vendor", "railfrog_plugins"))
+PluginSystem::Base.startup #unless RAILS_ENV == 'test'
