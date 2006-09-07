@@ -1,7 +1,7 @@
 module PluginSystem
-#    mattr_accessor :root
-#    self.root = File.expand_path(File.join(RAILS_ROOT, "vendor", "railfrog_plugins", "gems"))
-  class Exception < ::Exception; end    
+  module Exceptions
+    class Exception < ::Exception; end
+  end
 end
 
 require 'plugin_system/base'
