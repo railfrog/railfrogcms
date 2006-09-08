@@ -11,16 +11,24 @@ module PluginSystem
     # installed plugins 
     attr_reader :path_to_specs
     
+    cattr_reader :plugin_system
+    
     # Starts the plugin system. Set the root directory of the plugin system
     # (that is where the gems/ and specifications/ directory is located) with
     # the +root_dir+ parameter
     def self.startup(root_dir)
-      base = self.new(root_dir)
-      base.start
+      unless @@plugin_system
+        @@plugin_system = self.new(root_dir)
+        @@plugin_system.start
+      end
     end
     
     def initialize(root_dir)
       self.root = root_dir
+      reg_plugins, inst_plugins = registered_plugins, installed_plugins
+      (reg_plugins - inst_plugins).each do |name_version|
+        ::Plugin.find_by_name_and_version(*name_version).destroy
+      end
       installed_plugins.each do |name_version|
         plugins[name_version] = Plugin.new(File.join(@path_to_specs, "#{name_version.join('-')}.gemspec"))
       end
@@ -48,7 +56,7 @@ module PluginSystem
     end
     
     def plugins(name=nil, version=nil)
-      #TODO: Add specs for this method
+      #TODO: Add specs for this method & Refactor it!
       if name.nil? && version.nil?
         @plugins ||= {}
       elsif name.kind_of?(String) && version.kind_of?(String)
@@ -61,6 +69,11 @@ module PluginSystem
       gems.select do |gem| 
         File.exist? File.join(@path_to_gems, File.basename(gem, ".gemspec"))
       end.map { |gem| File.basename(gem, ".gemspec").split(/-([^-]+)/) }
+    end
+    
+    def registered_plugins
+      plugins = ::Plugin.find(:all)
+      plugins.map { |plugin| [plugin.name, plugin.version] }
     end
     
     private

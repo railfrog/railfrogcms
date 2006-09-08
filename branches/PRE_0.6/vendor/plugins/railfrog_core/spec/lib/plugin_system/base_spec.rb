@@ -2,14 +2,37 @@ require File.dirname(__FILE__) + '/../../spec_helper'
 
 #TODO:  Refactor setup and teardown methods
 
-context "The initialized plugin system with no installed plugins" do
+context "The initialized plugin system with no installed and no registered plugins" do
   setup do
-    @plugin_system = PluginSystem::Base.new(File.join(
-                       RAILS_ROOT, "vendor", "plugins", "railfrog_core", "spec", "lib", "plugin_system", "no_plugins"))
+    @plugin_system = PluginSystem::Base.new(@@__no_plugins_root)
   end
   
   specify "should have no installed plugins" do
     @plugin_system.should_have(0).installed_plugins
+  end
+  
+  specify "should have no registered plugins" do
+    @plugin_system.should_have(0).registered_plugins
+  end
+end
+
+context "The initialized plugin system with no installed but 4 registered plugins" do
+  fixtures :plugins
+  
+  setup do
+    @plugin_system = PluginSystem::Base.new(@@__no_plugins_root)
+  end
+  
+  specify "should have no installed plugins" do
+    @plugin_system.should_have(0).installed_plugins
+  end
+  
+  specify "should have no registered plugins" do
+    @plugin_system.should_have(0).registered_plugins
+  end
+  
+  teardown do
+    @plugin_system.shutdown
   end
 end
 
@@ -23,11 +46,23 @@ context "The initialized plugin system with 4 installed plugins (in general)" do
   end
   
   specify "should have 4 installed plugins" do
-    @plugin_system.installed_plugins.should_equal([
-      ["another_plugin", "0.0.1"],
-      ["another_plugin", "0.0.2"],
-      ["the_first_plugin", "0.0.1"],
-      ["yet_another_plugin", "0.0.3"]])
+    @plugin_system.should_have(4).installed_plugins
+    [["another_plugin", "0.0.1"],
+    ["another_plugin", "0.0.2"],
+    ["the_first_plugin", "0.0.1"],
+    ["yet_another_plugin", "0.0.3"]].each do |plugin|
+      @plugin_system.installed_plugins.should_include plugin
+    end
+  end
+  
+  specify "should have 4 registered plugins" do
+    @plugin_system.should_have(4).registered_plugins
+    [["another_plugin", "0.0.1"],
+    ["another_plugin", "0.0.2"],
+    ["the_first_plugin", "0.0.1"],
+    ["yet_another_plugin", "0.0.3"]].each do |plugin|
+      @plugin_system.registered_plugins.should_include plugin
+    end
   end
   
 #  specify "can enable <plugin>" do
@@ -51,15 +86,14 @@ end
 
 context "The started plugin system with 4 installed plugins (yet_another_plugin enabled)" do
   setup do
-    ["railfrog_yet_another_plugin", "railfrog_another_plugin"].each do |plugin|
-      FileUtils.rm_rf(File.join(Engines.config(:root), plugin), :secure => true)
-    end
-        
     @plugin_system = PluginSystem::Base.new(@@__plugin_system_root)
     
     @yet_another_plugin = @plugin_system.plugins('yet_another_plugin', '0.0.3')
     @another_plugin = @plugin_system.plugins('another_plugin', '0.0.2')
-    @yet_another_plugin.enable
+    [@yet_another_plugin, @another_plugin].each do |plugin|
+      FileUtils.rm_rf(plugin.path_to_engine, :secure => true)
+    end
+    @yet_another_plugin.enable if @yet_another_plugin.disabled?
     
     @plugin_system.start
   end
@@ -71,7 +105,7 @@ context "The started plugin system with 4 installed plugins (yet_another_plugin 
   
   teardown do
     @plugin_system.shutdown
-    FileUtils.rm_rf(File.join(Engines.config(:root), "railfrog_yet_another_plugin"), :secure => true)
+    FileUtils.rm_rf(@yet_another_plugin.path_to_engine, :secure => true)
   end
 end
 
@@ -79,15 +113,14 @@ end
 # another_plugin is enabled. 
 context "The started plugin system with 4 installed plugins (yet_another_plugin and another_plugin enabled)" do
   setup do
-    ["railfrog_yet_another_plugin", "railfrog_another_plugin"].each do |plugin|
-      FileUtils.rm_rf(File.join(Engines.config(:root), plugin), :secure => true)
-    end
-
     @plugin_system = PluginSystem::Base.new(@@__plugin_system_root)
     
     @yet_another_plugin = @plugin_system.plugins("yet_another_plugin", "0.0.3")
     @another_plugin = @plugin_system.plugins("another_plugin", "0.0.2")
-    [@yet_another_plugin, @another_plugin].each { |plugin| plugin.enable }
+    [@yet_another_plugin, @another_plugin].each do |plugin|
+      FileUtils.rm_rf(plugin.path_to_engine, :secure => true)
+      plugin.enable
+    end
     
     @plugin_system.start
   end
@@ -99,8 +132,8 @@ context "The started plugin system with 4 installed plugins (yet_another_plugin 
   
   teardown do
     @plugin_system.shutdown
-    ["railfrog_yet_another_plugin", "railfrog_another_plugin"].each do |plugin|
-      FileUtils.rm_rf(File.join(Engines.config(:root), plugin), :secure => true)
+    [@yet_another_plugin, @another_plugin].each do |plugin|
+      FileUtils.rm_rf(plugin.path_to_engine, :secure => true)
     end
   end
 end

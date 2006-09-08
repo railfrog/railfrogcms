@@ -1,7 +1,7 @@
 require 'spec/rake/spectask'
 
 namespace :spec do
-  desc "Run the specs under vendor/plugins with rails_spec_runner"
+  desc "Run the specs under vendor/plugins with rails_spec_server"
   task :plugins_with_runner do
     spec_files = FileList['vendor/plugins/**/spec/**/*_spec.rb']
     spec_opts = ["-f h"]

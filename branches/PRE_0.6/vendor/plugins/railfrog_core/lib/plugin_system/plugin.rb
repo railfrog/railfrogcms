@@ -8,7 +8,8 @@ module PluginSystem
     class SpecificationFileDoesNotExistException < Exception; end
     class PluginWithSameNameAlreadyEnabledException < Exception; end
   end
-  
+
+  #TODO: disable plugins in database if removed from railsengines root  
   class Plugin
     attr_reader :database, :specification
     
@@ -36,21 +37,27 @@ module PluginSystem
         raise Exceptions::PluginWithSameNameAlreadyEnabledException,
               "A plugin with the same name as the plugin you're trying to enable is already enabled."
       else
-        FileUtils.mkdir(path_to_engine)
-        Dir.chdir(@path_to_gem) do
-          Dir["**/*"].each do |file_or_directory|
-            dest = File.join(path_to_engine, file_or_directory)
-            unless File.exist?(dest)
-              if File.file?(file_or_directory)
-                FileUtils.cp(file_or_directory, dest)                
-              elsif File.directory?(file_or_directory)
-                FileUtils.mkdir(dest)
+        begin
+          FileUtils.mkdir(path_to_engine)
+          Dir.chdir(@path_to_gem) do
+            Dir["**/*"].each do |file_or_directory|
+              dest = File.join(path_to_engine, file_or_directory)
+              unless File.exist?(dest)
+                if File.file?(file_or_directory)
+                  FileUtils.cp(file_or_directory, dest)                
+                elsif File.directory?(file_or_directory)
+                  FileUtils.mkdir(dest)
+                end
               end
             end
           end
+          database.enabled = true
+          database.save!
+        rescue
+          # Make sure that the engines directory gets removed if anything fails
+          FileUtils.rm_rf(path_to_engine, :secure => true)
+          raise
         end
-        database.enabled = true
-        database.save!
       end
     end
     

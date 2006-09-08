@@ -1,7 +1,6 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
 
 #TODO:  Give instances of PluginSystem::Plugin better/more readable names? i.e. @helloworld_0_0_1 instead of @new_plugin
-#TODO:  Make PluginSystem specs independent of Rails Engines
 #TODO:  Migrate database when enabling plugin
 
 context "A plugin (in general)" do
@@ -25,7 +24,7 @@ context "A plugin (in general)" do
   end
   
   specify "should be installed" do
-    File.exists?(File.join(@@__plugin_system_specs, '..', 'gems', 'the_first_plugin-0.0.1')).should_be true
+    File.exist?(File.join(@@__plugin_system_specs, '..', 'gems', 'the_first_plugin-0.0.1'))
   end
   
   specify "should reflect changes made to the corresponding database entry immidately" do
@@ -44,7 +43,7 @@ context "A disabled plugin" do
   
   specify "should be disabled" do
     @disabled_plugin.should_be_disabled
-    File.exist?(@disabled_plugin.path_to_engine).should_be false
+    File.exist?(@disabled_plugin.path_to_engine)
   end
   
   specify "cannot be disabled" do
@@ -68,7 +67,7 @@ context "A disabled plugin" do
       Dir["**/*"].each do |file|
         a = File.join(@disabled_plugin.path_to_gem, file)
         b = File.join(@disabled_plugin.path_to_engine, file)
-        File.exist?(b).should_be true
+        File.exist?(b)
         if File.file?(b)
           FileUtils.compare_file(a, b).should_be true
         end
