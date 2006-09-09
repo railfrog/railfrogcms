@@ -24,7 +24,7 @@ class Chunk < ActiveRecord::Base
 
       c = Chunk.create :description => filename, :live_version => 1, :mime_type_id => mime_type.id
       c.save
-      site_mapping.chunk_id = c.id 
+      site_mapping.chunk_id = c.id
       site_mapping.save
 
       next_version = 1
@@ -50,10 +50,8 @@ class Chunk < ActiveRecord::Base
     end
 
     version = options[:version] ? options[:version] : chunk.live_version
-    if version == 'LATEST' then
-      version = ChunkVersion.last_version(chunk.id)
-    end
+    version = ChunkVersion.last_version(chunk.id) if version == 'LATEST'
 
-    chunk.chunk_versions.find(:first, :conditions => ["version = ?", version])
+    chunk.chunk_versions.find_by_version(version)
   end
 end

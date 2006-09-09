@@ -5,7 +5,7 @@
  * Off White - #F7F4DF - backgrounds
  * Light Green - #ABDA4E - borders
  * Mid Green - #8AAE2F - title backgrounds
- * Dark Green - #206020
+ * Dark Green - #206020 - block action backgrounds, active items
  * Mid Grey - #505050 - links, unimportant text
  */
 
@@ -376,6 +376,11 @@ th {
     width: 25%;
     background: #FFFFFF;
     border: 1px solid #505050;
+}
+
+.internal-chunk a {
+    color: #8AAE2F;
+    font-style: italic;
 }
 
 .label-name {

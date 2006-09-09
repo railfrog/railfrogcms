@@ -1,5 +1,5 @@
 <tr id="file-<%= site_mapping.id %>" class="mime-<%= mime_class %>">
-  <td>
+  <td<%= ' class="internal-chunk"' if site_mapping.is_internal? %>>
     <%= link_to(site_mapping.path_segment, :id => site_mapping.id) %>
   </td>
   <td><%= author %></td>

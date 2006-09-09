@@ -35,17 +35,17 @@ class SiteMapperController < ApplicationController
         # it is a html doc, then render our data inside the layout
         layout = @rf_labels['layout']
         rendering_options = {}
-        if layout then
-          if layout.include?("mapping:") then
+        if layout
+          if layout.include?("mapping:")
             layout.gsub!("mapping:", "")
 
-	    layout_chunk = SiteMapping.find_chunk(layout.split('/'))
-	    if layout_chunk then
-	      rendering_options[:inline] = layout_chunk.content
-	    else 
-	      rendering_options[:inline] = "Couldn't find layout #{layout}" 
-	    end
-	      
+            layout_chunk = SiteMapping.find_chunk(layout.split('/'))
+            if layout_chunk then
+              rendering_options[:inline] = layout_chunk.content
+            else
+              rendering_options[:inline] = "Couldn't find layout #{layout}"
+            end
+
             @rf_labels["chunk_content"] = @chunk_content
           else
             rendering_options[:partial] = "chunk_content"

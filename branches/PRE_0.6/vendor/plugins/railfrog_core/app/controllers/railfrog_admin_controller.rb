@@ -367,6 +367,9 @@ class RailfrogAdminController < ApplicationController
 
     site_mapping = SiteMapping.find_by_chunk_id(chunk.id)
 
+    # expire the chunk if it was cached
+    expire_page :controller => 'site_mapper', :action => 'show_chunk', :path => site_mapping.full_path
+
     render :partial => 'explore_block_chunk_versions', :locals => { :chunk => chunk,
                                                                     :chunk_versions => chunk_versions,
                                                                     :site_mapping => site_mapping }
