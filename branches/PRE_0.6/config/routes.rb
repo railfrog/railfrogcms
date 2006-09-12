@@ -1,7 +1,9 @@
 ActionController::Routing::Routes.draw do |map|
-
-  map.rf_admin '/admin', :controller => 'railfrog_admin' 
-
+  map.rf_admin '/admin', :controller => 'railfrog_admin'
+  
+  #map.resource :user
+  #map.resource :group
+  
   map.connect ':controller/:action/:id'
   
   # Default route for DB lookup

@@ -37,5 +37,5 @@ end
 Test::Unit.run = true
 
 # Ensure that the code mixing and view loading from the application is disabled
-Engines.disable_app_views_loading = true
-Engines.disable_app_code_mixing = true
+#Engines.disable_app_views_loading = true
+#Engines.disable_app_code_mixing = true

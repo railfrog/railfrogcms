@@ -12,9 +12,9 @@ RailFrog is a lightweight Content Management System for building websites.
 
 == Loading site content ==
  If you'd like to load site content to the RailFrog database use 
-{{{$ rake rf:load_site SITE=<path-to-site>}}}, or use our default site 
-{{{$ rake rf:load_site SITE=vendor/plugins/railfrog_core/db/sites/railfrog}}}
-  
+{{{$ rake railfrog:load_site SITE=<path-to-site>}}}, or use our default site 
+{{{$ rake railfrog:load_site SITE=vendor/plugins/railfrog_core/db/sites/railfrog}}}
+
 == Troubleshooting ==
 
  If your database gets mashed, try
