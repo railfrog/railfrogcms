@@ -90,9 +90,6 @@ context "The started plugin system with 4 installed plugins (yet_another_plugin 
     
     @yet_another_plugin = @plugin_system.plugins('yet_another_plugin', '0.0.3')
     @another_plugin = @plugin_system.plugins('another_plugin', '0.0.2')
-    [@yet_another_plugin, @another_plugin].each do |plugin|
-      FileUtils.rm_rf(plugin.path_to_engine, :secure => true)
-    end
     @yet_another_plugin.enable if @yet_another_plugin.disabled?
     
     @plugin_system.start
@@ -105,7 +102,6 @@ context "The started plugin system with 4 installed plugins (yet_another_plugin 
   
   teardown do
     @plugin_system.shutdown
-    FileUtils.rm_rf(@yet_another_plugin.path_to_engine, :secure => true)
   end
 end
 
@@ -118,7 +114,6 @@ context "The started plugin system with 4 installed plugins (yet_another_plugin 
     @yet_another_plugin = @plugin_system.plugins("yet_another_plugin", "0.0.3")
     @another_plugin = @plugin_system.plugins("another_plugin", "0.0.2")
     [@yet_another_plugin, @another_plugin].each do |plugin|
-      FileUtils.rm_rf(plugin.path_to_engine, :secure => true)
       plugin.enable
     end
     
@@ -132,8 +127,5 @@ context "The started plugin system with 4 installed plugins (yet_another_plugin 
   
   teardown do
     @plugin_system.shutdown
-    [@yet_another_plugin, @another_plugin].each do |plugin|
-      FileUtils.rm_rf(plugin.path_to_engine, :secure => true)
-    end
   end
 end

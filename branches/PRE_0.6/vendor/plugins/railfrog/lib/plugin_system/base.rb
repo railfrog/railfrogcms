@@ -16,10 +16,10 @@ module PluginSystem
     # Starts the plugin system. Set the root directory of the plugin system
     # (that is where the gems/ and specifications/ directory is located) with
     # the +root_dir+ parameter
-    def self.startup(root_dir)
+    def self.startup(root_dir, config=nil)
       unless @@plugin_system
         @@plugin_system = self.new(root_dir)
-        @@plugin_system.start
+        @@plugin_system.start(config)
       end
     end
     
@@ -34,13 +34,13 @@ module PluginSystem
       end
     end
     
-    def start
+    def start(config=nil)
       unless (@started ||= false)
         # start enabled plugins
         @enabled_plugins = plugins.values.select { |plugin| plugin.enabled? }
         DependencyList.from_plugin_list(@enabled_plugins).dependency_order.reverse.each do |spec|
           # only start plugins which dependencies are met
-          plugins(spec.name, spec.version.to_s).start if spec.dependencies.all? do |dep|
+          plugins(spec.name, spec.version.to_s).start(config) if spec.dependencies.all? do |dep|
             @enabled_plugins.any? { |p| p.specification.satisfies_requirement?(dep) }
           end
         end

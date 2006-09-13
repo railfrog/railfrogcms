@@ -38,12 +38,10 @@ context "A disabled plugin" do
   setup do
     @disabled_plugin = PluginSystem::Plugin.new(
                          File.join(@@__plugin_system_specs, 'the_first_plugin-0.0.1.gemspec'))
-    FileUtils.rm_rf(@disabled_plugin.path_to_engine, :secure => true)
   end
   
   specify "should be disabled" do
     @disabled_plugin.should_be_disabled
-    File.exist?(@disabled_plugin.path_to_engine)
   end
   
   specify "cannot be disabled" do
@@ -63,24 +61,10 @@ context "A disabled plugin" do
   specify "can be enabled" do
     lambda { @disabled_plugin.enable }.should_not_raise
     @disabled_plugin.should_be_enabled
-    Dir.chdir(@disabled_plugin.path_to_gem) do
-      Dir["**/*"].each do |file|
-        a = File.join(@disabled_plugin.path_to_gem, file)
-        b = File.join(@disabled_plugin.path_to_engine, file)
-        File.exist?(b)
-        if File.file?(b)
-          FileUtils.compare_file(a, b).should_be true
-        end
-      end
-    end
   end
   
   specify "can be uninstalled" do
     violated
-  end
-  
-  teardown do
-    FileUtils.rm_rf(@disabled_plugin.path_to_engine, :secure => true)
   end
 end
 
@@ -93,16 +77,6 @@ context "An enabled plugin" do
   
   specify "should be enabled" do
     @enabled_plugin.should_be_enabled
-    Dir.chdir(@enabled_plugin.path_to_gem) do
-      Dir["**/*"].each do |file|
-        a = File.join(@enabled_plugin.path_to_gem, file)
-        b = File.join(@enabled_plugin.path_to_engine, file)
-        File.exist?(b).should_be true
-        if File.file?(b)
-          FileUtils.compare_file(a, b).should_be true
-        end
-      end
-    end
   end
   
   specify "cannot be enabled" do
@@ -118,7 +92,6 @@ context "An enabled plugin" do
   specify "can be disabled" do
     lambda { @enabled_plugin.disable }.should_not_raise
     @enabled_plugin.should_be_disabled
-    File.exist?(@enabled_plugin.path_to_engine).should_be false
   end
   
   specify "cannot be uninstalled" do
@@ -129,7 +102,6 @@ context "An enabled plugin" do
   
   teardown do
     @enabled_plugin.stop if @enabled_plugin.started?
-    FileUtils.rm_rf(@enabled_plugin.path_to_engine, :secure => true)
   end
 end
 
@@ -147,8 +119,7 @@ context "A started plugin" do
   
   specify "should be started" do
     @started_plugin.should_be_started
-    #TODO: Make this independent of Rails Engines (i.e. specs like "controllers should be accessible")
-    Engines[:railfrog_the_first_plugin].should_be_an_instance_of Engine
+    #TODO: Test if really started (i.e. specs like "controllers should be accessible")
   end
   
   specify "cannot be started" do
@@ -158,7 +129,6 @@ context "A started plugin" do
   
   teardown do
     @started_plugin.stop
-    FileUtils.rm_rf(@started_plugin.path_to_engine, :secure => true)
   end
 end
 
@@ -166,7 +136,6 @@ context "Two plugins with the same name" do
   setup do
     @another_plugin_001 = PluginSystem::Plugin.new(File.join(@@__plugin_system_specs, 'another_plugin-0.0.1.gemspec'))
     @another_plugin_002 = PluginSystem::Plugin.new(File.join(@@__plugin_system_specs, 'another_plugin-0.0.2.gemspec'))
-    FileUtils.rm_rf(@another_plugin_001.path_to_engine, :secure => true)
   end
   
   specify "cannot both be enabled" do
@@ -174,9 +143,5 @@ context "Two plugins with the same name" do
     lambda { @another_plugin_002.enable }.should_raise PluginSystem::Exceptions::PluginWithSameNameAlreadyEnabledException
     @another_plugin_001.should_be_enabled
     @another_plugin_002.should_not_be_enabled
-  end
-  
-  teardown do
-    FileUtils.rm_rf(@another_plugin_001.path_to_engine, :secure => true)
   end
 end

@@ -13,14 +13,13 @@ module PluginSystem
   class Plugin
     attr_reader :database, :specification
     
-    attr_reader :path_to_gem, :path_to_engine
+    attr_reader :path_to_gem
     
     def initialize(specification_file)
       if File.exists? specification_file
         @specification = ::Gem::Specification.load(specification_file)
         @database = ::Plugin.find_or_create_by_name_and_version(specification.name, specification.version.to_s)
         @path_to_gem = File.expand_path(File.join(File.dirname(specification_file), '..', 'gems', specification.full_name))
-        @path_to_engine = File.expand_path(File.join(RAILS_ROOT, 'vendor', 'plugins', "railfrog_#{name}"))
       else
         raise Exceptions::SpecificationFileDoesNotExistException,
               "Specification file #{specification_file} does not exist."
@@ -33,36 +32,14 @@ module PluginSystem
       if enabled?
         raise Exceptions::PluginAlreadyEnabledException,
               "Plugin #{name} (version: #{version}) is already enabled."
-      elsif File.exist?(path_to_engine)
-        raise Exceptions::PluginWithSameNameAlreadyEnabledException,
-              "A plugin with the same name as the plugin you're trying to enable is already enabled."
       else
-        begin
-          FileUtils.mkdir(path_to_engine)
-          Dir.chdir(@path_to_gem) do
-            Dir["**/*"].each do |file_or_directory|
-              dest = File.join(path_to_engine, file_or_directory)
-              unless File.exist?(dest)
-                if File.file?(file_or_directory)
-                  FileUtils.cp(file_or_directory, dest)                
-                elsif File.directory?(file_or_directory)
-                  FileUtils.mkdir(dest)
-                end
-              end
-            end
-          end
-          database.enabled = true
-          database.save!
-        rescue
-          # Make sure that the engines directory gets removed if anything fails
-          FileUtils.rm_rf(path_to_engine, :secure => true)
-          raise
-        end
+        database.enabled = true
+        database.save!
       end
     end
     
     def enabled?
-      File.exist?(path_to_engine) && File.directory?(path_to_engine) && database.enabled?
+      database.enabled?
     end
     
     def disable
@@ -70,7 +47,6 @@ module PluginSystem
         raise Exceptions::PluginAlreadyDisabledException, 
               "Plugin #{name} (version: #{version}) is already disabled."
       else
-        FileUtils.rm_rf(path_to_engine, :secure => true)
         database.enabled = false
         database.save!
       end
@@ -80,7 +56,7 @@ module PluginSystem
       not enabled?
     end
     
-    def start
+    def start(config=nil)
       if disabled?
         raise Exceptions::CannotStartDisabledPluginException,
               "Cannot start plugin #{name} (version: #{version}) because it's disabled. Only enabled plugins can be started."
@@ -88,17 +64,35 @@ module PluginSystem
         raise Exceptions::PluginAlreadyStartedException,
               "Plugin #{name} (version: #{version}) is already started."
       else
-        Engines.start "railfrog_#{name}"
+        if config
+          config.controller_paths << File.join(path_to_gem, 'app', 'controllers')
+        else
+          ::ActionController::Routing.controller_paths << File.join(path_to_gem, 'app', 'controllers')
+        end
+        (load_paths = Array.new).concat %w(
+          app/models
+          app/controllers
+          app/helpers
+          lib 
+        ).map { |dir| "#{path_to_gem}/#{dir}" }.select { |dir| File.directory?(dir) }
+        (autoload_paths = Array.new).concat %w(
+          app/models
+          app/controllers
+          app/helpers
+        ).map { |dir| "#{path_to_gem}/#{dir}" }.select { |dir| File.directory?(dir) }
+        $LOAD_PATH.concat load_paths
+        ::Dependencies.load_paths.concat autoload_paths
+        @started = true
       end
     end
     
     def started?
-      Engines.active.any? { |engine| engine.name == "railfrog_#{name}" }
+      #Engines.active.any? { |engine| engine.name == "railfrog_#{name}" }
+      @started
     end
     
     def stop
       if started?
-        Engines.active.delete_if { |engine| engine.name == "railfrog_#{name}" }
         #TODO: Unload plugin
       end
     end
