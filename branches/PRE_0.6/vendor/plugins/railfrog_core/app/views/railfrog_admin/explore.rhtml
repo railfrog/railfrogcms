@@ -23,7 +23,7 @@
                                                                           :chunk_versions => @chunk_versions,
                                                                           :site_mapping => @site_mapping } %>
       <%# hide the versions block by default %>
-      <%= hide_block 'chunk-versions' %>
+      <%#= hide_block 'chunk-versions' %>
       <%= render :partial => 'explore_block_chunk', :locals => { :site_mapping => @site_mapping,
                                                                  :full_path => @full_path,
                                                                  :chunk => @chunk,

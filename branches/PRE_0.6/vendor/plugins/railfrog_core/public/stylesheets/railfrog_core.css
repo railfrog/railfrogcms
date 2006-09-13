@@ -318,11 +318,17 @@ th {
 /* the contents of a block */
 .block-content {
     padding: 4px;
+    overflow: auto;
 }
 
 /**
  * ------------------------------------------------------------------------------------------------------ ADMIN --
  */
+
+#edit-chunk-content table {
+	width: auto;
+}
+
 #folders-block {}
 #folders-title {}
 #folders-actions {}

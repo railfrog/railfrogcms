@@ -1,8 +1,10 @@
 <%= block_start 'chunk', 'Chunk' %>
   <%= block_nav_start 'chunk' %>
+    <% unless site_mapping.is_internal? %>
     <li>
       <%= link_to 'view', full_path, :target => '_blank' %>
     </li>
+    <% end %>
     <li>
       <%= link_to ('edit',
                    :action => 'edit_chunk',
@@ -31,7 +33,13 @@
   <%= block_nav_end %>
 
   <%= block_content_start 'chunk' %>
+  <% if site_mapping.is_internal? %>
+    <pre>
+<%= h chunk_version.content %>
+    </pre>
+  <% else %>
     <%= render :partial => 'show_chunk', :locals => { :full_path => full_path,
                                                       :mime_type => mime_type } %>
+  <% end %>
   <%= block_content_end %>
 <%= block_end %>

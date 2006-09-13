@@ -7,18 +7,13 @@ module RailfrogAdminHelper
                      "}" +
                      "if ($('#{dom_id_segment}-content')) {" +
                        "Element.hide('#{dom_id_segment}-content');" +
-                     "}" +
-                     "$('#{dom_id_segment}-action-collapse-image').src = '#{image_path('collapsed')}';")
+                     "}")
   end
 
 
   def block_start(dom_id_segment, heading)
     html =  "<div id=\"#{dom_id_segment}-block\" class=\"block\"><div>"
     html << "  <h2 id=\"#{dom_id_segment}-title\" class=\"block-title\">#{heading}</h2>"
-
-    html << "  <ul id=\"#{dom_id_segment}-actions\" class=\"block-actions horizontal-list\">"
-    html << block_action_collapse(dom_id_segment)
-    html << "  </ul>"
 
     return html
   end
@@ -68,32 +63,6 @@ module RailfrogAdminHelper
   end
 
 
-  def block_action_collapse(dom_segment_id)
-    onclick_js = "if ($('#{dom_segment_id}-nav')) {" +
-                   visual_effect(:toggle_slide, "#{dom_segment_id}-nav", :duration => 0.5) +
-                 "}" +
-                 "if ($('#{dom_segment_id}-content')) {" +
-                   visual_effect(:toggle_slide, "#{dom_segment_id}-content", :duration => 0.5) +
-                 "}" +
-                 "if ($('#{dom_segment_id}-action-collapse-image').src.match('expanded')) {" +
-                 "  $('#{dom_segment_id}-action-collapse-image').src = '#{image_path('collapsed')}'" +
-                 "} else {" +
-                 "  $('#{dom_segment_id}-action-collapse-image').src = '#{image_path('expanded')}'" +
-                 "}"
-
-    html  = "<li id=\"#{dom_segment_id}-action-collapse\" class=\"action-collapse\" " +
-                "onclick=\"#{onclick_js.gsub("\"", "'")}\">"
-    html << image_tag('expanded',
-                      :size => '10x10',
-                      :alt => 'V',
-                      :id => "#{dom_segment_id}-action-collapse-image",
-                      :class => 'js-true')
-    html << '</li>'
-
-    return html
-  end
-
-
   # Lists the folders under the given SiteMapping.
   def list_folders(site_mapping)
     html = '<ul id="folders-list-#{site_mapping.id}" class="folders-list relatedcontent">'
@@ -102,7 +71,7 @@ module RailfrogAdminHelper
     if site_mapping.child_folders.size == 0
       html << 'No Folders'
       # there are no folders, so hide this block's content
-      html << hide_block('folders')
+#      html << hide_block('folders')
     end
 
     html << '</ul>'
@@ -190,13 +159,12 @@ module RailfrogAdminHelper
 
     if mapping_labels.empty?
       html << '<span>No Labels</span>'
-      html << javascript_tag("if ($('labels-nav')) {" +
-                               "Element.hide('labels-nav');" +
-                             "}" +
-                             "if ($('labels-content')) {" +
-                               "Element.hide('labels-content');" +
-                             "}" +
-                             "$('labels-action-collapse-image').src = '#{image_path('collapsed')}';")
+#      html << javascript_tag("if ($('labels-nav')) {" +
+#                               "Element.hide('labels-nav');" +
+#                             "}" +
+#                             "if ($('labels-content')) {" +
+#                               "Element.hide('labels-content');" +
+#                             "}")
     else
       html << '<table>'
 
@@ -218,13 +186,12 @@ module RailfrogAdminHelper
 
     html << '<ul class="relatedcontent">'
     html << '<li>No Tags</li>'
-    html << javascript_tag("if ($('tags-nav')) {" +
-                             "Element.hide('tags-nav');" +
-                           "}" +
-                           "if ($('tags-content')) {" +
-                             "Element.hide('tags-content');" +
-                           "}" +
-                           "$('tags-action-collapse-image').src = '#{image_path('collapsed')}';")
+#    html << javascript_tag("if ($('tags-nav')) {" +
+#                             "Element.hide('tags-nav');" +
+#                           "}" +
+#                           "if ($('tags-content')) {" +
+#                             "Element.hide('tags-content');" +
+#                           "}")
     html << '</ul>'
 
     return html
@@ -263,18 +230,17 @@ module RailfrogAdminHelper
                                   :updated_at => updated_at })
     end
 
-    if count == 0
-      html << '<span>No Files</span>'
-      html << javascript_tag("if ($('#{mime_class}-nav')) {" +
-                               "Element.hide('#{mime_class}-nav');" +
-                             "}" +
-                             "if ($('#{mime_class}-content')) {" +
-                               "Element.hide('#{mime_class}-content');" +
-                             "}" +
-                             "$('#{mime_class}-action-collapse-image').src = '#{image_path('collapsed')}';")
-    end
-
     html << '</table>'
+    
+    if count == 0
+      html = '<span>No Files</span>'
+#      html << javascript_tag("if ($('#{mime_class}-nav')) {" +
+#                               "Element.hide('#{mime_class}-nav');" +
+#                             "}" +
+#                             "if ($('#{mime_class}-content')) {" +
+#                               "Element.hide('#{mime_class}-content');" +
+#                             "}")
+    end
 
     return html
   end
