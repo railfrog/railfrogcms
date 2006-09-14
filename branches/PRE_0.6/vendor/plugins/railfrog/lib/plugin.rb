@@ -10,4 +10,8 @@ class Plugin < ActiveRecord::Base
       errors.add(:base, "Only one version of a plugin may be enabled")
     end
   end
+  
+  def full_name
+    "#{name}-#{version}"
+  end
 end

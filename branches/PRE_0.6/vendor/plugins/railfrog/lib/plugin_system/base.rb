@@ -11,39 +11,29 @@ module PluginSystem
     # installed plugins 
     attr_reader :path_to_specs
     
-    cattr_reader :plugin_system
-    
-    # Starts the plugin system. Set the root directory of the plugin system
-    # (that is where the gems/ and specifications/ directory is located) with
-    # the +root_dir+ parameter
-    def self.startup(root_dir, config=nil)
-      unless @@plugin_system
-        @@plugin_system = self.new(root_dir)
-        @@plugin_system.start(config)
-      end
-    end
+    attr_reader :installed_plugins,
+                :enabled_plugins,
+                :disabled_plugins,
+                :started_plugins
     
     def initialize(root_dir)
       self.root = root_dir
-      reg_plugins, inst_plugins = registered_plugins, installed_plugins
-      (reg_plugins - inst_plugins).each do |name_version|
-        ::Plugin.find_by_name_and_version(*name_version).destroy
-      end
-      installed_plugins.each do |name_version|
-        plugins[name_version] = Plugin.new(File.join(@path_to_specs, "#{name_version.join('-')}.gemspec"))
+      
+      plugins = Dir[File.join(path_to_specs, "*.gemspec")].map {|file| Plugin.new(file)}
+      @installed_plugins = Plugins.new(*plugins)
+      @enabled_plugins   = Plugins.new(*plugins.select {|plugin| plugin.enabled?  })
+      @disabled_plugins  = Plugins.new(*plugins.select {|plugin| plugin.disabled? })
+      @started_plugins   = Plugins.new(*plugins.select {|plugin| plugin.started?  })
+      
+      ::Plugin.find(:all).each do |plugin| 
+        plugin.destroy if @installed_plugins[plugin.full_name].nil?        
       end
     end
     
     def start(config=nil)
       unless (@started ||= false)
         # start enabled plugins
-        @enabled_plugins = plugins.values.select { |plugin| plugin.enabled? }
-        DependencyList.from_plugin_list(@enabled_plugins).dependency_order.reverse.each do |spec|
-          # only start plugins which dependencies are met
-          plugins(spec.name, spec.version.to_s).start(config) if spec.dependencies.all? do |dep|
-            @enabled_plugins.any? { |p| p.specification.satisfies_requirement?(dep) }
-          end
-        end
+        @enabled_plugins.load_order.each { |plugin| plugin.start(config) }
         @started = true
       end
     end
@@ -55,33 +45,100 @@ module PluginSystem
       end
     end
     
-    def plugins(name=nil, version=nil)
-      #TODO: Add specs for this method & Refactor it!
-      if name.nil? && version.nil?
-        @plugins ||= {}
-      elsif name.kind_of?(String) && version.kind_of?(String)
-        @plugins[[name, version]]
+    def registered_plugins
+      ::Plugin.find(:all)
+    end
+    
+    #TODO: The *_plugin methods should take care of dependencies
+    
+    def enable_plugin(full_name)
+      if plugin = @disabled_plugins[full_name]
+        plugin.enable
+        @disabled_plugins.remove(plugin)
+        @enabled_plugins.add(plugin)
+      else
+        raise
       end
     end
     
-    def installed_plugins
-      gems = Dir[File.join(@path_to_specs, "*.gemspec")]
-      gems.select do |gem| 
-        File.exist? File.join(@path_to_gems, File.basename(gem, ".gemspec"))
-      end.map { |gem| File.basename(gem, ".gemspec").split(/-([^-]+)/) }
+    def disable_plugin(full_name)
+      if plugin = @enabled_plugins[full_name]
+        plugin.disable
+        @enabled_plugins.remove(plugin)
+        @disabled_plugins.add(plugin)
+      else
+        raise
+      end
     end
     
-    def registered_plugins
-      plugins = ::Plugin.find(:all)
-      plugins.map { |plugin| [plugin.name, plugin.version] }
+    def start_plugin(full_name)
+      if plugin = @enabled_plugins[full_name]
+        plugin.start
+        @started_plugins.add(plugin)
+      else
+        raise
+      end
+    end
+
+    def stop_plugin(full_name)
+      if plugin = @started_plugins[full_name]
+        plugin.stop
+        @started_plugins.remove(plugin)
+      else
+      end
+    end
+    
+    class Plugins
+      include Enumerable
+      
+      attr_reader :dependency_list
+      
+      def initialize(*plugins)
+        @plugins = []
+        add(*plugins)
+      end
+      
+      def each
+        @plugins.each do |plugin|
+          yield plugin
+        end
+      end
+      
+      def add(*plugins)
+        @plugins.concat plugins
+        generate_dependency_order
+      end
+      
+      def remove(plugin)
+        @plugins.delete plugin
+        generate_dependency_order
+      end
+      
+      def [](full_name)
+        @plugins.find {|plugin| plugin.full_name == full_name }
+      end
+      
+      def load_order
+        @dependency_order.reverse.select do |plugin|
+          plugin.specification.dependencies.all? do |dep|
+            @plugins.any? { |p| p.specification.satisfies_requirement?(dep) }
+          end
+        end        
+      end
+      
+      private
+        def generate_dependency_order
+          @dependency_order = ::PluginSystem::DependencyList.from_plugin_list(@plugins).dependency_order.map do |spec|
+            self[spec.full_name]
+          end
+        end
     end
     
     private
-    
-    def root=(value)
-      @root = File.expand_path(value)
-      @path_to_gems = File.join(@root, 'gems')
-      @path_to_specs = File.join(@root, 'specifications')
-    end    
+      def root=(value)
+        @root = File.expand_path(value)
+        @path_to_gems = File.join(@root, 'gems')
+        @path_to_specs = File.join(@root, 'specifications')
+      end
   end
 end

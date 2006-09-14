@@ -7,13 +7,3 @@ another_plugin_001:
   id: 2
   name: another_plugin
   version: 0.0.1
-
-another_plugin_002:
-  id: 3
-  name: another_plugin
-  version: 0.0.2
-
-yet_another_plugin_003:
-  id: 4
-  name: yet_another_plugin
-  version: 0.0.3

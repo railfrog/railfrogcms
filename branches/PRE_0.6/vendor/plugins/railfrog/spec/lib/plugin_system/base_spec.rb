@@ -1,22 +1,20 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
 
-#TODO:  Refactor setup and teardown methods
-
 context "The initialized plugin system with no installed and no registered plugins" do
   setup do
     @plugin_system = PluginSystem::Base.new(@@__no_plugins_root)
   end
   
   specify "should have no installed plugins" do
-    @plugin_system.should_have(0).installed_plugins
+    @plugin_system.installed_plugins.should_have(0).entries
   end
   
   specify "should have no registered plugins" do
-    @plugin_system.should_have(0).registered_plugins
+    @plugin_system.registered_plugins.should_have(0).entries
   end
 end
 
-context "The initialized plugin system with no installed but 4 registered plugins" do
+context "The initialized plugin system with no installed but 2 registered plugins" do
   fixtures :plugins
   
   setup do
@@ -24,11 +22,11 @@ context "The initialized plugin system with no installed but 4 registered plugin
   end
   
   specify "should have no installed plugins" do
-    @plugin_system.should_have(0).installed_plugins
+    @plugin_system.installed_plugins.should_have(0).entries
   end
   
   specify "should have no registered plugins" do
-    @plugin_system.should_have(0).registered_plugins
+    @plugin_system.registered_plugins.should_have(0).entries
   end
   
   teardown do
@@ -36,68 +34,78 @@ context "The initialized plugin system with no installed but 4 registered plugin
   end
 end
 
-#TODO:  Plugin can only be enabled when all plugins it depends are enabled (create .enable(plugin), also .enabled?(plugin))
-#TODO:  Plugin can only be disabled when all plugins that depend on it are disabled (create .disable(plugin), also .disabled?(plugin))
-#TODO:  Plugin can only be started when all associated dependencies are met (create .start(plugin), also .started?(plugin))
+context "The initialized plugin system with 5 installed plugins (in general)" do
+  setup do
+    @plugin_system = PluginSystem::Base.new(@@__plugin_system_root)
+    @plugins = %w{another_plugin-0.0.1 another_plugin-0.0.2
+                  the_first_plugin-0.0.1 without_files-1.0.0
+                  yet_another_plugin-0.0.3}
+  end
+  
+  specify "should have 5 installed plugins" do
+    installed_plugins = @plugin_system.installed_plugins.map {|plugin| plugin.full_name }
+    installed_plugins.sort.should_equal @plugins
+  end
+  
+  specify "should have 5 registered plugins" do
+    registered_plugins = @plugin_system.registered_plugins.map {|plugin| plugin.full_name }
+    registered_plugins.sort.should_equal @plugins
+  end
+end
 
-context "The initialized plugin system with 4 installed plugins (in general)" do
+context "The initialized plugin system with disabled plugins" do
   setup do
     @plugin_system = PluginSystem::Base.new(@@__plugin_system_root)
   end
   
-  specify "should have 4 installed plugins" do
-    @plugin_system.should_have(4).installed_plugins
-    [["another_plugin", "0.0.1"],
-    ["another_plugin", "0.0.2"],
-    ["the_first_plugin", "0.0.1"],
-    ["yet_another_plugin", "0.0.3"]].each do |plugin|
-      @plugin_system.installed_plugins.should_include plugin
-    end
+  specify "can enable 'the_first_plugin-0.0.1'" do
+    @plugin_system.enable_plugin('the_first_plugin-0.0.1')
+    @plugin_system.enabled_plugins['the_first_plugin-0.0.1'].should_be_enabled
   end
-  
-  specify "should have 4 registered plugins" do
-    @plugin_system.should_have(4).registered_plugins
-    [["another_plugin", "0.0.1"],
-    ["another_plugin", "0.0.2"],
-    ["the_first_plugin", "0.0.1"],
-    ["yet_another_plugin", "0.0.3"]].each do |plugin|
-      @plugin_system.registered_plugins.should_include plugin
-    end
-  end
-  
-#  specify "can enable <plugin>" do
-#  end
-#  
-#  specify "cannot enable <plugin>" do
-#  end
-#  
-#  specify "can disable <plugin>" do
-#  end
-#  
-#  specify "cannot disable <plugin>" do
-#  end
-#  
-#  specify "can start <plugin>" do
-#  end
-#  
-#  specify "cannot start <plugin>" do
-#  end
 end
 
-context "The started plugin system with 4 installed plugins (yet_another_plugin enabled)" do
+context "The initialized plugin system with the enabled plugin 'the_first_plugin-0.0.1' (all other plugins disabled)" do
+  setup do
+    @plugin_system = PluginSystem::Base.new(@@__plugin_system_root)
+    @plugin_system.enable_plugin('the_first_plugin-0.0.1')
+  end
+  
+  specify "can disable 'the_first_plugin-0.0.1'" do
+    @plugin_system.disable_plugin('the_first_plugin-0.0.1')
+    @plugin_system.disabled_plugins['the_first_plugin-0.0.1'].should_be_disabled
+  end
+  
+  specify "can start 'the_first_plugin-0.0.1'" do
+    @plugin_system.start_plugin('the_first_plugin-0.0.1')
+    @plugin_system.started_plugins['the_first_plugin-0.0.1'].should_be_started
+  end
+end
+
+context "The initialized plugin system with the started plugin 'the_first_plugin-0.0.1' (all other plugins disabled)" do
+  setup do
+    @plugin_system = PluginSystem::Base.new(@@__plugin_system_root)
+    @plugin_system.enable_plugin('the_first_plugin-0.0.1')
+    @plugin_system.start_plugin('the_first_plugin-0.0.1')
+  end
+  
+  specify "can stop 'the_first_plugin-0.0.1'" do
+    @plugin_system.stop_plugin('the_first_plugin-0.0.1')
+    @plugin_system.enabled_plugins['the_first_plugin-0.0.1'].should_not_be_started
+  end
+end
+
+context "The started plugin system with the enabled plugin 'yet_another_plugin-0.0.3' (all other plugins disabled)" do
   setup do
     @plugin_system = PluginSystem::Base.new(@@__plugin_system_root)
     
-    @yet_another_plugin = @plugin_system.plugins('yet_another_plugin', '0.0.3')
-    @another_plugin = @plugin_system.plugins('another_plugin', '0.0.2')
-    @yet_another_plugin.enable if @yet_another_plugin.disabled?
+    @yet_another_plugin = @plugin_system.installed_plugins['yet_another_plugin-0.0.3']
+    @plugin_system.enable_plugin('yet_another_plugin-0.0.3')
     
     @plugin_system.start
   end
   
   specify "should not have started any plugins" do
     @yet_another_plugin.should_not_be_started
-    @another_plugin.should_not_be_started
   end
   
   teardown do
@@ -105,17 +113,14 @@ context "The started plugin system with 4 installed plugins (yet_another_plugin 
   end
 end
 
-# This spec does fail because the plugin system doesn't know which version of
-# another_plugin is enabled. 
-context "The started plugin system with 4 installed plugins (yet_another_plugin and another_plugin enabled)" do
+context "The started plugin system with the enabled plugins 'yet_another_plugin-0.0.3' and 'another_plugin-0.0.2' (all other plugins disabled)" do
   setup do
     @plugin_system = PluginSystem::Base.new(@@__plugin_system_root)
     
-    @yet_another_plugin = @plugin_system.plugins("yet_another_plugin", "0.0.3")
-    @another_plugin = @plugin_system.plugins("another_plugin", "0.0.2")
-    [@yet_another_plugin, @another_plugin].each do |plugin|
-      plugin.enable
-    end
+    @yet_another_plugin = @plugin_system.installed_plugins['yet_another_plugin-0.0.3']
+    @another_plugin = @plugin_system.installed_plugins['another_plugin-0.0.2']
+    @plugin_system.enable_plugin('yet_another_plugin-0.0.3')
+    @plugin_system.enable_plugin('another_plugin-0.0.2')
     
     @plugin_system.start
   end

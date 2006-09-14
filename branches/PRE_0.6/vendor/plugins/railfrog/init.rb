@@ -8,13 +8,7 @@ edge_rails = false
 
 if edge_rails
   require 'plugin_system'
-  require File.join(RAILS_ROOT, 'vendor', 'plugins', 'railfrog', 'app', 'models', 'plugin.rb')
-  
-  unless Plugin.table_exists?
-    load File.dirname(__FILE__) + '/db/plugins_table.rb'
-  end
 
   # Start Plugin System 
-  rf_plugins_root = File.join(RAILS_ROOT, 'vendor', 'railfrog_plugins')
-  PluginSystem::Base.startup(rf_plugins_root, config)
+  PluginSystem::Instance.start(config)
 end
