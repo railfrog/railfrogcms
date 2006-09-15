@@ -26,14 +26,17 @@ module PluginSystem
       @started_plugins   = Plugins.new(*plugins.select {|plugin| plugin.started?  })
       
       ::Plugin.find(:all).each do |plugin| 
-        plugin.destroy if @installed_plugins[plugin.full_name].nil?        
+        plugin.destroy if @installed_plugins[plugin.full_name].nil?
       end
     end
     
     def start(config=nil)
       unless (@started ||= false)
         # start enabled plugins
-        @enabled_plugins.load_order.each { |plugin| plugin.start(config) }
+        @enabled_plugins.load_order.each do |plugin|
+          plugin.start(config)
+          @started_plugins.add(plugin)
+        end
         @started = true
       end
     end
