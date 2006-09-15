@@ -1,1 +1,1 @@
-require 'railfrog'
+require 'railfrog_core'

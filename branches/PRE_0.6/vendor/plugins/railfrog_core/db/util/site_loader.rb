@@ -1,4 +1,4 @@
-require File.join(RAILS_ROOT, 'config', 'environment')
+require File.expand_path(File.join(RAILS_ROOT, 'config', 'environment'))
 require File.dirname(__FILE__) + '/definition_loader'
 
 #FIXME: Write help for SiteLoader usage

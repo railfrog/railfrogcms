@@ -18,7 +18,7 @@ RailFrog is a lightweight Content Management System for building websites.
 == Troubleshooting ==
 
  If your database gets mashed, try
- {{{$ rake migrate:engines:railfrog_core VERSION=0 && rake migrate:engines:railfrog_core}}}
+ {{{$ rake db:migrate:engines:railfrog_core VERSION=0 && rake db:migrate:engines:railfrog_core}}}
 
 == Database Setup ==
 

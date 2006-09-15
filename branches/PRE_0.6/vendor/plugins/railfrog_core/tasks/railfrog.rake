@@ -1,4 +1,4 @@
-require File.join(RAILS_ROOT, 'vendor', 'plugins', 'railfrog_core', 'db', 'util', 'site_loader')
+require File.expand_path(File.dirname(__FILE__) + '/../db/util/site_loader')
 
 namespace :railfrog do
   desc "Load site to database"

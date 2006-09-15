@@ -1,6 +1,6 @@
 require 'pp'
 require 'yaml'
-require File.join(RAILS_ROOT, 'config', 'environment')
+require File.expand_path(File.join(RAILS_ROOT, 'config', 'environment'))
 require File.dirname(__FILE__) + '/../../app/models/chunk'
 
 # FIXME: write documentation
