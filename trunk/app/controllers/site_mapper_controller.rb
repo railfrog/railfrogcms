@@ -39,13 +39,13 @@ class SiteMapperController < ApplicationController
           if layout.include?("mapping:") then
             layout.gsub!("mapping:", "")
 
-	    layout_chunk = SiteMapping.find_chunk(layout.split('/'))
-	    if layout_chunk then
-	      rendering_options[:inline] = layout_chunk.content
-	    else 
-	      rendering_options[:inline] = "Couldn't find layout #{layout}" 
-	    end
-	      
+            layout_chunk = SiteMapping.find_chunk(layout.split('/'))
+            if layout_chunk then
+              rendering_options[:inline] = layout_chunk.content
+            else
+              rendering_options[:inline] = "Couldn't find layout #{layout}" 
+            end
+
             @rf_labels["chunk_content"] = @chunk_content
           else
             rendering_options[:partial] = "chunk_content"
@@ -58,7 +58,15 @@ class SiteMapperController < ApplicationController
         session[:rf_labels] = @rf_labels
         rendering_options[:locals] = {:rf_labels => @rf_labels}
 
-        data = render_to_string rendering_options
+        begin
+          data = render_to_string rendering_options
+        rescue Exception => exc
+          data = %Q{<h1>500 RailFrog Error</h1>
+            <p>Message: #{exc.message}</p>
+            <p>#{exc.backtrace.join("<br />")}</p>}
+
+          data_options[:status] = 500
+        end
       else
         data = @chunk_content
       end
