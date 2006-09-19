@@ -1,1 +1,6 @@
-<%= show_hello_world %> 
+<%=
+if @name
+  "Hello #{@name}!"
+else
+  show_hello_world
+end %>

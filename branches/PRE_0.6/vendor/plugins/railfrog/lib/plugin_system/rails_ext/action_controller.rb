@@ -5,9 +5,10 @@ module ::ActionController
     end
     
     def self.additional_template_roots
-      @@additional_template_roots = ::PluginSystem::Instance.started_plugins.load_order.inject([]) do |array, plugin|
+      @@additional_template_roots = ::PluginSystem::Instance.started_plugins.load_order.reverse.inject([]) do |array, plugin|
         plugin_template_root = File.join(plugin.path_to_gem, 'app', 'views')
         array << plugin_template_root if File.exist?(plugin_template_root)
+        array
       end
     end
     
@@ -25,6 +26,24 @@ module ::ActionController
             array.concat Dir.glob("#{tmpl_root}/layouts/**/*")
           end
         end
+    end
+  end
+  
+  module Routing
+    class RouteSet
+      def add_maps
+        yield Mapper.new(self)
+        named_routes.install
+      end
+      
+      def load_routes!
+        load File.join("#{RAILS_ROOT}/config/routes.rb")
+        ::PluginSystem::Instance.started_plugins.load_order.reverse.each do |plugin|
+          routes_file = File.join(plugin.path_to_gem, 'config', 'routes.rb')
+          load routes_file if File.file? routes_file
+        end
+        add_route ':controller/:action/:id'
+      end
     end
   end
 end

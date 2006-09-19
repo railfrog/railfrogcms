@@ -15,8 +15,6 @@ module PluginSystem
       end
     end
     
-    ##########################################
-    
     def enable
       if enabled?
         raise Exceptions::PluginAlreadyEnabledException,
@@ -61,14 +59,25 @@ module PluginSystem
         else
           ::ActionController::Routing.controller_paths << controller_path
         end
-        load_paths = [].concat %w(
+        
+        plugin_load_paths = %w(
           app/models
           app/controllers
           app/helpers
           lib 
         ).map { |dir| "#{path_to_gem}/#{dir}" }.select { |dir| File.directory?(dir) }
-        $LOAD_PATH.concat load_paths
-        ::Dependencies.load_paths.concat load_paths
+        
+        first_plugin_load_path = $LOAD_PATH.find do |path|
+          path.index(File.expand_path(File.join(path_to_gem, '..'))) == 0
+        end
+        
+        $LOAD_PATH.insert(first_plugin_load_path ? $LOAD_PATH.index(first_plugin_load_path) : -1, *plugin_load_paths)
+        # better don't put lib to the autoload path
+        ::Dependencies.load_paths.insert(first_plugin_load_path ? ::Dependencies.load_paths.index(first_plugin_load_path) : -1, *plugin_load_paths[0..2])
+        
+        init_file = File.join(path_to_gem, 'init.rb')
+        load init_file if File.file? init_file
+        
         @started = true
       end
       true
@@ -80,8 +89,10 @@ module PluginSystem
     
     def stop
       if started?
+        [$LOAD_PATH, ::Dependencies.load_paths].each do |load_paths|
+          load_paths.delete_if {|path| path.index(path_to_gem) == 0 }
+        end
         @started = false
-        #TODO: Unload plugin
       end
       true
     end
@@ -96,8 +107,6 @@ module PluginSystem
       end
       true
     end
-    
-    ##########################################    
     
     def name
       specification.name

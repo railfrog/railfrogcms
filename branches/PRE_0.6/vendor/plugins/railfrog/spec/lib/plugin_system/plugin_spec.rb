@@ -9,10 +9,6 @@ context "A plugin (in general)" do
                     File.join(@@__plugin_system_specs, 'the_first_plugin-0.0.1.gemspec'))
   end
   
-  specify "should be a PluginSystem::Plugin object" do
-    @new_plugin.should_be_a_kind_of PluginSystem::Plugin
-  end
-  
   specify "should raise exception if specification file does not exist" do
     inexistent_spec = File.join(@@__plugin_system_specs, 'inexistent.gemspec')
     lambda { @inexistent_plugin = PluginSystem::Plugin.new(inexistent_spec) }.should_raise PluginSystem::Exceptions::SpecificationFileDoesNotExistException
@@ -26,18 +22,13 @@ context "A plugin (in general)" do
   specify "should be installed" do
     File.exist?(File.join(@@__plugin_system_specs, '..', 'gems', 'the_first_plugin-0.0.1'))
   end
-  
-  specify "should reflect changes made to the corresponding database entry immidately" do
-    @new_plugin.database.should_not_be_enabled
-    Plugin.find_by_name_and_version("the_first_plugin", "0.0.1").update_attribute(:enabled, true)
-    @new_plugin.database.should_be_enabled
-  end
 end
 
-context "A disabled plugin" do  
+context "A disabled plugin" do
   setup do
     @disabled_plugin = PluginSystem::Plugin.new(
                          File.join(@@__plugin_system_specs, 'the_first_plugin-0.0.1.gemspec'))
+    @disabled_plugin.disable unless @disabled_plugin.disabled? # replace by mock/stub
   end
   
   specify "should be disabled" do
@@ -72,7 +63,7 @@ context "An enabled plugin" do
   setup do
     @enabled_plugin = PluginSystem::Plugin.new(
                         File.join(@@__plugin_system_specs, 'the_first_plugin-0.0.1.gemspec'))
-    @enabled_plugin.enable if @enabled_plugin.disabled?
+    @enabled_plugin.enable unless @enabled_plugin.enabled? # replace by mock/stub
   end
   
   specify "should be enabled" do
@@ -109,7 +100,7 @@ context "A started plugin" do
   setup do
     @started_plugin = PluginSystem::Plugin.new(
                         File.join(@@__plugin_system_specs, 'the_first_plugin-0.0.1.gemspec'))
-    @started_plugin.enable if @started_plugin.disabled?
+    @started_plugin.database.stubs(:enabled?).returns(true)
     @started_plugin.start
   end
   
@@ -119,29 +110,10 @@ context "A started plugin" do
   
   specify "should be started" do
     @started_plugin.should_be_started
-    #TODO: Test if really started (i.e. specs like "controllers should be accessible")
   end
   
   specify "cannot be started" do
     lambda { @started_plugin.start }.should_raise PluginSystem::Exceptions::PluginAlreadyStartedException
     @started_plugin.should_be_started
-  end
-  
-  teardown do
-    @started_plugin.stop
-  end
-end
-
-context "Two plugins with the same name" do
-  setup do
-    @another_plugin_001 = PluginSystem::Plugin.new(File.join(@@__plugin_system_specs, 'another_plugin-0.0.1.gemspec'))
-    @another_plugin_002 = PluginSystem::Plugin.new(File.join(@@__plugin_system_specs, 'another_plugin-0.0.2.gemspec'))
-  end
-  
-  specify "cannot both be enabled" do
-    @another_plugin_001.enable
-    lambda { @another_plugin_002.enable }.should_raise PluginSystem::Exceptions::PluginWithSameNameAlreadyEnabledException
-    @another_plugin_001.should_be_enabled
-    @another_plugin_002.should_not_be_enabled
   end
 end

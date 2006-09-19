@@ -1,5 +1,7 @@
 class HelloWorldController < ApplicationController
   def index
-    @name = params[:name]
+    @world = "World"
   end
+  
+  def plugin_name() end
 end
