@@ -1,9 +1,0 @@
-the_first_plugin_001:
-  id: 1
-  name: the_first_plugin
-  version: 0.0.1
-
-another_plugin_001:
-  id: 2
-  name: another_plugin
-  version: 0.0.1

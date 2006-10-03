@@ -15,9 +15,9 @@ context "The initialized plugin system with no installed and no registered plugi
 end
 
 context "The initialized plugin system with no installed but 2 registered plugins" do
-  fixtures :plugins
-  
   setup do
+    Plugin.create(:name => 'the_first_plugin', :version => '0.0.1')
+    Plugin.create(:name => 'another_plugin', :version => '0.0.1')
     @plugin_system = PluginSystem::Base.new(@@__no_plugins_root)
   end
   
@@ -102,30 +102,14 @@ context "The started plugin system with the enabled plugin 'another_plugin-0.0.2
     @another_plugin.stubs(:enabled?).returns(true)
     
     @plugin_system.start
-    
-    PluginSystem::Instance = @plugin_system #FIXME: replace with stub
-    setup_with_controller(:hello_world)
   end
   
   specify "should have started the 'another_plugin-0.0.2'" do
     @another_plugin.should_be_started
   end
   
-  specify "should return 'Hello World!' on GET to /hello_world/" do
-    get :index
-    response.should_be_success
-    response.body.should_have_tag('p', :content => 'Hello World!')
-  end
-  
-  specify "should return 'another_plugin-0.0.2' on GET to /hello_world/plugin_name" do
-    get :plugin_name
-    response.should_be_success
-    response.body.should_have_tag('p', :content => 'another_plugin-0.0.2')
-  end
-  
   teardown do
     @plugin_system.shutdown
-    Dispatcher.reset_application!
   end
 end
 
@@ -158,9 +142,6 @@ context "The started plugin system with the enabled plugins 'yet_another_plugin-
     @another_plugin.stubs(:enabled?).returns(true)
     
     @plugin_system.start
-    
-    PluginSystem::Instance = @plugin_system #FIXME: replace with stub
-    setup_with_controller(:hello_world)
   end
   
   specify "should have started the enabled plugins" do
@@ -168,20 +149,7 @@ context "The started plugin system with the enabled plugins 'yet_another_plugin-
     @another_plugin.should_be_started
   end
   
-  specify "should return 'Hello Frogs!' on GET to /hello_world/" do
-    get :index
-    response.should_be_success
-    response.body.should_have_tag('p', :content => 'Hello Frogs!')
-  end
-  
-  specify "should return 'yet_another_plugin-0.0.3' on GET to /hello_world/plugin_name" do
-    get :plugin_name
-    response.should_be_success
-    response.body.should_have_tag('p', :content => 'yet_another_plugin-0.0.3')
-  end
-  
   teardown do
     @plugin_system.shutdown
-    Dispatcher.reset_application!
   end
 end
