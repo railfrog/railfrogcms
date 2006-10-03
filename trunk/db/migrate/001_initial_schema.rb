@@ -72,7 +72,12 @@ class InitialSchema < ActiveRecord::Migration
     User.create :first_name => "Test", :last_name => "Tester", :email => "test@test.com", :password => "test"
 
     STDERR.puts "  loading mime types file"
-    load_mime_types_file File.dirname(__FILE__) + '/mime.types.4debug'
+    if RAILS_ENV == 'production'
+      file_name = File.dirname(__FILE__) + '/mime.types'
+    else
+      file_name = File.dirname(__FILE__) + '/mime.types.4debug'
+    end
+    load_mime_types_file file_name
 
     Chunk.reset_column_information
 
