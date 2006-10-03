@@ -70,3 +70,30 @@ module Dependencies
     end
   end
 end
+
+# TODO: Remove as soon as http://dev.rubyonrails.org/ticket/6272 is fixed.
+class Class
+  def const_missing(class_id)
+    if [Object, Kernel].include?(self) || parent == self
+      super
+    else
+      begin
+        begin
+          Dependencies.load_missing_constant self, class_id
+        rescue NameError
+          begin
+            return parent.const_get(class_id)
+          rescue NameError
+            parent.send :const_missing, class_id
+          end
+        end
+      rescue NameError => e
+        # Make sure that the name we are missing is the one that caused the error
+        parent_qualified_name = Dependencies.qualified_name_for parent, class_id
+        raise unless e.missing_name? parent_qualified_name
+        qualified_name = Dependencies.qualified_name_for self, class_id
+        raise NameError.new("uninitialized constant #{qualified_name}").copy_blame!(e)
+      end
+    end
+  end
+end
