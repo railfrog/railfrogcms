@@ -1,0 +1,2 @@
+module Railfrog::RolesHelper
+end

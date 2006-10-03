@@ -1,0 +1,2 @@
+module Railfrog::BaseHelper
+end

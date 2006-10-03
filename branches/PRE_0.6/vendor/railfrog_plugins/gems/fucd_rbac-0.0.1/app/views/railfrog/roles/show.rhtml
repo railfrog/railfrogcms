@@ -1,0 +1,19 @@
+<h2>Role <%= @role.name %></h2>
+
+<ul class="actions">
+  <li><%= link_to 'Edit', railfrog_edit_role_url(@role) %></li>
+  <li><%= link_to 'Delete', railfrog_role_url(@role), :method => :delete, :confirm => "Are you sure?" %></li>
+  <li><%= link_to 'Back to List', railfrog_roles_url %></li>
+</ul>
+
+<h3>Role Data</h3>
+
+<dl>
+  <dt>Name</dt>
+  <dd><%= @role.name %></dd>
+  
+  <dt>Description</dt>
+  <dd><%= @role.description %></dd>
+</dl>
+
+<h3>Assigned Users</h3>
