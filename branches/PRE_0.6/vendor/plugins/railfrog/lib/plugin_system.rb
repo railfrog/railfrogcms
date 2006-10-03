@@ -5,7 +5,7 @@ require 'plugin_system/plugin'
 require 'plugin_system/plugins_list'
 require 'plugin_system/rails_ext/action_controller'
 require 'plugin_system/rails_ext/action_view'
-#require 'plugin_system/rails_ext/active_record'
+require 'plugin_system/rails_ext/active_record'
 require 'plugin_system/rails_ext/dependencies'
 require 'plugin_system/rails_ext/routing'
 
