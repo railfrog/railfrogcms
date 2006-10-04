@@ -1,5 +1,6 @@
+require File.expand_path(File.join(RAILS_ROOT, 'config', 'environment'))
+
 if Object.const_defined?('PluginSystem')
-  require File.expand_path(File.join(RAILS_ROOT, 'config', 'environment'))
   require 'spec/rake/spectask'
   
   Dir["./vendor/railfrog_plugins/gems/*/tasks/**/*.rake"].sort.each { |ext| load ext }

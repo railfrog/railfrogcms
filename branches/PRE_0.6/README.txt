@@ -44,5 +44,6 @@ If you are looking at the new plugin code, you'll currently (04 Oct 2006) need t
  1. Install Edge Rails (e.g. run {{{rake rails:freeze:edge}}})
  2. Disable Rails Engines (e.g. rename /vendor/plugins/engines/init.rb to init.rb~)
  3. Enable the "fucd_rbac" plugin: In your Rails console ({{{ruby script/console}}}) run {{{Plugin.find(1).update_attributes(:enabled => true)}}}
- 4. Start your development server (e.g. {{{ruby script/server}}})
- 5. Locate your browser to http://localhost:3000/railfrog/users or http://localhost:3000/railfrog/roles
+ 4. Run {{{rake db:migrate:railfrog_plugin:fucd_rbac}}} to create the tables for the "fucd_rbac" plugin 
+ 5. Start your development server (e.g. {{{ruby script/server}}})
+ 6. Locate your browser to http://localhost:3000/railfrog/users or http://localhost:3000/railfrog/roles
