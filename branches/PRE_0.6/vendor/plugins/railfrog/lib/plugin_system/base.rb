@@ -70,7 +70,7 @@ module PluginSystem
     #
     #
     def registered_plugins
-      ::Plugin.find(:all)
+      Database::Plugin.find(:all)
     end
     
     private

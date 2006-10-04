@@ -7,7 +7,7 @@ module PluginSystem
     def initialize(specification_file)
       if File.exists? specification_file
         @specification = ::Gem::Specification.load(specification_file)
-        @database = ::Plugin.find_or_create_by_name_and_version(specification.name, specification.version.to_s)
+        @database = Database::Plugin.find_or_create_by_name_and_version(specification.name, specification.version.to_s)
         @path_to_gem = File.expand_path(File.join(File.dirname(specification_file), '..', 'gems', full_name))
       else
         raise Exceptions::SpecificationFileDoesNotExistException,

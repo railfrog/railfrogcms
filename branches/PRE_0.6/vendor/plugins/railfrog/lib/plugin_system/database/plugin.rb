@@ -1,4 +1,4 @@
-class Plugin < ActiveRecord::Base
+class PluginSystem::Database::Plugin < ActiveRecord::Base
   validates_presence_of :name, :version
   validates_format_of :version, :with => /^#{Gem::Version.const_get(:NUM_RE)}$/
   
@@ -13,5 +13,16 @@ class Plugin < ActiveRecord::Base
   
   def full_name
     "#{name}-#{version}"
+  end
+end
+
+#TODO: Don't do this automatically? What if another 'plugins' table is already present?
+unless PluginSystem::Database::Plugin.table_exists?
+  ActiveRecord::Schema.define do
+    create_table "plugins" do |t|
+      t.column "name",    :string
+      t.column "version", :string
+      t.column "enabled", :boolean, :default => false
+    end
   end
 end
