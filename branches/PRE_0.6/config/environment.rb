@@ -54,4 +54,4 @@ end
 
 ActionController::Base.perform_caching = true
 
-Engines.start 'railfrog_core'
+Engines.start 'railfrog_core' unless Object.const_defined?('PluginSystem') # FIXME

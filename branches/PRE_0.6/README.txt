@@ -37,31 +37,12 @@ RailFrog is a lightweight Content Management System for building websites.
     > create database railfrog_production with encoding = 'utf8';
     > create user railfrog with password 'ribbet!';
 
+== Working with the Plugin System in PRE_0.6 ==
+If you are looking at the new plugin code, you'll currently (04 Oct 2006) need to be doing some extra work.
 
-== Working with PRE_0.6 ==
-If you are looking at the new plugin code, you'll currently (21 Sep 2006) need to be doing some extra work. These are some rough notes from IRC:
-http://www.xmlv.com/railfrog/irclogs/railfrog.log.20060915
-which have received only minimal testing:
-
-0) rake rails:freeeze:edge
-1) edge_rails = true in /vendor/plugins/railfrog/init.rb
-2) rename init.rb in /vendor/plugins/engines/ to init.rb~
-3) comment out the line about the SiteMapper in config/routes.rb
-4) comment out Engines.start lines in config/environment.rb
-5) start server
-(this creates the plugins table)
-6) change the value of enabled (default = 0) for the hello_world plugin in the plugins table to 1 (true)
-7) stop the server and start it again
-
-
-ruby script/server
-then open your favourite sql tool
-and in the plugins table of your pre06 database you should see 1 entry
-in the enabled column: change 0 to 1
-then save your changes
-then stop the started server (i.e. Ctrl+C)
-and start the server again
-you can also use ruby script/console to change the plugin from disabled to enabled:
-@plugin = Plugin.find(:first)
-@plugin.enabled = true
-@plugin.save
+ 0. Install Railfrog just like always.
+ 1. Install Edge Rails (e.g. run {{{rake rails:freeze:edge}}})
+ 2. Disable Rails Engines (e.g. rename /vendor/plugins/engines/init.rb to init.rb~)
+ 3. Enable the "fucd_rbac" plugin: In your Rails console ({{{ruby script/console}}}) run {{{Plugin.find(1).update_attributes(:enabled => true)}}}
+ 4. Start your development server (e.g. {{{ruby script/server}}})
+ 5. Locate your browser to http://localhost:3000/railfrog/users or http://localhost:3000/railfrog/roles

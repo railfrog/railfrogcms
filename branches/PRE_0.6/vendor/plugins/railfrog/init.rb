@@ -1,12 +1,10 @@
 require 'hash_extension'
 
-# The Plugin System needs Edge Rails to work. Set edge_rails = true if you have
-# Edge Rails and want to start the Railfrog Plugin System.
+# The Plugin System needs Edge Rails to work.
 # NOTE: Currently Rails Engines doesn't work with Edge Rails, so don't forget to
 # turn Rails Engines off.
-edge_rails = false
 
-if edge_rails
+if Dependencies.respond_to?(:autoloaded_constants) # I just try to figure out if Edge Rails is installed
   require 'plugin_system'
   require 'railfrog_resources'
   
