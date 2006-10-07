@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
-    <title>RailFrog :: <%= params[:controller] %> > <%= params[:action] %></title>
+    <title>Railfrog :: <%= params[:controller] %> > <%= params[:action] %></title>
     <%= engine_stylesheet 'railfrog_core' %>
     <script type="text/javascript">
       _editor_url  = "/engine_files/railfrog_core/xinha";
@@ -22,25 +22,25 @@
         <div id="branding-tagline"><%# TODO: rf_labels['branding-tagline'] %>Design, Deploy and Maintain Websites with Joy</div>
       </div>
 
-      <div id="page-heading"><%= @page_heading %></div>
+      <div id="page-heading">Railfrog Control Panel</div>
 
       <div id="navigation">
         <ul id="nav-main" class="horizontal-list">
           <%# FIXME: highlight navigation items in a better way than this %>
-          <li<%= ' class="active"' if params[:action] == 'dashboard' %>>
-            <%= link_to 'Dashboard', :action => 'dashboard' %>
+          <li<%= ' class="active"' if params[:controller] == 'railfrog_admin' && params[:action] == 'dashboard' %>>
+            <%= link_to 'Dashboard', :controller => 'railfrog_admin', :action => 'dashboard' %>
           </li>
-          <li<%= ' class="active"' if params[:action] == 'explore' %>>
-            <%= link_to 'Site Explorer', :action => 'explore' %>
+          <li<%= ' class="active"' if params[:controller] == 'railfrog_admin' && params[:action] == 'explore' %>>
+            <%= link_to 'Site Explorer', :controller => 'railfrog_admin', :action => 'explore' %>
           </li>
-          <li<%= ' class="active"' if params[:action] == 'settings' %>>
-            <%= link_to 'Settings', :action => 'settings' %>
+          <li<%= ' class="active"' if params[:controller] == 'railfrog_admin' && params[:action] == 'settings' %>>
+            <%= link_to 'Settings', :controller => 'railfrog_admin', :action => 'settings' %>
           </li>
-          <li<%= ' class="active"' if params[:action] == 'users' %>>
-            <%= link_to 'User Administration', :action => 'users' %>
+          <li<%= ' class="active"' if params[:controller] == 'user' %>>
+            <%= link_to 'User Administration', :controller => 'user', :action => 'index' %>
           </li>
-          <li<%= ' class="active"' if params[:action] == 'plugins' %>>
-            <%= link_to 'Plugins', :action => 'plugins' %>
+          <li>
+            <%= link_to 'Logout', :controller => 'user', :action => 'logout' %>
           </li>
         </ul>
         <% if @site_mapping %>
@@ -53,8 +53,6 @@
 
       <div id="search">
         <form id="search-input">
-          <input type="text"/>
-          <input type="submit" value="Search"/>
         </form>
         <dl id="search-output">
         </dl>
@@ -62,6 +60,7 @@
 
       <div id="msg-area-flash">
         <span id="msg-warning"><%= flash[:warning] %></span>
+        <span id="msg-error"><%= flash[:error] %></span>
         <span id="msg-message"><%= flash[:message] %></span>
         <span id="msg-notice"><%= flash[:notice] %></span>
       </div>
@@ -74,7 +73,7 @@
           <li>About Your Website</li>
           <li>About Railfrog</li>
         </ul>
-        <div id="siteinfo-legal">© 2006 Foo Bar</div>
+        <div id="siteinfo-legal">&copy; 2006 Railfrog</div>
         <div id="siteinfo-credits"><%= link_to 'Ribbeted in teh Railfrog pond.', 'http://railfrog.com' %></div>
       </div>
     </div>

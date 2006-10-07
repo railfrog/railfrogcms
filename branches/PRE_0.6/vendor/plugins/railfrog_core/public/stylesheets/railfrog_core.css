@@ -176,8 +176,7 @@ th {
 
 /* notice messages (positive feedback) - flash[:notice] */
 #msg-notice {
-    color: #00FF00;
-    background: #000000;
+    color: #10A010;
     font-weight: bold;
 }
 
