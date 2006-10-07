@@ -35,14 +35,6 @@ module PluginSystem
       self.find {|plugin| plugin.full_name == full_name }
     end
     
-    #TODO: add spec
-    def group_by(attribute)
-      self.inject({}) do |hash, plugin|
-        (hash[plugin.specification.send(attribute)] ||= []) << plugin
-        hash
-      end
-    end
-    
     def load_order
       dependency_order.reverse.select do |plugin|
         plugin.specification.dependencies.all? do |dep|

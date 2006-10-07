@@ -8,19 +8,20 @@ if Object.const_defined?('PluginSystem')
   namespace :db do
     namespace :migrate do
       namespace :railfrog_plugin do
-        PluginSystem::Instance.installed_plugins.group_by(:name).each do |name, plugins|
+        PluginSystem::Instance.installed_plugins.group_by(&:name).each do |name, plugins|
           desc "Migrate the plugin '#{name}'."
           task name do
             if plugins.size > 1
-              puts <<-END_OF_TEXT
-                NOTE: Currently you can only migrate to a newer version 
-                of a plugin. Migrating down to an older version won't 
-                work properly.
-              END_OF_TEXT
-              puts "Select the version to which you want to migrate to:"
+              puts <<END_OF_TEXT
+NOTE: Currently you can only migrate to a newer version of a plugin. Migrating
+      down to an older version won't work properly.
+
+Select the version to which you want to migrate to:
+END_OF_TEXT
               plugins.each_with_index do |plugin, index|
                 puts " #{index+1}) #{plugin.full_name}"
               end
+              puts
               print "Select: "
               selection = STDIN.gets
               plugin = plugins[selection.to_i-1]
