@@ -1,8 +1,6 @@
 require File.expand_path(File.join(RAILS_ROOT, 'config', 'environment'))
 
 if Object.const_defined?('PluginSystem')
-  require 'spec/rake/spectask'
-  
   Dir["./vendor/railfrog_plugins/gems/*/tasks/**/*.rake"].sort.each { |ext| load ext }
   
   namespace :db do
@@ -38,25 +36,30 @@ END_OF_TEXT
     end
   end
   
-  namespace :spec do
-    namespace :railfrog_plugins do
-      PluginSystem::Instance.installed_plugins.each do |plugin|
-        namespace plugin.full_name do
-          if File.directory?("#{plugin.path_to_gem}/spec/models")
-            desc "Run the specs under #{plugin.path_to_gem}/spec/models"
-            Spec::Rake::SpecTask.new(:models => "db:test:prepare") do |t|
-              t.spec_files = FileList["#{plugin.path_to_gem}/spec/models/**/*_spec.rb"]
+  # FIXME: The 'begin .. rescue' is only a temporary fix for cases where rspec is not present.
+  begin 
+    require 'spec/rake/spectask'
+    namespace :spec do
+      namespace :railfrog_plugins do
+        PluginSystem::Instance.installed_plugins.each do |plugin|
+          namespace plugin.full_name do
+            if File.directory?("#{plugin.path_to_gem}/spec/models")
+              desc "Run the specs under #{plugin.path_to_gem}/spec/models"
+              Spec::Rake::SpecTask.new(:models => "db:test:prepare") do |t|
+                t.spec_files = FileList["#{plugin.path_to_gem}/spec/models/**/*_spec.rb"]
+              end
             end
-          end
-          
-          if File.directory?("#{plugin.path_to_gem}/spec/controllers")      
-            desc "Run the specs under #{plugin.path_to_gem}/spec/controllers"
-            Spec::Rake::SpecTask.new(:controllers => "db:test:prepare") do |t|
-              t.spec_files = FileList["#{plugin.path_to_gem}/spec/controllers/**/*_spec.rb"]
+            
+            if File.directory?("#{plugin.path_to_gem}/spec/controllers")      
+              desc "Run the specs under #{plugin.path_to_gem}/spec/controllers"
+              Spec::Rake::SpecTask.new(:controllers => "db:test:prepare") do |t|
+                t.spec_files = FileList["#{plugin.path_to_gem}/spec/controllers/**/*_spec.rb"]
+              end
             end
           end
         end
       end
     end
+  rescue
   end
 end
