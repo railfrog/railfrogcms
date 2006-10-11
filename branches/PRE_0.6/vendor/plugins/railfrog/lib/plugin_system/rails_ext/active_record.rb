@@ -3,7 +3,10 @@ module ActiveRecord::ConnectionAdapters::SchemaStatements
   def initialize_schema_information
     plugin_system_original_initialize_schema_information
     begin
-      execute "CREATE TABLE #{::PluginSystem::Migrator::schema_info_table_name} (id int(11) NOT NULL auto_increment, name #{type_to_sql(:string)}, version #{type_to_sql(:integer)}, PRIMARY KEY (id))"
+      create_table ::PluginSystem::Migrator::schema_info_table_name do |t|
+        t.column :name,    :string
+        t.column :version, :integer
+      end
     rescue ActiveRecord::StatementInvalid
       # Schema has been initialized
     end
