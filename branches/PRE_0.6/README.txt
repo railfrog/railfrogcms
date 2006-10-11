@@ -43,7 +43,8 @@ If you are looking at the new plugin code, you'll currently (04 Oct 2006) need t
  0. Install Railfrog just like always.
  1. Install Edge Rails (e.g. run {{{rake rails:freeze:edge}}})
  2. Disable Rails Engines (e.g. rename /vendor/plugins/engines/init.rb to init.rb~)
- 3. Enable the "fucd_rbac" plugin: In your Rails console ({{{ruby script/console}}}) run {{{PluginSystem::Database::Plugin.find(1).update_attributes(:enabled => true)}}}
+ 3. Enable the "fucd_rbac" and "core" plugin: E.g. in your Rails console ({{{ruby script/console}}}) run {{{PluginSystem::Database::Plugin.update_all("enabled = 1")}}}
  4. Run {{{rake db:migrate:railfrog_plugin:fucd_rbac}}} to create the tables for the "fucd_rbac" plugin 
  5. Start your development server (e.g. {{{ruby script/server}}})
- 6. Locate your browser to http://localhost:3000/railfrog/users or http://localhost:3000/railfrog/roles
+ 6. Locate your browser to http://localhost:3000/railfrog/login
+ 7. Login! Username is 'admin' and password is 'ribbet!'

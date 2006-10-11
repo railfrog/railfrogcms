@@ -1,6 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../../../../spec/spec_helper')
 
-module Railfrog
+module FucdRbac
   module SpecHelpers
     def required_user_attributes
       { :username => 'johndoe',
@@ -20,7 +20,17 @@ module Railfrog
     end
     
     def required_permission_attributes
-      { :role_id => 1 }
+      { :role_id => 1,
+        :controller => 'foo',
+        :action => '.*' }
+    end
+  end
+  
+  module FakeAuthorization
+    protected
+    
+    def authenticate
+      true
     end
   end
 end

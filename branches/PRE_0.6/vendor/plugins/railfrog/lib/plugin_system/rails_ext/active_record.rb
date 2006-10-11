@@ -1,11 +1,9 @@
-ActiveRecord::SchemaDumper.ignore_tables << 'engine_schema_info'
-
 module ActiveRecord::ConnectionAdapters::SchemaStatements
   alias :plugin_system_original_initialize_schema_information :initialize_schema_information
   def initialize_schema_information
     plugin_system_original_initialize_schema_information
     begin
-      execute "CREATE TABLE #{::PluginSystem::Migrator::schema_info_table_name} (name #{type_to_sql(:string)}, version #{type_to_sql(:integer)})"
+      execute "CREATE TABLE #{::PluginSystem::Migrator::schema_info_table_name} (id int(11) NOT NULL auto_increment, name #{type_to_sql(:string)}, version #{type_to_sql(:integer)}, PRIMARY KEY (id))"
     rescue ActiveRecord::StatementInvalid
       # Schema has been initialized
     end
@@ -37,3 +35,5 @@ module PluginSystem
     end
   end
 end
+
+ActiveRecord::SchemaDumper.ignore_tables << PluginSystem::Migrator.schema_info_table_name

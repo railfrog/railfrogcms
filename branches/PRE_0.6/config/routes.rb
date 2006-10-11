@@ -1,9 +1,5 @@
 # FIXME
-if Object.const_defined?('PluginSystem')
-  ActionController::Routing::Routes.draw do |map|
-    map.connect ':controller/:action/:id'
-  end
-else
+unless Object.const_defined?('PluginSystem')
   ActionController::Routing::Routes.draw do |map|
     map.rf_admin '/admin', :controller => 'railfrog_admin'
     

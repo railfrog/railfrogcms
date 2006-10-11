@@ -1,2 +1,0 @@
-module Railfrog::UsersHelper
-end

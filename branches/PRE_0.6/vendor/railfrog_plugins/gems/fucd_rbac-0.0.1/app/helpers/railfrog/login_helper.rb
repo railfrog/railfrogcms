@@ -1,2 +1,0 @@
-module Railfrog::LoginHelper
-end

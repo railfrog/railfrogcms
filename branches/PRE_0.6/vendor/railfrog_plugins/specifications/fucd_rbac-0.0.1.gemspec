@@ -5,4 +5,5 @@ Gem::Specification.new do |s|
   s.summary = "FUC'D Role Based Authentication Control"
   s.description = "Role Based Authentication Control System for RailFrog"
   s.authors = ["Daniel Siemssen"]
+  s.add_dependency(%q<core>, [">= 0.7.0"])
 end
