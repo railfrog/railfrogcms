@@ -33,10 +33,12 @@ module FucdRbac
     end
     
     def destroy
-      reset_session
-      
-      @login = Login.find(session[:fucd_rbac_login_id])
-      @login.destroy
+      begin
+        @login = Login.find(session[:fucd_rbac_login_id])
+        @login.destroy
+      ensure
+        reset_session
+      end
       
       flash[:notice] = 'You have successfully logged out.'
       
