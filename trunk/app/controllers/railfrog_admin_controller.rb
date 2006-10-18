@@ -262,8 +262,8 @@ class RailfrogAdminController < ApplicationController
     else
       file_name = params['chunk_version']['tmp_file'].original_filename.gsub(/[^a-zA-Z0-9.]/, '_') # This makes sure filenames are sane
       mime_type = MimeType.find_by_file_name(file_name)
-      @params['chunk_version']['content'] = @params['chunk_version']['tmp_file'].read
-      @params['chunk_version'].delete('tmp_file')
+      params['chunk_version']['content'] = params['chunk_version']['tmp_file'].read
+      params['chunk_version'].delete('tmp_file')
 
       @chunk = Chunk.new(params[:chunk])
       @chunk_version = @chunk.chunk_versions.build(params[:chunk_version])
@@ -302,8 +302,8 @@ class RailfrogAdminController < ApplicationController
     else
       file_name = params['chunk_version']['tmp_file'].original_filename.gsub(/[^a-zA-Z0-9.]/, '_') # This makes sure filenames are sane
       mime_type = MimeType.find_by_file_name(file_name)
-      @params['chunk_version']['content'] = @params['chunk_version']['tmp_file'].read
-      @params['chunk_version'].delete('tmp_file')
+      params['chunk_version']['content'] = params['chunk_version']['tmp_file'].read
+      params['chunk_version'].delete('tmp_file')
 
       @chunk = Chunk.find(params[:chunk][:id])
       @chunk_version = @chunk.chunk_versions.build(params[:chunk_version])
@@ -373,7 +373,7 @@ class RailfrogAdminController < ApplicationController
   private
   def expire(sm)
     logger.info "Expiring #{sm.full_path}"
-    expire_page :controller => 'site_mapper', 
+    expire_page :controller => 'site_mapper',
       :action => 'show_chunk',
       :path => sm.full_path.split('/')
   end

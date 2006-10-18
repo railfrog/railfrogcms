@@ -29,7 +29,7 @@ class SiteMapperController < ApplicationController
       end
 
       data_options[:type] = mime_type
-      data_options[:filename] = @params[:path].last
+      data_options[:filename] = params[:path].last
 
       if mime_type.include?("html") && params[:layout] != 'false' then
         # it is a html doc, then render our data inside the layout
