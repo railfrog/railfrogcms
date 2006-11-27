@@ -201,33 +201,35 @@ module RailfrogAdminHelper
   # Lists the files of the given type under the given SiteMapping.
   def list_files(site_mapping, mime_class)
     html  = '<table>'
-    html << '<tr><th>Name</th><th>Author</th><th>Updated</th><th></th></tr>'
+    html << '<tr><th>ID</th><th>Name</th><th>Updated</th><th>Type</th><th></th></tr>'
 
     author = 'Unknown'
     updated_at = site_mapping.updated_at
 
-    # the number of folders found
+    # the number of items found
     count = 0
 
     # the individual mime types specified by the mime class
-    mime_types = Array.new
+    relevant_mime_types = Array.new
     MimeType.find_by_class(mime_class).each do |mime_type|
-      mime_types << mime_type.mime_type
+      relevant_mime_types << mime_type.mime_type
     end
 
     site_mapping.direct_children.each do |child|
       # skip if the child is a folder
       next if child.folder?
       # filter out the mime types we don't need
-      next if not mime_types.include?(child.chunk.mime_type.mime_type)
+      next if not relevant_mime_types.include?(child.chunk.mime_type.mime_type)
 
       count += 1
 
       html << render(:partial => 'file_item',
-                     :locals => { :site_mapping => child,
+                     :locals => { :chunk_id => child.chunk.id,
+                                  :site_mapping => child,
                                   :mime_class => mime_class,
-                                  :author => author,
-                                  :updated_at => updated_at })
+                                  :author => author,        # FIXME uninitialized and unused
+                                  :updated_at => updated_at,
+                                  :mime_type => child.chunk.mime_type.mime_type })
     end
 
     html << '</table>'

@@ -1,5 +1,14 @@
 ###############################################################################
 #
+#    Railfrog extensions
+#
+#    Railfrog adds some non-standard mime-types - see the end of this file.
+###############################################################################
+
+
+
+###############################################################################
+#
 #  MIME-TYPES and the extensions that represent them
 #
 #  This file is part of the app-misc/mime-types package, which is based on 
@@ -726,3 +735,17 @@ video/x-sgi-movie				movie
 x-conference/x-cooltalk				ice
 
 x-world/x-vrml					vrm vrml wrl
+
+
+###############################################################################
+#
+#    Railfrog extensions
+#
+#    Railfrog adds some non-standard mime-types. If these become standardised
+#    in the future then update MimeType.find_by_class to avoid breakage.
+###############################################################################
+
+text/x-markdown                 markdown
+text/x-textile                  textile
+text/x-liquid                   liquid
+

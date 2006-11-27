@@ -175,6 +175,7 @@ class RailfrogAdminController < ApplicationController
     @site_mapping.parent_id = params[:parent_id]
     @chunk = Chunk.new
     @chunk_version = ChunkVersion.new
+    @session[:syntax] = params[:syntax]     # currently markdown or textile - use html if nil   
 
     render :partial => 'explore_block_new_chunk'
   end
@@ -187,12 +188,22 @@ class RailfrogAdminController < ApplicationController
 
     begin
       @chunk.live_version = 1
-      @chunk.mime_type = MimeType.find_by_file_name(params[:site_mapping][:path_segment])
+      if @session[:syntax]
+        matching_types = MimeType.find_by_class(@session[:syntax])
+        @chunk.mime_type = matching_types[0] if matching_types
+      else
+        @chunk.mime_type = MimeType.find_by_file_name(params[:site_mapping][:path_segment])
+      end
+      # TODO CHK REMOVE:
+      # breakpoint
       @chunk.save!
       render(:update) { |page| page.redirect_to :action => :explore }
-    rescue
+    rescue Exception => e
+      # TODO CHK remove:
+      logger.error e.to_s
       render :update do |page|
-        page.replace_html 'content', :partial => 'new_chunk'
+        flash[:notice] = 'Error: Unable to save content'
+        page.replace_html 'content', :partial => 'explore_block_new_chunk'
         page.show 'content'
       end
     end

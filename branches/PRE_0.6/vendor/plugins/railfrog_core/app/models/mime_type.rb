@@ -43,12 +43,16 @@ class MimeType < ActiveRecord::Base
     types = Array.new
   
     case name
-      when 'html'
-        types << "= 'text/html'" << "= 'text/css'"
+      when 'html', 'document'    # FIXME should use class document for generic use, html only for application/xml+xhtml etc.
+        types << "= 'text/html'" << "= 'text/css'" << "= 'text/x-markdown'" << "= 'text/x-textile'"
       when 'image'
         types << "LIKE 'image/%'"
       when 'media'
         types << "LIKE 'image/%'"
+      when 'markdown'
+        types << "= 'text/x-markdown'"
+      when 'textile'
+        types << "= 'text/x-textile'"
       when 'other'
         types << "= 'text/calendar'" << "= 'text/comma-separated-values'" << "'= 'text/directory'"
         types << "= 'text/english'" << "= 'text/enriched'" << "= 'text/h323'"

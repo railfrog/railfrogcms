@@ -1,4 +1,6 @@
 require 'pp'
+require 'rubygems'
+require_gem 'BlueCloth', '>= 1.0.0'
 
 class SiteMapperController < ApplicationController
   caches_page :show_chunk
@@ -22,10 +24,22 @@ class SiteMapperController < ApplicationController
       # options for sending chunk content back to user
       data_options = {:disposition => 'inline'}
 
-      if @chunk_version.chunk.mime_type then
-        mime_type = @chunk_version.chunk.mime_type.mime_type
-      else
-        mime_type = "text/html"
+      # If a mime type is specified, use it.
+      mime_type = "text/html"
+      case @chunk_version.chunk.mime_type.mime_type
+        when nil
+          # No action
+        when "text/x-markdown"
+          # Apply BlueCloth
+          # TODO Check whether BC is available without demanding require_gem ## if (const_defined? 'BlueCloth')
+          @chunk_content = BlueCloth::new(@chunk_content).to_html
+          # else
+          #   @chunk_content = "<h1>Error: BlueCloth gem not installed</h1>"
+          # end
+        when "text/x-textile"
+          # Apply RedCloth TODO CHK  
+        else
+          mime_type = @chunk_version.chunk.mime_type.mime_type
       end
 
       data_options[:type] = mime_type
@@ -47,6 +61,7 @@ class SiteMapperController < ApplicationController
             end
 
             @rf_labels["chunk_content"] = @chunk_content
+            @rf_labels["chunk-content"] = @chunk_content    # FIXME: Always allow hyphens as alternative to underscore in rf_label[] lookups
           else
             rendering_options[:partial] = "chunk_content"
             rendering_options[:layout] = layout
