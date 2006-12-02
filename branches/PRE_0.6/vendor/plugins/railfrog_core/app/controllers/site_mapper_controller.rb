@@ -1,9 +1,8 @@
 require 'pp'
 require 'rubygems'
-require_gem 'BlueCloth', '>= 1.0.0'
 
 class SiteMapperController < ApplicationController
-  caches_page :show_chunk
+  # TODO CHK RE-ENABLE!!! caches_page :show_chunk
 
   def show_chunk
 
@@ -30,14 +29,17 @@ class SiteMapperController < ApplicationController
         when nil
           # No action
         when "text/x-markdown"
-          # Apply BlueCloth
+          # Apply BlueCloth for Markdown
           # TODO Check whether BC is available without demanding require_gem ## if (const_defined? 'BlueCloth')
+          require_gem 'BlueCloth', '>= 1.0.0'
           @chunk_content = BlueCloth::new(@chunk_content).to_html
           # else
           #   @chunk_content = "<h1>Error: BlueCloth gem not installed</h1>"
           # end
         when "text/x-textile"
-          # Apply RedCloth TODO CHK  
+          # Apply RedCloth for Textile
+          require_gem 'RedCloth', '>= 3.0.0'
+          @chunk_content = RedCloth::new(@chunk_content).to_html
         else
           mime_type = @chunk_version.chunk.mime_type.mime_type
       end

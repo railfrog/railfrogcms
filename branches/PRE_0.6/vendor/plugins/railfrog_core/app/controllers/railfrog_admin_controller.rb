@@ -345,7 +345,7 @@ class RailfrogAdminController < ApplicationController
                                        :conditions => ["chunk_id = ?", chunk.id],
                                        :order => "version DESC")
 
-    site_mapping = SiteMapping.find_by_chunk_id(chunk.id)
+    site_mapping = SiteMapping.find_by_chunk_id(chunk.id)        # TODO REFACTOR - chunk may have multiple mappings!
 
     # expire the chunk if it was cached
     expire_page :controller => 'site_mapper', :action => 'show_chunk', :path => site_mapping.full_path
