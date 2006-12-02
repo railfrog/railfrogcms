@@ -4,6 +4,14 @@ RailFrog is a lightweight Content Management System for building websites.
 
 ## TODO
 
+== Prerequisites ==
+* Rails 1.1.x
+* Rake - {{{gem install rake}}}
+* RSpec - {{{gem install rspec}}}
+* BlueCloth (if you need Markdown support) - {{{gem install bluecloth}}}
+* RedCloth (if you need Textile support) - {{{gem install redcloth}}}
+
+
 == Installation ==
  1. Create a {{{railfrog_development}}} database (see notes below).
  2. Copy config/database.yml.example to database.yml and edit as appropriate.
@@ -27,6 +35,13 @@ RailFrog is a lightweight Content Management System for building websites.
     > CREATE DATABASE railfrog_development DEFAULT CHARACTER SET "utf8";
     > CREATE DATABASE railfrog_test DEFAULT CHARACTER SET "utf8";
     > CREATE DATABASE railfrog_production DEFAULT CHARACTER SET "utf8";
+ * For each, grant privileges -- if anyone knows a tidier way to do this please shout out:
+    > USE railfrog_development;
+    > GRANT ALL ON railfrog_development.* TO 'railfrog'@'localhost' IDENTIFIED BY 'ribbet!'
+    > USE railfrog_test;
+    > GRANT ALL ON railfrog_test.* TO 'railfrog'@'localhost' IDENTIFIED BY 'ribbet!'
+    > USE railfrog_production;
+    > GRANT ALL ON railfrog_production.* TO 'railfrog'@'localhost' IDENTIFIED BY 'ribbet!'
 
 === PostgreSQL ===
  * edit /var/lib/postgresql/data/pg_hba.conf to add a suitable auth rule
