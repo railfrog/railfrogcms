@@ -1,0 +1,1 @@
+require 'railfrog_core'
