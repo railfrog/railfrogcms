@@ -1,4 +1,4 @@
-class RailfrogAdminController < ApplicationController
+class RailfrogAdminController < RailfrogCore::BaseController
   layout 'admin'
 
   before_filter :ensure_logged_in
@@ -175,7 +175,7 @@ class RailfrogAdminController < ApplicationController
     @site_mapping.parent_id = params[:parent_id]
     @chunk = Chunk.new
     @chunk_version = ChunkVersion.new
-    @session[:syntax] = params[:syntax]     # currently markdown or textile - use html if nil   
+    @session[:syntax] = params[:syntax]     # currently markdown or textile - use html if nil
 
     render :partial => 'explore_block_new_chunk'
   end

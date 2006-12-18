@@ -4,7 +4,8 @@
   <head>
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
     <title>Railfrog :: <%= params[:controller] %> > <%= params[:action] %></title>
-    <%= engine_stylesheet 'railfrog_core' %>
+    <%# FIXME: we need a way of linking to this. currently must be copied to /public/stylesheets %>
+    <%= stylesheet_link_tag 'railfrog_core' %>
   </head>
 
   <body>

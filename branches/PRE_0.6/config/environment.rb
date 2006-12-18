@@ -1,22 +1,28 @@
 # Be sure to restart your web server when you modify this file.
 
-# Uncomment below to force Rails into production mode when 
+# Uncomment below to force Rails into production mode when
 # you don't control web/app server and can't set it the proper way
 # ENV['RAILS_ENV'] ||= 'production'
+
+#RAILS_GEM_VERSION = '1.1.6' # 1.2RC1 = 1.1.6.5618
 
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
 
+module Engines
+  EdgeRails = true
+end
+
 Rails::Initializer.run do |config|
   # Settings in config/environments/* take precedence those specified here
-  
+
   # Skip frameworks you're not going to use
   # config.frameworks -= [ :action_web_service, :action_mailer ]
 
   # Add additional load paths for your own custom dirs
   # config.load_paths += %W( #{RAILS_ROOT}/extras )
 
-  # Force all environments to use the same logger level 
+  # Force all environments to use the same logger level
   # (by default production uses :info, the others :debug)
   # config.log_level = :debug
 
@@ -33,7 +39,7 @@ Rails::Initializer.run do |config|
 
   # Make Active Record use UTC-base instead of local time
   # config.active_record.default_timezone = :utc
-  
+
   # Use Active Record's schema dumper instead of SQL when creating the test database
   # (enables use of different database adapters for development and test environments)
   config.active_record.schema_format = :ruby
@@ -41,7 +47,7 @@ Rails::Initializer.run do |config|
   # See Rails::Configuration for more options
 end
 
-# Add new inflection rules using the following format 
+# Add new inflection rules using the following format
 # (all these examples are active by default):
 # Inflector.inflections do |inflect|
 #   inflect.plural /^(ox)$/i, '\1en'
@@ -53,5 +59,3 @@ end
 # Include your application configuration below
 
 ActionController::Base.perform_caching = true
-
-Engines.start 'railfrog_core' unless Object.const_defined?('PluginSystem') # FIXME

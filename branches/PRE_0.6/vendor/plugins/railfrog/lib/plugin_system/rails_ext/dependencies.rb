@@ -10,6 +10,27 @@ module Dependencies
     raise unless swallow_load_errors
   end
   
+  def loadable_constants_for_path(path, bases = load_paths - load_once_paths)
+    path = $1 if path =~ /\A(.*)\.rb\Z/
+    expanded_path = File.expand_path(path)
+    
+    bases.collect do |root|
+      expanded_root = File.expand_path(root)
+      next unless %r{\A#{Regexp.escape(expanded_root)}(/|\\)} =~ expanded_path
+      
+      nesting = expanded_path[(expanded_root.size)..-1]
+      nesting = nesting[1..-1] if nesting && nesting[0] == ?/
+      next if nesting.blank?
+      next unless nesting.camelize =~ /^(::)?([A-Z]\w*)(::[A-Z]\w*)*$/
+      
+      [
+        nesting.camelize,
+        # Special case: application.rb might define ApplicationControlller.
+        ('ApplicationController' if nesting == 'application')
+      ]
+    end.flatten.compact.uniq
+  end
+  
   def search_for_files(path_suffix)
     path_suffix = path_suffix + '.rb' unless path_suffix.ends_with? '.rb'
     load_paths.inject(nil) do |paths, root|
@@ -37,8 +58,8 @@ module Dependencies
     unless qualified_const_defined?(from_mod.name) && from_mod.name.constantize.object_id == from_mod.object_id
       raise ArgumentError, "A copy of #{from_mod} has been removed from the module tree but is still active!"
     end
-    
-    raise ArgumentError, "Expected #{from_mod} is not missing constant #{const_name}!" if from_mod.const_defined?(const_name)
+
+    raise ArgumentError, "#{from_mod} is not missing constant #{const_name}!" if from_mod.const_defined?(const_name)
     
     qualified_name = qualified_name_for from_mod, const_name
     path_suffix = qualified_name.underscore

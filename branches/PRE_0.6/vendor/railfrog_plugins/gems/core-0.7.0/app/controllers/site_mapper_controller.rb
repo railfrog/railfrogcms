@@ -1,7 +1,9 @@
 require 'pp'
 require 'rubygems'
+# models
+require 'site_mapping'
 
-class SiteMapperController < ApplicationController
+class SiteMapperController < RailfrogCore::BaseController
   # TODO CHK RE-ENABLE!!! caches_page :show_chunk
 
   def show_chunk

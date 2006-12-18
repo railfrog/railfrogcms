@@ -48,7 +48,8 @@ module PluginSystem
     def start(config=nil)
       if disabled?
         raise Exceptions::CannotStartDisabledPluginException,
-              "Cannot start plugin #{name} (version: #{version}) because it's disabled. Only enabled plugins can be started."
+              "Cannot start plugin #{name} (version: #{version}) because it's 
+               disabled. Only enabled plugins can be started."
       elsif started?
         raise Exceptions::PluginAlreadyStartedException,
               "Plugin #{name} (version: #{version}) is already started."
@@ -65,7 +66,7 @@ module PluginSystem
           app/controllers
           app/helpers
           lib 
-        ).map { |dir| "#{path_to_gem}/#{dir}" }.select { |dir| File.directory?(dir) }
+        ).map { |dir| File.join(path_to_gem, dir) }.select { |dir| File.directory?(dir) }
         
         first_plugin_load_path = $LOAD_PATH.find do |path|
           path.index(File.expand_path(File.join(path_to_gem, '..'))) == 0
@@ -100,7 +101,8 @@ module PluginSystem
     def uninstall
       if enabled?
         raise Exceptions::CannotUninstallEnabledPluginException,
-              "Cannot uninstall plugin #{name} (version: #{version}) because it's enabled. Only disabled plugins can be uninstalled."
+              "Cannot uninstall plugin #{name} (version: #{version}) because 
+               it's enabled. Only disabled plugins can be uninstalled."
       else
         #FIXME: implement uninstall routine
         database.destroy

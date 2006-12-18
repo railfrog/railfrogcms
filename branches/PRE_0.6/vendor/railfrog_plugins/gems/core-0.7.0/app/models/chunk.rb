@@ -1,3 +1,7 @@
+require 'chunk_version'
+require 'mime_type'
+require 'site_mapping'
+
 class Chunk < ActiveRecord::Base
   has_many :site_mappings
   has_many :chunk_versions, :order => 'version', :dependent => :destroy

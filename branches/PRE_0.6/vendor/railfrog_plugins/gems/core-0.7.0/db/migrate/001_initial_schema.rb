@@ -1,3 +1,7 @@
+require 'mime_type'
+require 'site_mapping'
+require 'user'
+
 class InitialSchema < ActiveRecord::Migration
   def self.up
     create_table "mime_types", :force => true do |t|
@@ -104,7 +108,7 @@ class InitialSchema < ActiveRecord::Migration
   end
 
   def self.set_mapping_ids_in_chunk_table
-    SiteMapping.find(:all, :conditions => "chunk_id is not null").each do |sm| 
+    SiteMapping.find(:all, :conditions => "chunk_id is not null").each do |sm|
       extension = sm.path_segment.chomp.split(/\./).pop
       if extension then
         fe = FileExtension.find(:first, :conditions => ["extension = ?", extension])
@@ -113,7 +117,7 @@ class InitialSchema < ActiveRecord::Migration
       end
     end
 
-    Chunk.find(:all, :conditions => "mime_type_id is null").each do |c| 
+    Chunk.find(:all, :conditions => "mime_type_id is null").each do |c|
       c.mime_type_id = MimeType.find_default_mime_type.id
       c.save
     end
