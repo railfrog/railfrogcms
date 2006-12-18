@@ -1,38 +1,21 @@
 ENV["RAILS_ENV"] = "test"
 require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
-require 'controller_mixin'
 require 'rspec_on_rails'
-require 'stubba'
 
-class SpecTestCase < Test::Unit::TestCase
-  self.use_transactional_fixtures = true
-  self.use_instantiated_fixtures  = false
-  self.fixture_path = RAILS_ROOT + '/spec/fixtures'
+# Even if you're using RSpec, RSpec on Rails is reusing some of the
+# Rails-specific extensions for fixtures and stubbed requests, response
+# and other things (via RSpec's inherit mechanism). These extensions are 
+# tightly coupled to Test::Unit in Rails, which is why you're seeing it here.
+module Test
+  module Rails
+    class TestCase < Test::Unit::TestCase
+      self.use_transactional_fixtures = true
+      self.use_instantiated_fixtures  = false
+      self.fixture_path = RAILS_ROOT + '/spec/fixtures'
 
-  # You can set up your global fixtures here, or you
-  # can do it in individual contexts
-  #fixtures :table_a, :table_b
-
-  def run(*args)
-  end
-
-  def setup
-    super
-  end
-
-  def teardown
-    super
-  end
-end
-
-module Spec
-  module Runner
-    class Context
-      def before_context_eval
-        inherit SpecTestCase
-      end
+      # You can set up your global fixtures here, or you
+      # can do it in individual contexts
+      #fixtures :table_a, :table_b
     end
   end
 end
-
-Test::Unit.run = true

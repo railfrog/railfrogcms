@@ -101,7 +101,7 @@ module PluginSystem
     setup do
       @started_plugin = Plugin.new(
                           File.join(@@__plugin_system_specs, 'the_first_plugin-0.0.1.gemspec'))
-      @started_plugin.database.stubs(:enabled?).returns(true)
+      @started_plugin.database.stub!(:enabled?).and_return(true)
       @started_plugin.start
     end
     

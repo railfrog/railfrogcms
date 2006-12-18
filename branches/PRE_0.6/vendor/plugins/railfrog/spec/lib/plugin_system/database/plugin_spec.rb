@@ -7,8 +7,8 @@ module PluginSystem::Database
         :version => '1.0.0' }
     end
   end
-  
-  context "A plugin (in general)" do
+
+  context "A plugin (in general)", :context_type => :model do
     include PluginSpecHelper
     
     setup do
@@ -49,7 +49,7 @@ module PluginSystem::Database
     end
   end
   
-  context "Two plugins with same name and version" do
+  context "Two plugins with same name and version", :context_type => :model do
     include PluginSpecHelper
     
     setup do
@@ -59,11 +59,11 @@ module PluginSystem::Database
   
     specify "cannot exist" do
       @plugin.should_not_be_valid
-      @plugin.errors.on(:base).should_equal "The name-version pair of a plugin must be unique"
+      @plugin.errors.on(:base).should == "The name-version pair of a plugin must be unique"
     end
   end
   
-  context "Two plugins with same name and different version" do
+  context "Two plugins with same name and different version", :context_type => :model do
     include PluginSpecHelper
     
     setup do
@@ -74,7 +74,7 @@ module PluginSystem::Database
     specify "cannot both be enabled" do
       @plugin.enabled = true
       @plugin.should_not_be_valid
-      @plugin.errors.on(:base).should_equal "Only one version of a plugin may be enabled"
+      @plugin.errors.on(:base).should == "Only one version of a plugin may be enabled"
     end
   end
 end

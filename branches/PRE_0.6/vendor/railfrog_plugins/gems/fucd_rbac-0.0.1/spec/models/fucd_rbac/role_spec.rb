@@ -15,7 +15,7 @@ module FucdRbac
     end
     
     specify "should have a unique name" do
-      Role.stubs(:find).returns([@user])
+      Role.should_receive(:find).and_return([@user])
       @role.should_not_be_valid
       @role.errors.on(:name).should_not_be nil
     end
@@ -54,6 +54,11 @@ module FucdRbac
       @role.destroy
       Membership.should_have(0).records
     end
+    
+    teardown do
+      @role.destroy
+      @user.destroy
+    end
   end
   
   context "A saved role with a permission" do
@@ -75,13 +80,18 @@ module FucdRbac
     end
     
     specify "should grant permission for action 'show' of controller 'people'" do
-      @permission.stubs(:grants?).with('people', 'show').returns(true)
+      @permission.should_receive(:grants?).with('people', 'show').and_return(true)
       @role.grants_permission_for?('people', 'show').should_be true
     end
     
     specify "should not grant permission for action 'edit' of controller 'people'" do
-      @permission.stubs(:grants?).with('people', 'edit').returns(false)
+      @permission.should_receive(:grants?).with('people', 'edit').and_return(false)
       @role.grants_permission_for?('people', 'edit').should_be false
+    end
+    
+    teardown do
+      @role.destroy
+      @permission.destroy
     end
   end
 end

@@ -4,18 +4,15 @@ module FucdRbac
   RolesController.send(:include, FakeAuthorization)
   
   context "GET to fucd_rbac/roles" do
-    include SpecHelpers
     controller_name 'fucd_rbac/roles'
-  
-    setup do
-      @role = Role.new required_role_attributes
-      Role.stubs(:find).with(:all).returns([@role])
-      get :index
-    end
     
     specify "should find all roles" do
-      response.should_be_success
-      assigns(:roles).should_equal [@role]
+      @role = mock('role')
+      Role.should_receive(:find).with(:all).and_return([@role])
+      
+      get :index
+      
+      assigns(:roles).should == [@role]
     end
   end
   
@@ -27,139 +24,125 @@ module FucdRbac
     end
     
     specify "should be successful" do
-      response.should_be_success
+      response.should_be_success #TODO
     end
   end
   
   context "GET to fucd_rbac/roles/edit/1" do
-    include SpecHelpers
     controller_name 'fucd_rbac/roles'
     
-    setup do
-      @role = Role.new required_role_attributes
-      Role.stubs(:find).with('1').returns(@role)
+    specify "should get role with id=1" do
+      @role = mock('role')
+      Role.should_receive(:find).with('1').and_return(@role)
+      
       get :edit, :id => 1
-    end
-    
-    specify "should edit the role 'editor'" do
-      response.should_be_success
-      assigns(:role).should_equal @role
+      
+      assigns(:role).should == @role
     end
   end
   
   context "GET to fucd_rbac/roles/show/1" do
-    include SpecHelpers
     controller_name 'fucd_rbac/roles'
     
-    setup do
-      @role = Role.new required_role_attributes
-      @role.stubs(:id).returns(1)
-      Role.stubs(:find).with('1').returns(@role)
+    specify "should get role with id=1" do
+      @role = mock('role')
+      Role.should_receive(:find).with('1').and_return(@role)
+      
       get :show, :id => 1
-    end
-    
-    specify "should show the role 'editor'" do
-      response.should_be_success
-      assigns(:role).should_equal @role
+      
+      assigns(:role).should == @role
     end
   end
   
-  context "POST to fucd_rbac/roles with valid attributes" do
-    include SpecHelpers
+  context "POST to fucd_rbac/roles" do
     controller_name 'fucd_rbac/roles'
     
     setup do
-      post :create, :role => required_role_attributes
+      @role = mock('role')
+      @role.stub!(:to_s).and_return(1)
+      Role.stub!(:new).and_return(@role)
     end
     
-    specify "should create new role 'editor'" do
-      Role.count.should_be 1
+    specify "should try to create new role" do
+      @role.should_receive(:save)
+      Role.should_receive(:new).with("name" => "Editor").and_return(@role)
+      
+      post :create, :role => { "name" => "Editor" }
+    end
+
+    specify "should redirect to show new role after successful save" do
+      @role.stub!(:save).and_return(true)
+      controller.should_redirect_to :action => 'show', :id => 1
+            
+      post :create
     end
     
-    specify "should redirect to show new role" do
-      response.should_be_redirect
-      response.redirect_url.should_equal fucd_rbac_role_url(assigns(:role))
+    specify "should render action 'new' after failed save" do
+      @role.stub!(:save).and_return(false)
+      
+      controller.should_render :action => 'new'
+      
+      post :create
+      
+      assigns(:role).should == @role
     end
   end
   
-  context "POST to fucd_rbac/roles with invalid attributes" do
-    include SpecHelpers
+  
+  context "PUT to fucd_rbac/roles/1" do
     controller_name 'fucd_rbac/roles'
     
     setup do
-      post :create, :role => required_role_attributes.except(:name)
+      @role = mock('role')
+      @role.stub!(:to_s).and_return(1)
+      Role.stub!(:find).and_return(@role)
     end
     
-    specify "should not create a new role" do
-      Role.count.should_be 0
+    specify "should try to update role with id=1" do
+      @role.should_receive(:update_attributes).with("name" => "Editor")
+      Role.should_receive(:find).with('1').and_return(@role)
+      
+      put :update, :id => 1, :role => { "name" => "Editor" }
     end
     
-    specify "should raise model errors" do
-      assigns(:role).errors.should_not_be nil
+    specify "should redirect to show role with id=1 after successful update" do
+      @role.should_receive(:update_attributes).and_return(true)
+      controller.should_redirect_to :action => 'show', :id => 1
+      
+      put :update, :id => 1
     end
     
-    specify "should render new" do
-      response.should_render :new
+    specify "should render action 'edit' after failed update" do
+      @role.should_receive(:update_attributes).and_return(false)
+      
+      controller.should_render :action => 'edit'
+      
+      put :update, :id => 1
+      
+#      assigns(:role).should == @role
     end
   end
   
-  context "PUT to fucd_rbac/roles/<id> with valid attributes" do
-    include SpecHelpers
+  context "DELETE to fucd_rbac/roles/1" do
     controller_name 'fucd_rbac/roles'
     
     setup do
-      @role = Role.create required_role_attributes
-      put :update, :id => @role.id, :role => { :name => 'supervisor'} 
+      @role = mock('role')
+      @role.stub!(:destroy)
+      Role.stub!(:find).and_return(@role)
     end
     
-    specify "should update role 'editor'" do
-      Role.find(@role.id).name.should_equal 'supervisor'
-    end
-    
-    specify "should redirect to show role 'editor'" do
-      response.should_be_redirect
-      response.redirect_url.should_equal fucd_rbac_role_url(assigns(:role))
-    end
-  end
-  
-  context "PUT to fucd_rbac/roles/<id> with invalid attributes" do
-    include SpecHelpers
-    controller_name 'fucd_rbac/roles'
-    
-    setup do
-      @role = Role.create required_role_attributes
-      put :update, :id => @role.id, :role => { :name => '' }
-    end
-    
-    specify "should not update role 'editor'" do
-      Role.find(@role.id).name.should_equal @role.name
-    end
-    
-    specify "should raise model errors" do
-      assigns(:role).errors.should_not_be nil
-    end
-    
-    specify "should render edit" do
-      response.should_render :edit
-    end
-  end
-  
-  context "DELETE to fucd_rbac/roles/<id>" do
-    include SpecHelpers
-    controller_name 'fucd_rbac/roles'
-    
-    setup do
-      @role = Role.create required_role_attributes
-      delete :destroy, :id => @role.id
-    end
-    
-    specify "should delete role 'editor'" do
-      Role.count.should_be 0
+    specify "should delete role with id=1" do
+      @role.should_receive(:destroy)
+      Role.should_receive(:find).with('1').and_return(@role)
+      
+      delete :destroy, :id => 1
     end
     
     specify "should redirect to index" do
-      response.should_be_redirect
-      response.redirect_url.should_equal fucd_rbac_roles_url
+      controller.should_redirect_to :action => 'index'
+      
+      delete :destroy, :id => 1
     end
   end
 end

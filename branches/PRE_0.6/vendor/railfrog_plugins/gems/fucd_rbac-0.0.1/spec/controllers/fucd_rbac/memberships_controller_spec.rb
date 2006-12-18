@@ -3,109 +3,84 @@ require File.dirname(__FILE__) + '/../../spec_helper'
 module FucdRbac
   MembershipsController.send(:include, FakeAuthorization)
   
-  context "GET to fucd_rbac/memberships with :user_id" do
+  context "GET to fucd_rbac/memberships" do
     controller_name 'fucd_rbac/memberships'
     
     setup do
-      ids = [1,2]
-      Role.any_instance.stubs(:id).returns(ids.shift)
-      @roles = [Role.new, Role.new]
-      User.stubs(:find).with('1').returns(@user = User.new)
-      Role.stubs(:find).with(:all).returns(@roles)
+      @user = mock('user')
+      @role = mock('role')
+    end
+    
+    specify "should get user with id=1 and all roles if given user_id=1" do
+      User.should_receive(:find).with('1').and_return(@user)
+      Role.should_receive(:find).with(:all).and_return([@role, @role])
+      
       get :edit, :user_id => 1
+      
+      assigns(:user).should == @user
+      assigns(:roles).should == [@role, @role]
     end
     
-    specify "should be successful" do
-      response.should_be_success
-    end
-    
-    specify "should assign @user with the user with ID=1" do
-      assigns(:user).should_equal @user
-    end
-    
-    specify "should assign @roles with all roles" do
-      assigns(:roles).should_equal @roles
-    end
-  end
-  
-  context "GET to fucd_rbac/memberships with :role_id" do
-    controller_name 'fucd_rbac/memberships'
-    
-    setup do
-      ids = [1,2]
-      User.any_instance.stubs(:id).returns(ids.shift)
-      @users = [User.new, User.new]
-      User.stubs(:find).with(:all).returns(@users)
-      Role.stubs(:find).with('1').returns(@role = Role.new)
+    specify "should get role with id=1 and all users if given role_id=1" do
+      Role.should_receive(:find).with('1').and_return(@role)
+      User.should_receive(:find).with(:all).and_return([@user, @user])
+      
       get :edit, :role_id => 1
+      
+      assigns(:users).should == [@user, @user]
+      assigns(:role).should == @role
     end
     
-    specify "should be successful" do
-      response.should_be_success
-    end
-    
-    specify "should assign @users with all roles" do
-      assigns(:users).should_equal @users
-    end
-    
-    specify "should assign @role with the role with ID=1" do
-      assigns(:role).should_equal @role
+    specify "should not be possible if given neither :user_id nor :role_id" do #TODO: better specify text
+      lambda { get :edit }.should_raise #TODO raise ok?
     end
   end
   
-  context "GET to fucd_rbac/memberships without :user_id and :role_id" do
-    controller_name 'fucd_rbac/memberships'
-    
-    specify "should not be possible" do
-      lambda { get :edit }.should_raise
-    end
-  end
-  
-  context "PUT to fucd_rbac/memberships with :user_id" do
-    include SpecHelpers
+  context "PUT to fucd_rbac/memberships" do
     controller_name 'fucd_rbac/memberships'
     
     setup do
-      @user = User.create required_user_attributes
-      @roles = [Role.create(required_role_attributes), Role.create(required_role_attributes.merge({:name => 'admin'}))]
-      put :update, :user_id => @user.id, :memberships => { @roles[0].id => '0', @roles[1].id => '1' }
+      @membership = mock('membership')
     end
     
-    specify "should redirect to show user" do
-      response.should_be_redirect
-      response.redirect_url.should_equal fucd_rbac_user_url(@user.id)
+    specify "should create a membership relation between 'user 1' and 'role 2', redirect to show 'user 1'" do
+      Membership.should_receive(:find_or_create_by_user_id_and_role_id).with('1', '2')
+      Membership.should_receive(:find_by_user_id_and_role_id).with('1', '1').and_return(nil)
+      
+      controller.should_redirect_to :controller => 'users', :action => 'show', :id => 1
+      
+      put :update, :user_id => '1', :memberships => { '1' => '0', '2' => '1' }
     end
     
-    specify "should create a membership relation between user and second role" do
-      Membership.find_by_user_id_and_role_id(@user.id, @roles[1].id).should_not_be nil
-    end
-  end
-  
-  context "PUT to fucd_rbac/memberships with :role_id" do
-    include SpecHelpers
-    controller_name 'fucd_rbac/memberships'
-    
-    setup do
-      @role = Role.create required_role_attributes
-      @users = [User.create(required_user_attributes), User.create(required_user_attributes.merge({:username => 'janedoe'}))]
-      put :update, :role_id => @role.id, :memberships => { @users[0].id => '0', @users[1].id => '1' }
+    specify "should destroy the membership relation between 'user 2' and 'role 1', redirect to show 'user 1'" do
+      Membership.should_receive(:find_by_user_id_and_role_id).with('2', '1').and_return(@membership)
+      @membership.should_receive(:destroy)
+      
+      controller.should_redirect_to :controller => 'users', :action => 'show', :id => 2
+
+      put :update, :user_id => '2', :memberships => { '1' => '0' }
     end
     
-    specify "should redirect to show role" do
-      response.should_be_redirect
-      response.redirect_url.should_equal fucd_rbac_role_url(@role.id)
+    specify "should create a membership relation between 'role 1' and 'user 2', redirect to show role" do
+      Membership.should_receive(:find_or_create_by_user_id_and_role_id).with('2', '1')
+      Membership.should_receive(:find_by_user_id_and_role_id).with('1', '1').and_return(nil)
+      
+      controller.should_redirect_to :controller => 'roles', :action => 'show', :id => 1
+      
+      put :update, :role_id => '1', :memberships => { '1' => '0', '2' => '1' }
     end
     
-    specify "should create a membership relation between second user and role" do
-      Membership.find_by_user_id_and_role_id(@users[1].id, @role.id).should_not_be nil
+    specify "should destroy the membership relation between 'role 2' and 'user 1', redirect to show role" do
+      Membership.should_receive(:find_by_user_id_and_role_id).with('1', '2').and_return(@membership)
+      @membership.should_receive(:destroy)
+      
+      controller.should_redirect_to :controller => 'roles', :action => 'show', :id => 2
+
+      put :update, :role_id => '2', :memberships => { '1' => '0' }
     end
-  end
-  
-  context "PUT to fucd_rbac/memberships without :user_id and :role_id" do
-    controller_name 'fucd_rbac/memberships'
     
-    specify "should not be possible" do
-      lambda { put :update }.should_raise
+    specify "should not be possible if given neither :user_id nor :role_id" do #TODO: better specify text
+      lambda { put :update }.should_raise #TODO raise ok?
     end
   end
 end

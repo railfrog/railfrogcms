@@ -50,7 +50,7 @@ module FucdRbac
     
     private
       def before_create
-        if session[:fucd_rbac_login_id]
+        if authenticated?
           flash[:error] = 'You are already logged in!'
           
           respond_to do |format|
@@ -61,7 +61,7 @@ module FucdRbac
       end
       
       def before_destroy
-        unless session[:fucd_rbac_login_id]
+        unless authenticated?
           flash[:error] = 'You have to be logged in to log out!'
           
           respond_to do |format|

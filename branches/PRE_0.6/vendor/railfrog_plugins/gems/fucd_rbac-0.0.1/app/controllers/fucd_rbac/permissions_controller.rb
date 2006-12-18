@@ -67,7 +67,7 @@ module FucdRbac
     protected
     
       def find_permission
-        @permission = Permission.find_by_id_and_role_id(params[:id], params[:role_id])
+        @permission = Permission.find(params[:id])
       end
   end
 end

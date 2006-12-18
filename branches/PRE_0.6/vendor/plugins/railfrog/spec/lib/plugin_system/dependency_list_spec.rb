@@ -38,8 +38,8 @@ module PluginSystem
     end
     
     specify "should have dependency order 1) yet_another_plugin, 2) another_plugin" do
-      @deps.dependency_order.should_equal [@plugins[1].specification,
-                                           @plugins[0].specification]
+      @deps.dependency_order.should == [@plugins[1].specification,
+                                        @plugins[0].specification]
     end
   end
   

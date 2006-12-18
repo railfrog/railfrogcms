@@ -4,18 +4,15 @@ module FucdRbac
   UsersController.send(:include, FakeAuthorization)
   
   context "GET to fucd_rbac/users" do
-    include SpecHelpers
     controller_name 'fucd_rbac/users'
-  
-    setup do
-      @user = User.new required_user_attributes
-      User.stubs(:find).with(:all).returns([@user])
-      get :index
-    end
     
     specify "should find all users" do
-      response.should_be_success
-      assigns(:users).should_equal [@user]
+      @user = mock('user')
+      User.should_receive(:find).with(:all).and_return([@user])
+      
+      get :index
+      
+      assigns(:users).should == [@user]
     end
   end
   
@@ -27,139 +24,126 @@ module FucdRbac
     end
     
     specify "should be successful" do
-      response.should_be_success
+      response.should_be_success #TODO
     end
   end
   
   context "GET to fucd_rbac/users/edit/1" do
-    include SpecHelpers
     controller_name 'fucd_rbac/users'
     
-    setup do
-      @user = User.new required_user_attributes
-      User.stubs(:find).with('1').returns(@user)
+    specify "should get user with id=1" do
+      @user = mock('user')
+      User.should_receive(:find).with('1').and_return(@user)
+      
       get :edit, :id => 1
-    end
-    
-    specify "should edit the user 'johndoe'" do
-      response.should_be_success
-      assigns(:user).should_equal @user
+      
+      assigns(:user).should == @user
     end
   end
   
   context "GET to fucd_rbac/users/show/1" do
-    include SpecHelpers
     controller_name 'fucd_rbac/users'
     
-    setup do
-      @user = User.new required_user_attributes
-      @user.stubs(:id).returns(1)
-      User.stubs(:find).with('1').returns(@user)
+    specify "should get user with id=1" do
+      @user = mock('user')
+      User.should_receive(:find).with('1').and_return(@user)
+      
       get :show, :id => 1
-    end
-    
-    specify "should show the user 'johndoe'" do
-      response.should_be_success
-      assigns(:user).should_equal @user
+      
+      assigns(:user).should == @user
     end
   end
   
-  context "POST to fucd_rbac/users with valid attributes" do
-    include SpecHelpers
+  context "POST to fucd_rbac/users" do
     controller_name 'fucd_rbac/users'
     
     setup do
-      post :create, :user => required_user_attributes
+      @user = mock('user')
+      @user.stub!(:to_s).and_return(1)
+      User.stub!(:new).and_return(@user)
     end
     
-    specify "should create new user 'johndoe'" do
-      User.count.should_be 1
+    specify "should try to create new user" do
+      @user.should_receive(:save)
+      User.should_receive(:new).with("name" => "John Doe").and_return(@user)
+      
+      post :create, :user => { "name" => "John Doe" }
     end
     
-    specify "should redirect to show new user" do
-      response.should_be_redirect
-      response.redirect_url.should_equal fucd_rbac_user_url(assigns(:user))
+    specify "should redirect to show new user after successful save" do
+      @user.stub!(:save).and_return(true)
+      
+      controller.should_redirect_to :action => 'show', :id => 1
+      
+      post :create
+    end
+    
+    specify "should render action 'new' after failed save" do
+      @user.stub!(:save).and_return(false)
+      
+      controller.should_render :action => 'new'
+      
+      post :create
+      
+      assigns(:user).should == @user
     end
   end
   
-  context "POST to fucd_rbac/users with invalid attributes" do
-    include SpecHelpers
+  context "PUT to fucd_rbac/users/1" do
     controller_name 'fucd_rbac/users'
     
     setup do
-      post :create, :user => required_user_attributes.except(:username)
+      @user = mock('user')
+      @user.stub!(:to_s).and_return(1)
+      User.stub!(:find).and_return(@user)
     end
     
-    specify "should not create a new user" do
-      User.count.should_be 0
+    specify "should try to update user with id=1" do
+      @user.should_receive(:update_attributes).with("name" => "John Doe")
+      User.should_receive(:find).with('1').and_return(@user)
+      
+      put :update, :id => 1, :user => { "name" => "John Doe" }
     end
     
-    specify "should raise model errors" do
-      assigns(:user).errors.should_not_be nil
+    specify "should redirect to show user with id=1 after successful update" do
+      @user.should_receive(:update_attributes).and_return(true)
+      
+      controller.should_redirect_to :action => 'show', :id => 1
+      
+      put :update, :id => 1
     end
     
-    specify "should render new" do
-      response.should_render :new
+    specify "should render action 'edit' after failed update" do
+      @user.should_receive(:update_attributes).and_return(false)
+      
+      controller.should_render :action => 'edit'
+      
+      put :update, :id => 1
+      
+      assigns(:user).should == @user
     end
   end
   
-  context "PUT to fucd_rbac/users/<id> with valid attributes" do
-    include SpecHelpers
+  context "DELETE to fucd_rbac/users/1" do
     controller_name 'fucd_rbac/users'
     
     setup do
-      @user = User.create required_user_attributes
-      put :update, :id => @user.id, :user => { :email => 'johnsnewaddress@doe-enterprises.com'} 
+      @user = mock('user')
+      @user.stub!(:destroy)
+      User.stub!(:find).and_return(@user)
     end
     
-    specify "should update user 'johndoe'" do
-      User.find(@user.id).email.should_equal 'johnsnewaddress@doe-enterprises.com'
+    specify "should delete user with id=1" do
+      @user.should_receive(:destroy)
+      User.should_receive(:find).with('1').and_return(@user)
+      
+      delete :destroy, :id => 1
     end
     
-    specify "should redirect to show user 'johndoe'" do
-      response.should_be_redirect
-      response.redirect_url.should_equal fucd_rbac_user_url(assigns(:user))
-    end
-  end
-  
-  context "PUT to fucd_rbac/users/<id> with invalid attributes" do
-    include SpecHelpers
-    controller_name 'fucd_rbac/users'
-    
-    setup do
-      @user = User.create required_user_attributes
-      put :update, :id => @user.id, :user => { :email => nil }
-    end
-    
-    specify "should not update user 'johndoe'" do
-      User.find(@user.id).email.should_equal @user.email
-    end
-    
-    specify "should raise model errors" do
-      assigns(:user).errors.should_not_be nil
-    end
-    
-    specify "should render edit" do
-      response.should_render :edit
-    end
-  end
-    
-  context "DELETE to fucd_rbac/users/<id>" do
-    include SpecHelpers
-    controller_name 'fucd_rbac/users'
-    
-    setup do
-      @user = User.create required_user_attributes
-      delete :destroy, :id => @user.id
-    end
-    
-    specify "should delete user 'johndoe'" do
-      User.count.should_be 0
-    end
-    
-    specify "should redirect to index" do
-      response.should_be_redirect
-      response.redirect_url.should_equal fucd_rbac_users_url
+    specify "should redirect to action 'index'" do
+      controller.should_redirect_to :action => 'index'
+      
+      delete :destroy, :id => 1
     end
   end
 end

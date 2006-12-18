@@ -2,8 +2,12 @@ module Railfrog
   class BaseController < ::ApplicationController
     protected
     
+    def authenticated?
+      ! session[:fucd_rbac_login_id].nil?
+    end
+    
     def authenticate
-      unless session[:fucd_rbac_login_id]
+      unless authenticated?
         session[:return_to] = request.request_uri
         flash[:error] = "You have to be logged in to perform this action!"
         

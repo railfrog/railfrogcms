@@ -27,8 +27,8 @@ module PluginSystem
         Plugin.new(File.join(@@__plugin_system_specs, "#{spec}.gemspec"))
       end
       @plugins_list.add(*plugins)
-      @plugins_list.entries.should_equal plugins
-      @plugins_list.dependency_order.should_equal [plugins[0], plugins[2], plugins[1]]
+      @plugins_list.entries.should == plugins
+      @plugins_list.dependency_order.should == [plugins[0], plugins[2], plugins[1]]
     end
   end
   
@@ -57,11 +57,11 @@ module PluginSystem
     end
     
     specify "should have a dependency order" do
-      @plugins_list.dependency_order.should_equal [@plugin]
+      @plugins_list.dependency_order.should == [@plugin]
     end
     
     specify "should have a load order" do
-      @plugins_list.load_order.should_equal [@plugin]
+      @plugins_list.load_order.should == [@plugin]
     end
   end
   
@@ -79,11 +79,11 @@ module PluginSystem
     end
     
     specify "should have a dependency order" do
-      @plugins_list.dependency_order.should_equal [@plugins[0], @plugins[2], @plugins[1]]
+      @plugins_list.dependency_order.should == [@plugins[0], @plugins[2], @plugins[1]]
     end
     
     specify "should have a load order" do
-      @plugins_list.load_order.should_equal [@plugins[1], @plugins[2], @plugins[0]]
+      @plugins_list.load_order.should == [@plugins[1], @plugins[2], @plugins[0]]
     end
     
     specify "can remove a plugin from itself" do
@@ -132,7 +132,7 @@ module PluginSystem
   context "A DynamicPluginsList that filters for enabled plugins with one enabled plugin" do
     setup do
       @plugin = Plugin.new(File.join(@@__plugin_system_specs, 'the_first_plugin-0.0.1.gemspec'))
-      @plugin.stubs(:enabled?).returns(true)
+      @plugin.stub!(:enabled?).and_return(true)
       @dynamic_plugins_list = DynamicPluginsList.new(PluginsList.new(@plugin), :enabled?)
     end
     
@@ -144,7 +144,7 @@ module PluginSystem
   context "A DynamicPluginsList that filters for enabled plugins with one disabled plugin" do
     setup do
       @plugin = Plugin.new(File.join(@@__plugin_system_specs, 'the_first_plugin-0.0.1.gemspec'))
-      @plugin.stubs(:enabled?).returns(false)
+      @plugin.stub!(:enabled?).and_return(false)
       @dynamic_plugins_list = DynamicPluginsList.new(PluginsList.new(@plugin), :enabled?)
     end
     
@@ -167,11 +167,11 @@ module PluginSystem
     end
     
     specify "should have a dependency order" do
-      @plugins_list.dependency_order.should_equal [@plugins[0], @plugins[2], @plugins[1]]
+      @plugins_list.dependency_order.should == [@plugins[0], @plugins[2], @plugins[1]]
     end
     
     specify "should have a load order" do
-      @plugins_list.load_order.should_equal [@plugins[1], @plugins[2], @plugins[0]]
+      @plugins_list.load_order.should == [@plugins[1], @plugins[2], @plugins[0]]
     end
   end
 end

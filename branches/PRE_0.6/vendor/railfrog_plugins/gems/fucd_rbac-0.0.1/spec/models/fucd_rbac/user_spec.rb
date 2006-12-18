@@ -39,8 +39,6 @@ module FucdRbac
       @user.email = 'invalid.email.address'
       @user.should_not_be_valid
       @user.errors.on(:email).should_not_be nil
-      @user.email = 'user_9+filter@domain.museum'
-      @user.should_be_valid
     end
     
     specify "should be invalid without a d" do
@@ -74,11 +72,11 @@ module FucdRbac
     end
     
     specify "should have a full name" do
-      @user.full_name.should_equal "John Doe"
+      @user.full_name.should == "John Doe"
     end
     
     specify "should have a unique username" do
-      User.stubs(:find).returns([@user])
+      User.should_receive(:find).and_return([@user])
       @user.should_not_be_valid
       @user.errors.on(:username).should_not_be nil
     end
@@ -89,36 +87,40 @@ module FucdRbac
     
     setup do
       @mock_time = Time.utc(2000, 1, 1, 0, 0, 0, 0).to_s
-      Time.stubs(:now).returns(@mock_time)
+      Time.stub!(:now).and_return(@mock_time)
       @user = User.create required_user_attributes
     end
     
     specify "should have a salt" do
-      @user.salt.should_equal Digest::SHA256.hexdigest(@mock_time)
+      @user.salt.should == Digest::SHA256.hexdigest(@mock_time)
     end
     
     specify "should have a salted password" do
-      @user.password.should_equal Digest::SHA256.hexdigest('abcdefg' + @user.salt)
+      @user.password.should == Digest::SHA256.hexdigest('abcdefg' + @user.salt)
     end
     
     specify "should leave password as it is on update when no new password is provided" do
       old_password = @user.password
       @user.update_attributes(:username => 'Johnny')
-      @user.password.should_equal old_password
+      @user.password.should == old_password
     end
     
     specify "should update password on update when new password is provided" do
       old_password = @user.password
       @user.update_attributes(:password => 'qwerty')
-      @user.password.should_not_equal old_password
+      @user.password.should_not == old_password
     end
     
     specify "can be found with his decrypted credentials" do
-      User.find_with_credentials(@user.username, required_user_attributes[:password]).should_equal @user
+      User.find_with_credentials(@user.username, required_user_attributes[:password]).should == @user
     end
     
     specify "cannot be found with wrong credentials" do
       User.find_with_credentials(@user.username, "foobar").should_be nil
+    end
+    
+    teardown do
+      @user.destroy
     end
   end
   
@@ -138,6 +140,10 @@ module FucdRbac
     specify "should remove all associated logins when removing user" do
       @user.destroy
       Login.should_have(0).records
+    end
+    
+    teardown do
+      @user.destroy
     end
   end
   
@@ -164,13 +170,18 @@ module FucdRbac
     end
     
     specify "should have permission for action 'show' of controller 'people'" do
-      @role.stubs(:grants_permission_for?).with('people', 'show').returns(true)
+      @role.should_receive(:grants_permission_for?).with('people', 'show').and_return(true)
       @user.has_permission_for?('people', 'show').should_be true
     end
     
     specify "should not have permission for action 'edit' of controller 'people'" do
-      @role.stubs(:grants_permission_for?).with('people', 'edit').returns(false)
+      @role.should_receive(:grants_permission_for?).with('people', 'edit').and_return(false)
       @user.has_permission_for?('people', 'edit').should_be false
+    end
+    
+    teardown do
+      @user.destroy
+      @role.destroy
     end
   end
 end

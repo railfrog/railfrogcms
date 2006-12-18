@@ -3,33 +3,23 @@ require File.dirname(__FILE__) + '/../../spec_helper'
 module FucdRbac
   PermissionsController.send(:include, FakeAuthorization)
   
-  context "GET to fucd_rbac/permissions with :role_id=1 (=correct)" do
-    include SpecHelpers
+  context "GET to fucd_rbac/permissions" do
     controller_name 'fucd_rbac/permissions'
   
     setup do
-      @permission = Permission.create required_permission_attributes
+      @permission = mock('permission')
+    end
+    
+    specify "should find all associated permissions to role with id=1" do
+      Permission.should_receive(:find_all_by_role_id).with('1').and_return([@permission])
+      
       get :index, :role_id => 1
+      
+      assigns(:permissions).should == [@permission]
     end
     
-    specify "should find all associated permissions" do
-      response.should_be_success
-      assigns(:permissions).should_equal [@permission]
-    end
-  end
-  
-  context "GET to fucd_rbac/permissions with :role_id=2 (=wrong)" do
-    include SpecHelpers
-    controller_name 'fucd_rbac/permissions'
-  
-    setup do
-      @permission = Permission.create required_permission_attributes
+    specify "should ... when given id to an inexisting role" do
       get :index, :role_id => 2
-    end
-    
-    specify "should not find any permissions" do
-      response.should_be_success
-      assigns(:permissions).should_equal []
     end
   end
   
@@ -41,172 +31,120 @@ module FucdRbac
     end
     
     specify "should be successful" do
-      response.should_be_success
+      response.should_be_success #TODO
     end
   end
   
-  context "GET to fucd_rbac/permissions/edit/<id> with :role_id=1 (=correct)" do
-    include SpecHelpers
+  context "GET to fucd_rbac/permissions/edit/1" do
     controller_name 'fucd_rbac/permissions'
     
     setup do
-      @permission = Permission.create required_permission_attributes
-      get :edit, :id => @permission.id, :role_id => 1
+      @permission = mock('permission')
     end
     
-    specify "should edit the permission" do
-      response.should_be_success
-      assigns(:permission).should_equal @permission
+    specify "should get permission with id=1 " do
+      @permission = mock('permission')
+      Permission.should_receive(:find).with('1').and_return(@permission)
+      
+      get :edit, :id => 1, :role_id => 1
+      
+      assigns(:permission).should == @permission
     end
   end
   
-  context "GET to fucd_rbac/permissions/edit/<id> with :role_id=2 (=wrong)" do
-    include SpecHelpers
+  context "POST to fucd_rbac/permissions" do
     controller_name 'fucd_rbac/permissions'
-  
+    
     setup do
-      @permission = Permission.create required_permission_attributes
-      get :edit, :id => @permission.id, :role_id => 2
+      @permission = mock('permission')
+      @permission.stub!(:to_s).and_return(1)
+      @role = mock('role')
+      @role_permission = mock('role<->permission') #TODO
+      Role.stub!(:find).and_return(@role)
+      @role.stub!(:permissions).and_return(@role_permission)
+      @role_permission.stub!(:build).and_return(@permission)
     end
     
-    specify "should not be successful" do
-      #response.should_not_be_success
-      assigns(:permission).should_be nil
+    specify "should try to create new permission" do
+      @permission.should_receive(:save)
+      @role_permission.should_receive(:build).with("action" => ".*").and_return(@permission)
+      
+      post :create, :permission => { "action" => ".*" }, :role_id => 1
+    end
+    
+    specify "should redirect to action 'index' after successful save" do
+      @permission.stub!(:save).and_return(true)
+      controller.should_redirect_to :action => 'index', :role_id => 1
+      
+      post :create, :role_id => 1
+    end
+    
+    specify "should render action 'new' after failed save" do
+      @permission.stub!(:save).and_return(false)
+      
+      controller.should_render :action => 'new'
+      
+      post :create, :role_id => 1
+      
+      assigns(:permission).should == @permission
     end
   end
   
-  context "POST to fucd_rbac/permissions with valid attributes and :role_id=1 (=correct)" do
-    include SpecHelpers
+  context "PUT to fucd_rbac/permissions/1" do
     controller_name 'fucd_rbac/permissions'
     
     setup do
-      Role.stubs(:find).with('1').returns(Role.new)
-      post :create, :permission => required_permission_attributes, :role_id => 1
+      @permission = mock('permission')
+      @permission.stub!(:to_s).and_return(1)
+      Permission.stub!(:find).and_return(@permission)
     end
     
-    specify "should create new permission" do
-      Permission.count.should_be 1
+    specify "should try to update permission with id=1" do
+      @permission.should_receive(:update_attributes).with("action" => ".*")
+      Permission.should_receive(:find).with('1').and_return(@permission)
+      
+      put :update, :id => 1, :permission => { "action" => ".*" }, :role_id => 1
     end
     
-    specify "should redirect to index" do
-      response.should_be_redirect
-      response.redirect_url.should_equal fucd_rbac_permissions_url
+    specify "should redirect to action 'index' after successful update" do
+      @permission.should_receive(:update_attributes).and_return(true)
+      
+      controller.should_redirect_to :action => 'index', :role_id => 1
+      
+      put :update, :id => 1, :role_id => 1
+    end
+    
+    specify "should render action 'edit' after failed update" do
+      @permission.should_receive(:update_attributes).and_return(false)
+      
+      controller.should_render :action => 'edit'
+      
+      put :update, :id => 1, :role_id => 1
+      
+      assigns(:permission).should == @permission
     end
   end
   
-  context "POST to fucd_rbac/permissions with invalid attributes and :role_id=1 (=correct)" do
-    include SpecHelpers
+  context "DELETE to fucd_rbac/permissions/1" do
     controller_name 'fucd_rbac/permissions'
     
     setup do
-      Role.stubs(:find).with('1').returns(Role.new)
-      post :create, :permission => required_permission_attributes.except(:action), :role_id => 1
+      @permission = mock('permission')
+      @permission.stub!(:destroy)
+      Permission.stub!(:find).and_return(@permission)
     end
     
-    specify "should not create a new permission" do
-      Permission.count.should_be 0
+    specify "should delete permission with id=1" do
+      @permission.should_receive(:destroy)
+      Permission.should_receive(:find).with('1').and_return(@permission)
+      
+      delete :destroy, :id => 1, :role_id => 1
     end
     
-    specify "should raise model errors" do
-      assigns(:permission).errors.should_not_be nil
-    end
-    
-    specify "should render new" do
-      response.should_render :new
-    end
-  end
-  
-  context "PUT to fucd_rbac/permissions/<id> with valid attributes and :role_id=1 (=correct)" do
-    include SpecHelpers
-    controller_name 'fucd_rbac/permissions'
-    
-    setup do
-      @permission = Permission.create required_permission_attributes
-      put :update, :id => @permission.id, :permission => { :action => 'foobar'}, :role_id => 1
-    end
-    
-    specify "should update the permission" do
-      Permission.find(@permission.id).action.should_equal 'foobar'
-    end
-    
-    specify "should redirect to index" do
-      response.should_be_redirect
-      response.redirect_url.should_equal fucd_rbac_permissions_url
-    end
-  end
-  
-  context "PUT to fucd_rbac/permissions/<id> with invalid attributes and :role_id=1 (=correct)" do
-    include SpecHelpers
-    controller_name 'fucd_rbac/permissions'
-    
-    setup do
-      @permission = Permission.create required_permission_attributes
-      put :update, :id => @permission.id, :permission => { :action => nil }, :role_id => 1
-    end
-    
-    specify "should not update the permission" do
-      Permission.find(@permission.id).action.should_equal @permission.action
-    end
-    
-    specify "should raise model errors" do
-      assigns(:permission).errors.should_not_be nil
-    end
-    
-    specify "should render edit" do
-      response.should_render :edit
-    end
-  end
-  
-  context "PUT to fucd_rbac/permissions/<id> with valid attributes and :role_id=2 (=wrong)" do
-    include SpecHelpers
-    controller_name 'fucd_rbac/permissions'
-    
-    setup do
-      @permission = Permission.create required_permission_attributes
-      #FIXME: put :update, :id => @permission.id, :permission => { :action => 'foobar'}, :role_id => 2
-    end
-    
-    specify "should not update the permission" do
-      Permission.find(@permission.id).action.should_equal @permission.action
-    end
-    
-    specify "should..." do
-    end
-  end
-  
-  context "DELETE to fucd_rbac/permissions/<id> with :role_id=1 (=correct)" do
-    include SpecHelpers
-    controller_name 'fucd_rbac/permissions'
-    
-    setup do
-      @permission = Permission.create required_permission_attributes
-      delete :destroy, :id => @permission.id, :role_id => 1
-    end
-    
-    specify "should delete the permission" do
-      Permission.count.should_be 0
-    end
-    
-    specify "should redirect to index" do
-      response.should_be_redirect
-      response.redirect_url.should_equal fucd_rbac_permissions_url
-    end
-  end
-  
-  context "DELETE to fucd_rbac/permissions/<id> with :role_id=2 (=wrong)" do
-    include SpecHelpers
-    controller_name 'fucd_rbac/permissions'
-    
-    setup do
-      @permission = Permission.create required_permission_attributes
-      #FIXME: delete :destroy, :id => @permission.id, :role_id => 2
-    end
-    
-    specify "should not delete the permission" do
-      Permission.count.should_be 1
-    end
-    
-    specify "should..." do
+    specify "should redirect to action 'index'" do
+      controller.should_redirect_to :action => 'index', :role_id => 1
+      
+      delete :destroy, :id => 1, :role_id => 1
     end
   end
 end

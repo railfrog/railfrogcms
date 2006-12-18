@@ -46,12 +46,12 @@ require File.dirname(__FILE__) + '/../../spec_helper'
     
     specify "should have 5 installed plugins" do
       installed_plugins = @plugin_system.installed_plugins.map {|plugin| plugin.full_name }
-      installed_plugins.sort.should_equal @plugins
+      installed_plugins.sort.should == @plugins
     end
     
     specify "should have 5 registered plugins" do
       registered_plugins = @plugin_system.registered_plugins.map {|plugin| plugin.full_name }
-      registered_plugins.sort.should_equal @plugins
+      registered_plugins.sort.should == @plugins
     end
   end
   
@@ -60,7 +60,7 @@ require File.dirname(__FILE__) + '/../../spec_helper'
       @plugin_system = Base.new(@@__plugin_system_root)
       
       @another_plugin = @plugin_system.installed_plugins['another_plugin-0.0.2']
-      @another_plugin.stubs(:enabled?).returns(true)
+      @another_plugin.stub!(:enabled?).and_return(true)
       
       @plugin_system.start
     end
@@ -79,7 +79,7 @@ require File.dirname(__FILE__) + '/../../spec_helper'
       @plugin_system = Base.new(@@__plugin_system_root)
       
       @yet_another_plugin = @plugin_system.installed_plugins['yet_another_plugin-0.0.3']
-      @yet_another_plugin.stubs(:enabled?).returns(true)
+      @yet_another_plugin.stub!(:enabled?).and_return(true)
       
       @plugin_system.start
     end
@@ -99,8 +99,8 @@ require File.dirname(__FILE__) + '/../../spec_helper'
       
       @yet_another_plugin = @plugin_system.installed_plugins['yet_another_plugin-0.0.3']
       @another_plugin = @plugin_system.installed_plugins['another_plugin-0.0.2']
-      @yet_another_plugin.stubs(:enabled?).returns(true)
-      @another_plugin.stubs(:enabled?).returns(true)
+      @yet_another_plugin.stub!(:enabled?).and_return(true)
+      @another_plugin.stub!(:enabled?).and_return(true)
       
       @plugin_system.start
     end
