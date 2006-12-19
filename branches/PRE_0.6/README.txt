@@ -63,3 +63,8 @@ If you are looking at the new plugin code, you'll currently (04 Oct 2006) need t
  5. Start your development server (e.g. {{{ruby script/server}}})
  6. Locate your browser to http://localhost:3000/railfrog/login
  7. Login! Username is 'admin' and password is 'ribbet!'
+
+== We Need You!
+Please feel free to contribute to the Railfrog project.
+Visit us at http://railfrog.com
+
