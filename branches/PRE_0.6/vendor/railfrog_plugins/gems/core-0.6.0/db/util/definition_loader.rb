@@ -33,7 +33,7 @@ class SiteDefinitionLoader
 
         content = load_file_content(page['path'])
 
-  sm = SiteMapping.find_or_create_by_parent_and_path_segment(parent_sitemapping, path_segment)
+        sm = SiteMapping.find_or_create_by_parent_and_path_segment(parent_sitemapping, path_segment)
         Chunk.find_or_create_by_site_mapping_and_content(sm, content)
         load_labels(page, sm)
 
@@ -43,27 +43,25 @@ class SiteDefinitionLoader
 
         content = page['content']
 
-  sm = SiteMapping.find_or_create_by_parent_and_path_segment(parent_sitemapping, path_segment)
+        sm = SiteMapping.find_or_create_by_parent_and_path_segment(parent_sitemapping, path_segment)
         Chunk.find_or_create_by_site_mapping_and_content(sm, content)
         load_labels(page, sm)
 
       elsif page.class == Hash \
-    && path_segment == $RF_LABELS_TAG \
-    && parent_sitemapping.full_path == '' then # root labels
+          && path_segment == $RF_LABELS_TAG \
+          && parent_sitemapping.full_path == '' then # root labels
         load_labels({$RF_LABELS_TAG => page}, parent_sitemapping)
       else # dir
-
         puts "*PATH: " + path_segment
-  if path_segment == $RF_LABELS_TAG || path_segment == $RF_INTERANAL_TAG then
-
-    puts "*NEXT"
+        if path_segment == $RF_LABELS_TAG || path_segment == $RF_INTERANAL_TAG then
+          puts "*NEXT"
           next
-  end
+        end
 
         # Check whether such SiteMapping already exists
         sm = SiteMapping.find_or_create_by_parent_and_path_segment(parent_sitemapping, path_segment)
-  load_labels(page, sm)
-  is_internal(page, sm)
+        load_labels(page, sm)
+        is_internal(page, sm)
 
         get_pages(page, sm)
       end
