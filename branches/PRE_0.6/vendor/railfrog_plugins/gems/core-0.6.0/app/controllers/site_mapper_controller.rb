@@ -1,6 +1,9 @@
 require 'pp'
 require 'rubygems'
+
 # models
+require 'chunk'
+require 'mime_type'
 require 'site_mapping'
 
 class SiteMapperController < RailfrogCore::BaseController

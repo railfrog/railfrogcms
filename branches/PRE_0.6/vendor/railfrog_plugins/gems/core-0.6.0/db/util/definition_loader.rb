@@ -1,11 +1,14 @@
 require 'pp'
 require 'yaml'
-require File.expand_path(File.join(RAILS_ROOT, 'config', 'environment'))
-require File.dirname(__FILE__) + '/../../app/models/chunk'
+
+# models
+require 'chunk'
+require 'mapping_label'
+require 'site_mapping'
 
 # FIXME: write documentation
 class SiteDefinitionLoader
-	
+
   # tag name of the labels tag, eg:
   # pages:
   #   rf_labels:
@@ -13,15 +16,15 @@ class SiteDefinitionLoader
   #     layout=chunk:1
   $RF_LABELS_TAG = "rf-labels"
   $RF_INTERANAL_TAG = "rf-internal"
-  
+
   def self.load_definition(file)
     site_definition = YAML::load(File.open( file ))
-    
+
     Dir.chdir("site/")
     get_pages(site_definition["site"], SiteMapping.root)
   end
-  
-  def self.get_pages(node, parent_sitemapping) 
+
+  def self.get_pages(node, parent_sitemapping)
     node.each { |path_segment, page|
 
       if page.class == Hash \
@@ -30,7 +33,7 @@ class SiteDefinitionLoader
 
         content = load_file_content(page['path'])
 
-	sm = SiteMapping.find_or_create_by_parent_and_path_segment(parent_sitemapping, path_segment)
+  sm = SiteMapping.find_or_create_by_parent_and_path_segment(parent_sitemapping, path_segment)
         Chunk.find_or_create_by_site_mapping_and_content(sm, content)
         load_labels(page, sm)
 
@@ -40,27 +43,27 @@ class SiteDefinitionLoader
 
         content = page['content']
 
-	sm = SiteMapping.find_or_create_by_parent_and_path_segment(parent_sitemapping, path_segment)
+  sm = SiteMapping.find_or_create_by_parent_and_path_segment(parent_sitemapping, path_segment)
         Chunk.find_or_create_by_site_mapping_and_content(sm, content)
         load_labels(page, sm)
-	
+
       elsif page.class == Hash \
-	  && path_segment == $RF_LABELS_TAG \
-	  && parent_sitemapping.full_path == '' then # root labels
+    && path_segment == $RF_LABELS_TAG \
+    && parent_sitemapping.full_path == '' then # root labels
         load_labels({$RF_LABELS_TAG => page}, parent_sitemapping)
       else # dir
 
         puts "*PATH: " + path_segment
-	if path_segment == $RF_LABELS_TAG || path_segment == $RF_INTERANAL_TAG then
+  if path_segment == $RF_LABELS_TAG || path_segment == $RF_INTERANAL_TAG then
 
-	  puts "*NEXT"
+    puts "*NEXT"
           next
-	end
+  end
 
         # Check whether such SiteMapping already exists
-        sm = SiteMapping.find_or_create_by_parent_and_path_segment(parent_sitemapping, path_segment) 
-	load_labels(page, sm)
-	is_internal(page, sm)
+        sm = SiteMapping.find_or_create_by_parent_and_path_segment(parent_sitemapping, path_segment)
+  load_labels(page, sm)
+  is_internal(page, sm)
 
         get_pages(page, sm)
       end
@@ -70,7 +73,7 @@ class SiteDefinitionLoader
   # Loading labels
   # rf-labels:
   #   layout: "chunk:1"
-  #   active_menu_item: "1" 
+  #   active_menu_item: "1"
   def self.load_labels(node, site_mapping)
     puts "      loading labels for '#{site_mapping.full_path}' path"
     if node.class == Hash && node.has_key?($RF_LABELS_TAG) then
@@ -87,9 +90,9 @@ class SiteDefinitionLoader
       site_mapping.is_internal = node[$RF_INTERANAL_TAG]
       site_mapping.save!
     else
-      is_parent_internal(site_mapping)   
+      is_parent_internal(site_mapping)
     end
-    
+
   end
 
   def self.load_file_content(file)

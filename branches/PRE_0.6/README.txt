@@ -1,11 +1,11 @@
-= RailFrog =
+= Railfrog =
 
-RailFrog is a lightweight Content Management System for building websites. 
+Railfrog is a lightweight Content Management System for building websites.
 
 ## TODO
 
 == Prerequisites ==
-* Rails 1.1.x
+* Rails 1.2.x
 * Rake - {{{gem install rake}}}
 * RSpec - {{{gem install rspec}}}
 * BlueCloth (if you need Markdown support) - {{{gem install bluecloth}}}
@@ -15,18 +15,18 @@ RailFrog is a lightweight Content Management System for building websites.
 == Installation ==
  1. Create a {{{railfrog_development}}} database (see notes below).
  2. Copy config/database.yml.example to database.yml and edit as appropriate.
- 3. Run {{{$ rake db:migrate:engines:railfrog_core}}} to create all required tables in the database.
- 4. Run WEBrick
+ 3. Run {{{$ rake db:migrate:railfrog_plugin:core}}} to create all required tables in the database.
+ 4. Run {{{$ script/server}}}
 
 == Loading site content ==
- If you'd like to load site content to the RailFrog database use 
-{{{$ rake railfrog:load_site SITE=<path-to-site>}}}, or use our default site 
-{{{$ rake railfrog:load_site SITE=vendor/plugins/railfrog_core/db/sites/railfrog}}}
+ If you'd like to load site content to the RailFrog database use
+{{{$ rake railfrog:load_site SITE=<path-to-site>}}}, or use our default site
+{{{$ rake railfrog:load_site SITE=vendor/railfrog_plugins/gems/core-0.6.0/db/sites/railfrog}}}
 
 == Troubleshooting ==
 
  If your database gets mashed, try
- {{{$ rake db:migrate:engines:railfrog_core VERSION=0 && rake db:migrate:engines:railfrog_core}}}
+ {{{$ rake db:migrate:railfrog_plugin:core VERSION=0 && rake db:migrate:railfrog_plugin:core}}}
 
 == Database Setup ==
 
@@ -53,18 +53,15 @@ RailFrog is a lightweight Content Management System for building websites.
     > create user railfrog with password 'ribbet!';
 
 == Working with the Plugin System in PRE_0.6 ==
-If you are looking at the new plugin code, you'll currently (04 Oct 2006) need to be doing some extra work.
+If you are looking at the new plugin code, you'll currently (22 Dec 2006) need to be doing some extra work.
 
  0. Install Railfrog just like always.
- 1. Install Edge Rails (e.g. run {{{rake rails:freeze:edge}}})
- 2. Disable Rails Engines (e.g. rename /vendor/plugins/engines/init.rb to init.rb~)
- 3. Enable the "fucd_rbac" and "core" plugin: E.g. in your Rails console ({{{ruby script/console}}}) run {{{PluginSystem::Database::Plugin.update_all("enabled = true")}}}
- 4. Run {{{rake db:migrate:railfrog_plugin:fucd_rbac}}} to create the tables for the "fucd_rbac" plugin 
- 5. Start your development server (e.g. {{{ruby script/server}}})
- 6. Locate your browser to http://localhost:3000/railfrog/login
- 7. Login! Username is 'admin' and password is 'ribbet!'
+ 1. Enable the "fucd_rbac" and "admin_ui" plugins: E.g. in your Rails console ({{{ruby script/console}}}) run {{{PluginSystem::Database::Plugin.update_all("enabled = true")}}}
+ 2. Run {{{rake db:migrate:railfrog_plugin:fucd_rbac}}} to create the tables for the "fucd_rbac" plugin (admin_ui doesn't have any tables yet)
+ 3. Start your development server (e.g. {{{ruby script/server}}})
+ 4. Locate your browser to http://localhost:3000/railfrog/login
+ 5. Login! Username is 'admin' and password is 'ribbet!'
 
 == We Need You!
 Please feel free to contribute to the Railfrog project.
 Visit us at http://railfrog.com
-

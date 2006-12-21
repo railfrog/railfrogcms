@@ -1,6 +1,21 @@
 module RailfrogAdminHelper
 
 
+  def print_site_mappings(site_mapping)
+    html = '' if html.nil?
+
+      if site_mapping.parent_id == 0
+        html << '<li>' << link_to('ROOT', { :action => 'explore', :id => site_mapping.id }) << '</li>'
+    else
+      html = '<li> / ' + link_to(site_mapping.path_segment,
+                                 { :action => 'explore', :id => site_mapping.id }) + '</li>' + html
+      html = print_site_mappings(SiteMapping.find(site_mapping.parent_id)) + html
+    end
+
+    html
+  end
+
+
   def hide_block(dom_id_segment)
       javascript_tag("if ($('#{dom_id_segment}-nav')) {" +
                        "Element.hide('#{dom_id_segment}-nav');" +
@@ -233,7 +248,7 @@ module RailfrogAdminHelper
     end
 
     html << '</table>'
-    
+
     if count == 0
       html = '<span>No Files</span>'
 #      html << javascript_tag("if ($('#{mime_class}-nav')) {" +
