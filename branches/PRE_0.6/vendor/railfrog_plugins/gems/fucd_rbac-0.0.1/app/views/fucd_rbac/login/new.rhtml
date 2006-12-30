@@ -1,7 +1,5 @@
 <h2>Login</h2>
 
-<%= link_to 'logout', fucd_rbac_login_url, :method => :delete %>
-
 <% form_for :login, @login,
             :url => { :action => :create } do |f| %>
 <dl>

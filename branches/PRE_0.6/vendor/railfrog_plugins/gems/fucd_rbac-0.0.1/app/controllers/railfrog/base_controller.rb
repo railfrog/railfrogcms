@@ -1,5 +1,7 @@
 module Railfrog
   class BaseController < ::ApplicationController
+    before_filter :authenticate
+    
     protected
     
     def authenticated?

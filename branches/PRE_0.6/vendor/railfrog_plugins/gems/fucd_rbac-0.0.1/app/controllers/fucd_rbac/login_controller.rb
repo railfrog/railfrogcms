@@ -1,6 +1,6 @@
 module FucdRbac
   class LoginController < ::Railfrog::BaseController
-    layout 'login'
+    skip_before_filter :authenticate
     
     before_filter :before_create, :only => [:create]
     before_filter :before_destroy, :only => [:destroy]
@@ -14,7 +14,7 @@ module FucdRbac
         
         if @login.save
           session[:fucd_rbac_login_id] = @login.id
-          return_to = session[:return_to] || { :action => :new }#FIXME
+          return_to = session[:return_to] || { :controller => 'railfrog/admin' }#FIXME
           session[:return_to] = nil
           
           flash[:notice] = 'You have successfully logged in.'

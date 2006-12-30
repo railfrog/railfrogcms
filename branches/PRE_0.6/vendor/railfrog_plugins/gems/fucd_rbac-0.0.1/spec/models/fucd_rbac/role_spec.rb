@@ -66,8 +66,9 @@ module FucdRbac
     
     setup do
       @role = Role.create required_role_attributes
-      @permission = Permission.new required_permission_attributes
-      @role.permissions << @permission
+      @permission = mock('permission')
+      @role.stub!(:permissions).and_return([@permission])
+      @permission.stub!(:destroy)
     end
     
     specify "should have 1 permission" do
@@ -76,7 +77,7 @@ module FucdRbac
     
     specify "should remove all associated permissions when removing role" do
       @role.destroy
-      Permission.should_have(0).records
+      @permission.should_receive(:destroy)
     end
     
     specify "should grant permission for action 'show' of controller 'people'" do
@@ -91,7 +92,6 @@ module FucdRbac
     
     teardown do
       @role.destroy
-      @permission.destroy
     end
   end
 end

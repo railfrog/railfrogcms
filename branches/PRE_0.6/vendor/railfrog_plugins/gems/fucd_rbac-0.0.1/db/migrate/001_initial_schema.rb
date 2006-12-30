@@ -1,9 +1,3 @@
-model_dir = File.join(File.dirname(__FILE__), '..', '..', 'app', 'models', 'fucd_rbac')
-require File.join(model_dir, 'membership')
-require File.join(model_dir, 'permission')
-require File.join(model_dir, 'role')
-require File.join(model_dir, 'user')
-
 class InitialSchema < ActiveRecord::Migration
   def self.up
     create_table "fucd_rbac_logins", :force => true do |t|

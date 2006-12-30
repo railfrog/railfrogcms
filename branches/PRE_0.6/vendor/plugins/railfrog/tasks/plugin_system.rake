@@ -1,12 +1,14 @@
 require File.expand_path(File.join(RAILS_ROOT, 'config', 'environment'))
 
 if Object.const_defined?('PluginSystem')
-  Dir["./vendor/railfrog_plugins/gems/*/tasks/**/*.rake"].sort.each { |ext| load ext }
+  PluginSystem::Instance.enabled_plugins.each do |plugin|
+    Dir[File.join(plugin.path_to_gem, 'tasks', '**', '*.rake')].sort.each { |ext| load ext }
+  end
   
   namespace :db do
     namespace :migrate do
       namespace :railfrog_plugin do
-        PluginSystem::Instance.installed_plugins.group_by(&:name).each do |name, plugins|
+        PluginSystem::Instance.enabled_plugins.group_by(&:name).each do |name, plugins|
           desc "Migrate the plugin '#{name}'."
           task name do
             if plugins.size > 1

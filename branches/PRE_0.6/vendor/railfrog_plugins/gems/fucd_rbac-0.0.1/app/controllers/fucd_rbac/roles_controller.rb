@@ -1,7 +1,5 @@
 module FucdRbac
   class RolesController < ::Railfrog::BaseController
-    before_filter :authenticate
-    
     before_filter :find_role, :only => [:show, :edit, :update, :destroy]
     
     def index

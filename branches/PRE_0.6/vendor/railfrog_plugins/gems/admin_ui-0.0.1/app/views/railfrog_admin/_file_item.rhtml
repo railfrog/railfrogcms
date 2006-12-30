@@ -1,9 +1,0 @@
-<tr id="file-<%= site_mapping.id %>" class="mime-<%= mime_class %>">
-  <td><%= chunk_id %></td>
-  <td<%= ' class="internal-chunk"' if site_mapping.is_internal? %>>
-    <%= link_to(site_mapping.path_segment, :id => site_mapping.id) %>
-  </td>
-  <td><%= updated_at.strftime("%Y-%m-%d %H:%M:%S") %></td>
-  <td><% mime_type %></td>
-  <td>i</td>
-</tr>

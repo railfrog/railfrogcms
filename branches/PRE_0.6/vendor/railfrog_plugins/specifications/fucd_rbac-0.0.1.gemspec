@@ -6,4 +6,5 @@ Gem::Specification.new do |s|
   s.description = "Role Based Authentication Control System for RailFrog"
   s.authors = ["Daniel Siemssen"]
   s.add_dependency(%q<core>, [">= 0.6.0"])
+  s.add_dependency(%q<admin_ui>, [">= 0.0.1"])
 end

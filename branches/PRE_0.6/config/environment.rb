@@ -4,14 +4,8 @@
 # you don't control web/app server and can't set it the proper way
 # ENV['RAILS_ENV'] ||= 'production'
 
-#RAILS_GEM_VERSION = '1.1.6' # 1.2RC1 = 1.1.6.5618
-
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
-
-module Engines
-  EdgeRails = true
-end
 
 Rails::Initializer.run do |config|
   # Settings in config/environments/* take precedence those specified here

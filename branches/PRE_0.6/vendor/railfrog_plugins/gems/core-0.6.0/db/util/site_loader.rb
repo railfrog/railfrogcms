@@ -54,7 +54,7 @@ class SiteLoader
 
     puts "    loading content of the chunk from file: '#{file}'"
     content = SiteDefinitionLoader.load_file_content(file)
-    Chunk.find_or_create_by_site_mapping_and_content(site_mapping, content)
+    Railfrog::Chunk.find_or_create_by_site_mapping_and_content(site_mapping, content)
     SiteDefinitionLoader.is_parent_internal(site_mapping)   
   end
 

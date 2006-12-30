@@ -27,5 +27,12 @@ module ActionController
           end
         end
     end
+    
+    private
+      def layout_directory?(layout_name)
+        template_path = self.class.send(:layout_list).grep(%r{layouts/#{layout_name}\.[a-z][0-9a-z]*$}).first
+        dirname = File.dirname(template_path)
+        self.class.send(:layout_directory_exists_cache)[dirname]
+      end
   end
 end

@@ -31,8 +31,8 @@ module PluginSystem
       
       plugins = Dir[File.join(path_to_specs, "*.gemspec")].map {|file| Plugin.new(file) }
       @installed_plugins = PluginsList.new(*plugins)
-      @enabled_plugins  = DynamicPluginsList.new(installed_plugins, :enabled?)
-      @started_plugins  = DynamicPluginsList.new(installed_plugins, :started?)
+      @enabled_plugins   = DynamicPluginsList.new(installed_plugins, :enabled?)
+      @started_plugins   = DynamicPluginsList.new(installed_plugins, :started?)
       
       registered_plugins.each do |plugin| 
         plugin.destroy if installed_plugins[plugin.full_name].nil?

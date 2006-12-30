@@ -2,9 +2,9 @@ require 'pp'
 require 'yaml'
 
 # models
-require 'chunk'
-require 'mapping_label'
-require 'site_mapping'
+#require 'chunk'
+#require 'mapping_label'
+#require 'site_mapping'
 
 # FIXME: write documentation
 class SiteDefinitionLoader
@@ -34,7 +34,7 @@ class SiteDefinitionLoader
         content = load_file_content(page['path'])
 
         sm = SiteMapping.find_or_create_by_parent_and_path_segment(parent_sitemapping, path_segment)
-        Chunk.find_or_create_by_site_mapping_and_content(sm, content)
+        Railfrog::Chunk.find_or_create_by_site_mapping_and_content(sm, content)
         load_labels(page, sm)
 
       elsif page.class == Hash \
@@ -44,7 +44,7 @@ class SiteDefinitionLoader
         content = page['content']
 
         sm = SiteMapping.find_or_create_by_parent_and_path_segment(parent_sitemapping, path_segment)
-        Chunk.find_or_create_by_site_mapping_and_content(sm, content)
+        Railfrog::Chunk.find_or_create_by_site_mapping_and_content(sm, content)
         load_labels(page, sm)
 
       elsif page.class == Hash \

@@ -1,7 +1,3 @@
-require 'mime_type'
-require 'site_mapping'
-require 'user'
-
 class InitialSchema < ActiveRecord::Migration
   def self.up
     create_table "mime_types", :force => true do |t|
@@ -63,22 +59,11 @@ class InitialSchema < ActiveRecord::Migration
     end
 
     add_index "mapping_labels", ["site_mapping_id"], :name => "mapping_labels_site_mapping_id_index"
-
-    create_table "users", :force => true do |t|
-      t.column "first_name", :string, :default => "", :null => false
-      t.column "last_name", :string, :default => "", :null => false
-      t.column "email", :string, :default => "", :null => false
-      t.column "password", :string, :limit => 40, :default => "", :null => false
-      t.column "created_at", :datetime, :null => false
-      t.column "updated_at", :datetime, :null => false
-    end
-
-    User.create :first_name => "Test", :last_name => "Tester", :email => "test@test.com", :password => "test"
-
+    
     STDERR.puts "  loading mime types file"
     load_mime_types_file File.dirname(__FILE__) + '/mime.types.4debug'
 
-    Chunk.reset_column_information
+    Railfrog::Chunk.reset_column_information
 
     set_mapping_ids_in_chunk_table
 
@@ -101,26 +86,25 @@ class InitialSchema < ActiveRecord::Migration
         # not empty string and not comment
         if parts.size > 0 && !(parts[0].squeeze("#") == "#") then
           mime_type = parts.delete_at(0)
-          MimeType.create(mime_type, parts)
+          Railfrog::MimeType.create(mime_type, parts)
         end
       end
     end
   end
 
   def self.set_mapping_ids_in_chunk_table
-    SiteMapping.find(:all, :conditions => "chunk_id is not null").each do |sm|
+    Railfrog::SiteMapping.find(:all, :conditions => "chunk_id is not null").each do |sm|
       extension = sm.path_segment.chomp.split(/\./).pop
       if extension then
-        fe = FileExtension.find(:first, :conditions => ["extension = ?", extension])
+        fe = Railfrog::FileExtension.find(:first, :conditions => ["extension = ?", extension])
         sm.chunk.mime_type_id = fe.mime_type.id
         sm.save
       end
     end
 
-    Chunk.find(:all, :conditions => "mime_type_id is null").each do |c|
-      c.mime_type_id = MimeType.find_default_mime_type.id
+    Railfrog::Chunk.find(:all, :conditions => "mime_type_id is null").each do |c|
+      c.mime_type_id = Railfrog::MimeType.find_default_mime_type.id
       c.save
     end
    end
-
 end

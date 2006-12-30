@@ -1,7 +1,5 @@
 module FucdRbac
   class PermissionsController < ::Railfrog::BaseController
-    before_filter :authenticate
-    
     before_filter :find_permission, :only => [ :edit, :update, :destroy ]
     
     def index

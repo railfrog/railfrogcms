@@ -1,7 +1,5 @@
 module FucdRbac
   class MembershipsController < ::Railfrog::BaseController
-    before_filter :authenticate
-    
     before_filter :verify_user_id_or_role_id_present
     
     def edit
