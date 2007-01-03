@@ -15,7 +15,8 @@ Railfrog is a lightweight Content Management System for building websites.
 
  1. Create a {{{railfrog_development}}} database (see notes below).
  2. Copy config/database.yml.example to database.yml and edit as appropriate.
- 3. Enable the "core", "fucd_rbac" and "admin_ui" plugins: E.g. in your Rails console ({{{ruby script/console}}}) run {{{PluginSystem::Database::Plugin.update_all("enabled = true")}}}
+ 2.1. Freeze Rails - {{{rake rails:freeze:edge}}} (which also creates the plugins table)
+ 3. Enable the "core", "fucd_rbac" and "admin_ui" plugins: E.g. in your Rails console ({{{ruby script/console}}}) run {{{PluginSystem::Database::Plugin.update_all("enabled = true")}}} (you'll need to use 'enabled = 1' instead of 'enabled = true' for MySQL 4.x)
  4. Run {{{$ rake db:migrate:railfrog_plugin:core}}} and {{{$ rake db:migrate:railfrog_plugin:fucd_rbac}}} to create all required tables in the database.
  5. Copy contents of vendor/railfrog_plugins/gems/admin_ui-0.0.1/public/ into the public/ directory
  6. Start your development server {{{$ script/server}}}
