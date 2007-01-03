@@ -1,7 +1,8 @@
 require 'hash_extension'
-require 'plugin_system'
 
 if Dependencies.respond_to?(:autoloaded_constants) # I just try to figure out if Edge Rails is installed
+  require 'plugin_system'
+  
   # FIXME: REMOVE THIS
   if RAILS_ENV == 'test'
     PluginSystem::Instance.installed_plugins.each do |plugin|
