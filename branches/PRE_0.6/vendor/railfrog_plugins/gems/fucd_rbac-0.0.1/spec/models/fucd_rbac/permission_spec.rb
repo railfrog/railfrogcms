@@ -10,20 +10,17 @@ module FucdRbac
     
     specify "should be invalid without a role" do
       @permission.attributes = required_permission_attributes.except(:role_id)
-      @permission.should_not_be_valid
-      @permission.errors.on(:role_id).should_not_be nil
+      @permission.should_have(1).error_on(:role_id)
     end
     
     specify "should be invalid without a controller" do
       @permission.attributes = required_permission_attributes.except(:controller)
-      @permission.should_not_be_valid
-      @permission.errors.on(:controller).should_not_be nil
+      @permission.should_have(1).error_on(:controller)
     end
     
     specify "should be invalid without an action" do
       @permission.attributes = required_permission_attributes.except(:action)
-      @permission.should_not_be_valid
-      @permission.errors.on(:action).should_not_be nil
+      @permission.should_have(1).error_on(:action)
     end
   end
   

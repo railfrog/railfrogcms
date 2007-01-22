@@ -10,14 +10,12 @@ module FucdRbac
     
     specify "should be invalid without a user" do
       @membership.attributes = required_membership_attributes.except(:user_id)
-      @membership.should_not_be_valid
-      @membership.errors.on(:user_id).should_not_be nil
+      @membership.should_have(1).error_on(:user_id)
     end
     
     specify "should be invalid without a role" do
       @membership.attributes = required_membership_attributes.except(:role_id)
-      @membership.should_not_be_valid
-      @membership.errors.on(:role_id).should_not_be nil
+      @membership.should_have(1).error_on(:role_id)
     end
   end
   

@@ -10,14 +10,13 @@ module FucdRbac
     
     specify "should be invalid without a name" do
       @role.attributes = required_role_attributes.except(:name)
-      @role.should_not_be_valid
-      @role.errors.on(:name).should_not_be nil
+      @role.should_have(1).error_on(:name)
     end
     
     specify "should have a unique name" do
-      Role.should_receive(:find).and_return([@user])
-      @role.should_not_be_valid
-      @role.errors.on(:name).should_not_be nil
+      @role.attributes = required_role_attributes
+      Role.should_receive(:find).and_return([@role])
+      @role.should_have(1).error_on(:name)
     end
   end
   
@@ -47,7 +46,7 @@ module FucdRbac
     end
     
     specify "should 'have' the associated user" do
-      @role.has_user?(@user).should_be true
+      @role.should_have_user(@user)
     end
     
     specify "should remove membership of user in role when removing role" do

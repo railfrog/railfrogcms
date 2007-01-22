@@ -11,46 +11,39 @@ module FucdRbac
     
     specify "should be invalid without a username" do
       @user.attributes = required_user_attributes.except(:username)
-      @user.should_not_be_valid
-      @user.errors.on(:username).should_not_be nil
+      @user.should_have(1).error_on(:username)
     end
     
     specify "should be invalid without a first name" do
       @user.attributes = required_user_attributes.except(:first_name)
-      @user.should_not_be_valid
-      @user.errors.on(:first_name).should_not_be nil
+      @user.should_have(1).error_on(:first_name)
     end
     
     specify "should be invalid without a last name" do
       @user.attributes = required_user_attributes.except(:last_name)
-      @user.should_not_be_valid
-      @user.errors.on(:last_name).should_not_be nil
+      @user.should_have(1).error_on(:last_name)
     end
     
-  ## TODO: Remove? -- This is done by validates_format_of thus next spec should be enough.
-  #  specify "should be invalid without an email" do
-  #    @user.attributes = required_user_attributes.except(:email)
-  #    @user.should_not_be_valid
-  #    @user.errors.on(:email).should_not_be nil
-  #  end
+    specify "should be invalid without an email" do
+      @user.attributes = required_user_attributes.except(:email)
+      @user.should_have(1).error_on(:email)
+    end
     
     specify "should be invalid with invalid email address" do
       @user.attributes = required_user_attributes.except(:email)
       @user.email = 'invalid.email.address'
-      @user.should_not_be_valid
-      @user.errors.on(:email).should_not_be nil
+      @user.should_have(1).error_on(:email)
     end
     
-    specify "should be invalid without a d" do
+    specify "should be invalid without a password" do
       @user.attributes = required_user_attributes.except(:password)
-      @user.should_not_be_valid
-      @user.errors.on(:password).should_not_be nil
+      @user.should_have(1).error_on(:password)
     end
     
     specify "should be invalid if password is below 6 characters in length" do
       @user.attributes = required_user_attributes.except(:password)
       @user.password = 'abcde'
-      @user.should_not_be_valid
+      @user.should_have(1).error_on(:password)
     end
     
     specify "cannot change his salt by mass-assignement" do
@@ -77,8 +70,7 @@ module FucdRbac
     
     specify "should have a unique username" do
       User.should_receive(:find).and_return([@user])
-      @user.should_not_be_valid
-      @user.errors.on(:username).should_not_be nil
+      @user.should_have(1).error_on(:username)
     end
   end
   
@@ -161,7 +153,7 @@ module FucdRbac
     end
     
     specify "should 'have' the associated role" do
-      @user.has_role?(@role).should_be true
+      @user.should_have_role(@role)
     end
     
     specify "should remove membership of user in role when removing user" do
@@ -171,12 +163,12 @@ module FucdRbac
     
     specify "should have permission for action 'show' of controller 'people'" do
       @role.should_receive(:grants_permission_for?).with('people', 'show').and_return(true)
-      @user.has_permission_for?('people', 'show').should_be true
+      @user.should_have_permission_for('people', 'show')
     end
     
     specify "should not have permission for action 'edit' of controller 'people'" do
       @role.should_receive(:grants_permission_for?).with('people', 'edit').and_return(false)
-      @user.has_permission_for?('people', 'edit').should_be false
+      @user.should_not_have_permission_for('people', 'edit')
     end
     
     teardown do
