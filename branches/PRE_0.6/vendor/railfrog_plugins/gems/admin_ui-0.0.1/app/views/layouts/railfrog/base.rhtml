@@ -4,7 +4,7 @@
   <head>
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
     <title>Railfrog Administration</title>
-    <%= javascript_include_tag 'prototype' %>
+    <%#= javascript_include_tag 'prototype' %>
     <%# FIXME: we need a way of linking to this. currently must be copied to /public/stylesheets %>
     <%= stylesheet_link_tag 'admin_ui' %>
     <script type="text/javascript">
@@ -17,38 +17,48 @@
   </head>
 
   <body>
+
     <div id="container">
+	  <div style="background:url(/images/images/beta_stripe.gif) no-repeat; width:80px; height:80px; position: absolute; right:0; top:0">&nbsp;</div>
       <div id="branding">
-        <%= image_tag '/images/railfrog_logo.png', :alt => 'Site Logo', :size => '120x130', :id => 'branding-logo' %>
-        <h1 id="branding-name"><%# TODO: rf_labels['branding-name'] %>RailFrog</h1>
-        <div id="branding-tagline"><%# TODO: rf_labels['branding-tagline'] %>Design, Deploy and Maintain Websites with Joy</div>
+        <%= image_tag '/images/images/logo.gif', :alt => 'Site Logo',  :id => 'branding-logo' %>
+
+   <h1 id="branding-name"><%# TODO: rf_labels['branding-name'] %>Railfrog</h1>
+  <div id="branding-tagline"><%# TODO: rf_labels['branding-tagline'] %>Design, Deploy and Maintain Websites with Joy</div>
+		
+           <%= link_to 'Logout', fucd_rbac_login_url, :method => :delete %>
+
       </div>
 
-      <div id="page-heading">Railfrog Control Panel</div>
+
 
       <div id="navigation">
-        <ul id="nav-main" class="horizontal-list">
+        <ul>
           <%# FIXME: highlight navigation items in a better way than this %>
           <li<%= ' class="active"' if params[:controller] == 'railfrog/admin' && params[:action] == 'explore' %>>
             <%= link_to 'Site Explorer', :controller => 'railfrog/admin', :action => 'explore' %>
           </li>
-          <li<%= ' class="active"' if params[:controller] == 'railfrog/users' %>>
+          <li<%= ' class="active"' if params[:controller] == 'fucd_rbac/users' %>>
             <%= link_to 'Users', :controller => 'railfrog/users', :action => 'index' %>
           </li>
-          <li<%= ' class="active"' if params[:controller] == 'railfrog/roles' %>>
+          <li<%= ' class="active"' if params[:controller] == 'fucd_rbac/roles' %>>
             <%= link_to 'Roles', :controller => 'railfrog/roles', :action => 'index' %>
           </li>
-          <li>
-            <%= link_to 'Logout', fucd_rbac_login_url, :method => :delete %>
-          </li>
         </ul>
+		      <div id="page-heading" style="float:right">Railfrog Control Panel</div>
+      </div>
+
+
+	  
         <% if @site_mapping %>
+<div id="breadcrumbs">
         <span id="nav-section-title">Location:</span>
         <ul id="nav-section" class="horizontal-list">
           <%= print_site_mappings @site_mapping %>
         </ul>
+</div>
         <% end %>
-      </div>
+
 
       <div id="search">
         <form id="search-input">
