@@ -1,3 +1,5 @@
+# This file is copied to ~/spec when you run 'ruby script/generate rspec'
+# from the project root directory.
 ENV["RAILS_ENV"] = "test"
 require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
 require 'spec/rails'
@@ -9,14 +11,14 @@ require 'spec/rails'
 module Spec
   module Rails
     class EvalContext < Test::Unit::TestCase
-      cattr_accessor :fixture_path, :use_transactional_fixtures, :use_instantiated_fixtures
       self.use_transactional_fixtures = true
       self.use_instantiated_fixtures  = false
       self.fixture_path = RAILS_ROOT + '/spec/fixtures'
 
       # You can set up your global fixtures here, or you
-      # can do it in individual contexts
-      #fixtures :table_a, :table_b
+      # can do it in individual contexts using "fixtures :table_a, table_b".
+      #
+      #self.global_fixtures = :table_a, :table_b
     end
   end
 end
