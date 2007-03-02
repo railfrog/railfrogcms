@@ -1,18 +1,5 @@
 
 
-####################################################################
-### NOTE TO DEVELOPERS                                           ###
-###                                                              ###
-### Development is currently happening on the PRE_0.6 branch!    ###
-### Patches to this code may need work to re-integrate them -    ###
-### please see branches/PRE_0.6 instead of trunk.                ###
-###                                                              ###
-### This is the stable branch, being used in production systems) ###
-###                                                              ###
-####################################################################
-
-
-
 = RailFrog =
 
 RailFrog is a lightweight Content Management System for building websites. 
