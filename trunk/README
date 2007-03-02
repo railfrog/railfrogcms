@@ -1,5 +1,3 @@
-
-
 = RailFrog =
 
 RailFrog is a lightweight Content Management System for building websites. 
@@ -13,16 +11,26 @@ RailFrog is a lightweight Content Management System for building websites.
  4. Run WEBrick
 
 == Loading site content ==
- If you'd like to load site content to the RailFrog database use 
-{{{$ rake rf:load_site SITE=<path-to-site>}}}, or use our default site 
+
+To load the Railfrog default site, use:
 {{{$ rake rf:load_site SITE=db/sites/railfrog}}}
-  
+
+Note: if you'd like to load site content of your own to the RailFrog database use 
+{{{$ rake rf:load_site SITE=<path-to-your-site>}}}
+
+== Starting Railfrog ==
+
+Open your browser at http://localhost:3000 and you should see the familiar Railfrog site.
+
+To access the administration interface, point your browser to http://localhost:3000/admin 
+and there you can login with user email of {{{test@test.com}}} and password {{{test}}}. 
+
 == Troubleshooting ==
 
  If your database gets mashed, try
  {{{$ rake migrate VERSION=0 && rake migrate}}}
 
-== Database Setup ==
+== Notes on Database Setup ==
 
 === MySQL ===
  * Create databases with UTF-8 as default charset:
