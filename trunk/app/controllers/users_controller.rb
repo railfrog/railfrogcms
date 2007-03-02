@@ -7,7 +7,7 @@ class UsersController < ApplicationController
   
   # Login Authentication
   def authenticate
-    encrypted_password = SHA1.hexdigest params[:password]
+    encrypted_password = Digest::SHA1.hexdigest params[:password]
     user = User.find_by_email_and_password params[:email], encrypted_password
     if user
       session[:user_id] = user.id
