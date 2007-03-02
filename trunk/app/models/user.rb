@@ -6,6 +6,6 @@ class User < ActiveRecord::Base
   validates_uniqueness_of :email
 
   def before_save
-    self[:password] = SHA1.hexdigest self[:password]
+    self[:password] = Digest::SHA1.hexdigest self[:password]
   end
 end
