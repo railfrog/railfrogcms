@@ -1,0 +1,5 @@
+<strong><%= site_mapping.full_path %></strong>
+<% site_mapping.kid_dirs.each {|sm| %>
+<%= link_to_remote sm.path_segment, :url => { :action => 'change_dir', :id => sm.id } %><br />
+<% } %>
+

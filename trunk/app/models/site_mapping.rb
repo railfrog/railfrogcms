@@ -1,5 +1,3 @@
-require 'pp'
-
 # FIXME: direct inserting values to queries
 class SiteMapping < ActiveRecord::Base
   # the root folder is empty string
@@ -14,13 +12,24 @@ class SiteMapping < ActiveRecord::Base
   def self.get_all_tree
     tree = SiteMapping.find(:all, :order => 'root_id, lft')
 
-    if tree.size == 0 then # the DB is empty
-      tree << SiteMapping.find_or_create_root
+    if tree.size == 0
+      tree << SiteMapping.root
     end
 
     tree
   end
 
+  def self.root
+    SiteMapping.find_or_create_by_path_segment($ROOT_DIR)
+  end
+
+  def kid_dirs
+    SiteMapping.find(:all,
+      :conditions => { :parent_id => self.id, :chunk_id => nil },
+      :order => "path_segment")
+  end
+
+  # Deprecated. Use root instead.
   def self.find_or_create_root
     SiteMapping.find_or_create_by_path_segment($ROOT_DIR)
   end
