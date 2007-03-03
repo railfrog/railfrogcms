@@ -23,6 +23,14 @@ class RailfrogAjaxAdminController < ApplicationController
     end
   end
 
+  def new_dir
+    if request.xhr?
+      render :update do |page|
+        page.replace_html :site_explorer_pane, :partial => 'site_explorer_pane', :locals => { :site_mapping => SiteMapping.find(params[:parent_id]) }
+      end
+    end
+  end
+
   def labels
     render :text => 'labels'
   end

@@ -1,3 +1,12 @@
+<div class="window_actions">
+  <%= link_to_function("new folder",
+        "Dialog.confirm(
+        { url: '#{url_for(:action => 'new_dir', :parent_id => site_mapping.id)}',
+          options: {method: 'get'}}, 
+        { className: 'alphacube', width:540, okLabel: 'Create'});") %>
+
+</div
+
 <div>
   <strong>
     <% site_mapping.ancestors.each {|sm| %>
@@ -17,3 +26,4 @@
     <%= link_to_remote sm.path_segment, :url => { :action => 'change_dir', :id => sm.id } %><br />
   <% } %>
 </div>
+

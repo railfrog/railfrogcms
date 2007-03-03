@@ -27,35 +27,11 @@ h1 {
 #content {
   padding: 5px;
 }
-.widget {
-  width: 170px;
-  margin: 7px;
-}
-.widget_header {
-  border: 1px solid #8ABF23;
-  background: #99AF6D;
-  color: white;
-  font-family: Tahoma, Arial, sans-serif;
-  font-size: 0.75em;
+.window_actions {
+  text-align: right;
   font-weight: bold;
+  border-top: 1px solid #ABDA4E;
+  border-bottom: 1px solid #ABDA4E;
+  padding-top: 5px; margin-bottom: 5px;
+  padding-bottom: 5px; margin-bottom: 5px;
 }
-.widget_title {
-  padding: 2px;
-  cursor: move;
-}
-.widget_controls a {
-  padding: 2px;
-  text-decoration: none;
-  color: white;
-}
-.widget_body {
-  border: 1px solid #8ABF23;
-  border-top: 0px solid #8ABF23;
-  background-color: #D4FF7F;
-  height: 100px;
-}
-.widget_status {
-  padding: 2px;
-  cursor: s-resize;
-}
-
