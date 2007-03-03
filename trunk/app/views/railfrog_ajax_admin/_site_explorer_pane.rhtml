@@ -1,7 +1,7 @@
 <div class="window_actions">
   <%= link_to_function("new folder",
         "Dialog.confirm(
-        { url: '#{url_for(:action => 'new_dir', :parent_id => site_mapping.id)}',
+        { url: '#{url_for(:action => 'new_folder', :parent_id => site_mapping.id)}',
           options: {method: 'get'}}, 
         { className: 'alphacube', width:540, okLabel: 'Create'});") %>
 

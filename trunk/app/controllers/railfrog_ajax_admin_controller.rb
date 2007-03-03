@@ -23,12 +23,14 @@ class RailfrogAjaxAdminController < ApplicationController
     end
   end
 
-  def new_dir
-    if request.xhr?
-      render :update do |page|
-        page.replace_html :site_explorer_pane, :partial => 'site_explorer_pane', :locals => { :site_mapping => SiteMapping.find(params[:parent_id]) }
-      end
+  def new_folder
+    @site_mapping = SiteMapping.new(params[:site_mapping])
+
+    if request.post? and @site_mapping.save
+      #flash.now[:notice] = "Folder #{@site_mapping.path_segment} created"
     end
+
+    render :partial => 'new_folder'
   end
 
   def labels
