@@ -29,6 +29,14 @@ class SiteMapping < ActiveRecord::Base
       :order => "path_segment")
   end
 
+#  def path
+    
+#  end
+
+#  def path_str
+#    path.join('/')
+#  end
+
   # Deprecated. Use root instead.
   def self.find_or_create_root
     SiteMapping.find_or_create_by_path_segment($ROOT_DIR)

@@ -18,7 +18,7 @@ class RailfrogAjaxAdminController < ApplicationController
   def change_dir
     if request.xhr?
       render :update do |page|
-        page.replace_html :site_explorer_pane, :locals => { :site_mapping => SiteMapping.find(params[:id]) }
+        page.replace_html :site_explorer_pane, :partial => 'site_explorer_pane', :locals => { :site_mapping => SiteMapping.find(params[:id]) }
       end
     end
   end
