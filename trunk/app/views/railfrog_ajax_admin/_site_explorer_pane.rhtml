@@ -1,5 +1,19 @@
-<strong><%= site_mapping.full_path %></strong>
-<% site_mapping.kid_dirs.each {|sm| %>
-<%= link_to_remote sm.path_segment, :url => { :action => 'change_dir', :id => sm.id } %><br />
-<% } %>
+<div>
+  <strong>
+    <% site_mapping.ancestors.each {|sm| %>
+    <%= link_to_remote (sm.root? ? 'ROOT' : sm.path_segment), #FIXME
+          :url => { :action => 'change_dir', :id => sm.id } -%> /
+    <% } %>
+    <%= site_mapping.root? ? 'ROOT' : site_mapping.path_segment %>
+  </strong>
+</div>
 
+<div>
+  <% unless site_mapping.root? %>
+    <%= link_to_remote "..", :url => { :action => 'change_dir', :id => site_mapping.parent_id } %><br />
+  <% end %>
+
+  <% site_mapping.kid_dirs.each {|sm| %>
+    <%= link_to_remote sm.path_segment, :url => { :action => 'change_dir', :id => sm.id } %><br />
+  <% } %>
+</div>

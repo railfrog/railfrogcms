@@ -23,19 +23,21 @@ class SiteMapping < ActiveRecord::Base
     SiteMapping.find_or_create_by_path_segment($ROOT_DIR)
   end
 
+  def root?
+    self.path_segment.empty?
+  end
+
   def kid_dirs
     SiteMapping.find(:all,
       :conditions => { :parent_id => self.id, :chunk_id => nil },
       :order => "path_segment")
   end
 
-#  def path
-    
-#  end
-
-#  def path_str
-#    path.join('/')
-#  end
+  def ancestors
+    SiteMapping.find(:all,
+      :conditions => ["lft < ? AND rgt > ?", self.lft, self.rgt],
+      :order => "lft" )
+  end
 
   # Deprecated. Use root instead.
   def self.find_or_create_root
