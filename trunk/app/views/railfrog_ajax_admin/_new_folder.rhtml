@@ -2,11 +2,11 @@
 
 <%
 form_remote_for :site_mapping, @site_mapping,
-  :url => {:action => 'new_folder'} do |f|
+  :url => { :action => 'new_folder' } do |f|
 %>
   <%= f.hidden_field :parent_id %>
   <%= render :partial => 'folder_form' %>
-  <%= submit_tag 'Save' %>
+  <%= submit_tag('Save', { :onclick => "Dialog.closeInfo();return true;" } ) %>
 <% end %>
 
 
