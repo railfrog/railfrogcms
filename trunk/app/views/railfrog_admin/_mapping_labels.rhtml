@@ -13,7 +13,7 @@
               <%= text_field_tag :label_value %>
               <%= hidden_field_tag :site_mapping_id, @mapping_id %> 
               <%= submit_tag "Save" %>
-            <%= end_form_tag %>
+            </form>
           </div>
           <script type="text/javascript">
           Element.hide('add_label_div'); 
@@ -31,7 +31,7 @@
               <%= text_field_tag :label_value, label.value %>
               <%= hidden_field_tag :label_id, label.id %> 
               <%= submit_tag "Save" %>
-            <%= end_form_tag %>
+            </form>
           </div>
           <script type="text/javascript">
           Element.hide('<%= "label_#{label.id}_edit_div" %>'); 

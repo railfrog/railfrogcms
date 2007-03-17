@@ -1,8 +1,8 @@
 <h1>Add a New User</h1>
 
-<%= start_form_tag :action => 'create' %>
-  <%= render :partial => 'form' %>
+<% form_for :user, @user, :url => { :action => 'create' } do |form| %>
+  <%= render :partial => 'form', :locals => { :form => form } %>
   <%= submit_tag "Add User" %>
-<%= end_form_tag %>
+<% end %>
 
 <%= link_to 'Back', :action => 'list' %>
