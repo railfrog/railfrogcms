@@ -1,11 +1,10 @@
-require 'pp'
 require 'yaml'
 require File.dirname(__FILE__) + '/../../config/environment'
 require File.dirname(__FILE__) + '/../../app/models/chunk'
 
 # FIXME: write documentation
 class SiteDefinitionLoader
-	
+
   # tag name of the labels tag, eg:
   # pages:
   #   rf_labels:
@@ -13,14 +12,14 @@ class SiteDefinitionLoader
   #     layout=chunk:1
   $RF_LABELS_TAG = "rf-labels"
   $RF_INTERANAL_TAG = "rf-internal"
-  
+
   def self.load_definition(file)
     site_definition = YAML::load(File.open( file ))
-    
+
     Dir.chdir("site/")
-    get_pages(site_definition["site"], SiteMapping.find_or_create_root)
+    get_pages(site_definition["site"], SiteMapping.find_root)
   end
-  
+
   def self.get_pages(node, parent_sitemapping) 
     node.each { |path_segment, page|
 
@@ -30,7 +29,7 @@ class SiteDefinitionLoader
 
         content = load_file_content(page['path'])
 
-	sm = SiteMapping.find_or_create_by_parent_and_path_segment(parent_sitemapping, path_segment)
+        sm = parent_sitemapping.find_or_create_child(path_segment)
         Chunk.find_or_create_by_site_mapping_and_content(sm, content)
         load_labels(page, sm)
 
@@ -40,7 +39,7 @@ class SiteDefinitionLoader
 
         content = page['content']
 
-	sm = SiteMapping.find_or_create_by_parent_and_path_segment(parent_sitemapping, path_segment)
+	sm = parent_sitemapping.find_or_create_child(path_segment)
         Chunk.find_or_create_by_site_mapping_and_content(sm, content)
         load_labels(page, sm)
 	
@@ -58,7 +57,7 @@ class SiteDefinitionLoader
 	end
 
         # Check whether such SiteMapping already exists
-        sm = SiteMapping.find_or_create_by_parent_and_path_segment(parent_sitemapping, path_segment) 
+        sm = parent_sitemapping.find_or_create_child(path_segment)
 	load_labels(page, sm)
 	is_internal(page, sm)
 

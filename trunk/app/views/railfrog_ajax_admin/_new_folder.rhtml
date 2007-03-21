@@ -1,10 +1,12 @@
 <h2>Add new folder</h2>
 
+sm: <%= @site_mapping.inspect %>
+
 <%
 form_remote_for :site_mapping, @site_mapping,
   :url => { :action => 'new_folder' } do |f|
 %>
-  <%= f.hidden_field :parent_id %>
+  <%= hidden_field_tag :parent_id, @parent_id %>
   <%= render :partial => 'folder_form' %>
   <%= submit_tag('Save', { :onclick => "Dialog.closeInfo();return true;" } ) %>
 <% end %>

@@ -44,7 +44,7 @@ class Chunk < ActiveRecord::Base
     if id = options[:id] then
       chunk = find(id)
     elsif path = options[:path] then
-      chunk = SiteMapping.find_chunk(path.split('/')).chunk
+      chunk = SiteMapping.find_mapping(path.split('/')).chunk
     else
       return nil
     end

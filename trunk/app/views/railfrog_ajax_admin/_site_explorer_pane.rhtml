@@ -10,8 +10,9 @@
 <div>
   <strong>
     <% site_mapping.ancestors.each {|sm| %>
-    <%= link_to_remote (sm.root? ? 'ROOT' : sm.path_segment), #FIXME
-          :url => { :action => 'change_folder', :id => sm.id } -%> /
+      <%= link_to_remote (sm.root? ? 'ROOT' : sm.path_segment), #FIXME
+        :url => { :action => 'change_folder', :id => sm.id } -%> 
+      <%= SiteMapping::FILE_SEPARATOR-%>
     <% } %>
     <%= site_mapping.root? ? 'ROOT' : site_mapping.path_segment %>
   </strong>

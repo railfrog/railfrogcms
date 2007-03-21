@@ -1,19 +1,17 @@
-require 'pp'
-
 class SiteMapperController < ApplicationController
-# TODO - disabled caching #  caches_page :show_chunk
+  # FIXME - disabled caching #  caches_page :show_chunk
 
   def show_chunk
 
     path = params[:path]
 
-    @chunk_version, @rf_labels = SiteMapping.find_chunk_and_mapping_labels(path, params[:version], true)
+    @chunk_version, @rf_labels, @mapping = SiteMapping.find_mapping(path, params[:version], true)
 
     unless @chunk_version then
-      logger.info "Chunk is not found for path: #{path.to_s}. Trying to get index-page: #{@rf_labels['index-page']} ..."
+      logger.info "Chunk is not found for path: #{path.join('/')}. Trying to get index-page: #{@rf_labels['index-page']} ..."
       path.push @rf_labels['index-page']
 
-      @chunk_version, @rf_labels = SiteMapping.find_chunk_and_mapping_labels(path, params[:version])
+      @chunk_version, @rf_labels, @mapping = SiteMapping.find_mapping(path, params[:version], true)
     end
 
     if @chunk_version then
@@ -39,7 +37,7 @@ class SiteMapperController < ApplicationController
           if layout.include?("mapping:") then
             layout.gsub!("mapping:", "")
 
-            layout_chunk = SiteMapping.find_chunk(layout.split('/'))
+            layout_chunk = SiteMapping.find_mapping(layout.split('/'))
             if layout_chunk then
               rendering_options[:inline] = layout_chunk.content
             else

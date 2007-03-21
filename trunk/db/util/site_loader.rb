@@ -20,7 +20,7 @@ class SiteLoader
     SiteDefinitionLoader.load_definition $SITE_YML
   
     puts "  Loading chunks from filesystem"
-    load_content_chunks(SiteMapping.find_or_create_root)
+    load_content_chunks(SiteMapping.find_root)
   end
 
   def self.load_content_chunks(parent)
@@ -35,7 +35,7 @@ class SiteLoader
     # list all files in the given dir
     Dir.glob(path + '*').each { |filename| 
       path_segment = filename.split('/').last
-      site_mapping = SiteMapping.find_or_create_by_parent_and_path_segment(parent, path_segment)
+      site_mapping = parent.find_or_create_child(path_segment)
       if File.directory?(filename) then
         load_content_chunks site_mapping
       else

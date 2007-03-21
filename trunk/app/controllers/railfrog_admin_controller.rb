@@ -18,7 +18,7 @@ class RailfrogAdminController < ApplicationController
     if mapping_id = params[:mapping_id] then
       @site_mapping = SiteMapping.find(mapping_id, :include => [:chunk => [:mime_type]])
     else
-      @site_mapping = SiteMapping.find_or_create_root
+      @site_mapping = SiteMapping.root
     end
 
     @file_name = @site_mapping.full_path
@@ -143,7 +143,7 @@ class RailfrogAdminController < ApplicationController
   end
 
   def delete_folder
-    SiteMapping.destroy_tree(params[:mapping_id])
+    SiteMapping.find(params[:mapping_id]).destroy
 
     render :update do |page|
       page.redirect_to :action => 'index'
