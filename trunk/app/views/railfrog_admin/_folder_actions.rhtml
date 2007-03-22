@@ -1,31 +1,11 @@
-<ul>
-  <li>
-    <%= link_to_remote('New folder',
+<!-- this is rendered in the folder div in index.rhtml -->
+<%= link_to_remote('[new]',
       :url => {:action => 'new_folder', :parent_id => site_mapping}) %>
-  </li>
-  <li>
-    <%= link_to_remote('New document',
-      :url => {:action => 'new_chunk', :parent_id => site_mapping}) %>
-  </li>
-  <li>
-    <%= link_to_remote('Upload file',
-      :url => {:action => 'upload_file', :mapping_id => site_mapping}) %>
-  </li>
-  <li>
-    <%= link_to_remote('Labels',
-      :url => { :action => 'show_labels',
-      :site_mapping_id => site_mapping}) %>
-  </li>
-
-  <% unless site_mapping.path_segment.empty? then # not root %>
-  <li>
-    <%= link_to_remote('Rename Folder',
-      :url => {:action => 'rename_folder', :id => site_mapping}) %>
-  </li>
-  <li>
-    <%= link_to_remote('Delete Folder',
-      :url => {:action => 'delete_folder', :mapping_id => site_mapping},
-      :confirm => 'Are you sure?') %>
-  </li>
-  <% end %>
-</ul>
+      
+<% unless SiteMapping.find_or_create_root.path_segment.empty? then # not root %>
+  <%= link_to_remote('[rename]',
+    :url => {:action => 'rename_folder', :id => site_mapping}) %>
+  <%= link_to_remote('[delete]',
+    :url => {:action => 'delete_folder', :mapping_id => site_mapping},
+    :confirm => 'Are you sure?') %>
+<% end %>

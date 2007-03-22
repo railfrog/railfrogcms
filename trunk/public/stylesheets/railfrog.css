@@ -1,4 +1,4 @@
-body {
+/*body {
 	padding: 0;
 	margin: 0;
 	background-color: #F7F4DF;
@@ -6,18 +6,18 @@ body {
 
 body,div,p,li,dd,td,th {
 	font: 9pt "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
-}
+}*/
 
-#wrapper {
+/*#wrapper {
 	margin: 0 auto;
 	width: 85%;
 	border-left: 2px solid #4D4E5F;
 	border-right: 2px solid #4D4E5F;
 	background-color: #fff;
 	padding: 20px;
-}
+}*/
 
-h1,h2,h3,h4 {
+/*h1,h2,h3,h4 {
 	color: #6EB61A;
 }
 
@@ -27,7 +27,7 @@ a,a:visited,a:active {
 
 a:hover {
 	background-color: #d8eea9;
-}
+}*/
 
 input {
 	border: 1px solid #4D4E5F;
@@ -41,7 +41,7 @@ input:hover,input:focus {
 }
 
 
-#leftbar {
+/*#leftbar {
   border: #ccc solid 1px;
   vertical-align: top;
   text-align: left;
@@ -67,7 +67,7 @@ input:hover,input:focus {
 }
 
 #leftbar a.collapse {
-  background-image: url(/images/collapse.gif);
+  background-image: url(/images/collapse.gif);*/
 }
 
 #rightbar {
@@ -76,9 +76,9 @@ input:hover,input:focus {
   text-align: left;
 }
 
-#summary,#chunk_version_summary {
+/*#summary,#chunk_version_summary {
   padding: 5px;
-}
+}*/
 
 #context_menu ul {
   margin: 5px;
