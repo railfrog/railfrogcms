@@ -24,15 +24,14 @@ class RailfrogAjaxAdminController < ApplicationController
   end
 
   def new_folder
-    @site_mapping = SiteMapping.new(params[:site_mapping])
     @parent_id = params[:parent_id]
-
     if request.post?
-      @site_mapping = SiteMapping.find(@parent_id).find_or_create_child(@site_mapping.path_segment)
+      @site_mapping = SiteMapping.find(@parent_id).find_or_create_child(params[:site_mapping])
       render :update do |page|
         page.replace_html :site_explorer_pane, :partial => 'site_explorer_pane', :locals => { :site_mapping => SiteMapping.find(@site_mapping.parent_id) }
       end
     else
+      @site_mapping = SiteMapping.new
       render :partial => 'new_folder'
     end
   end

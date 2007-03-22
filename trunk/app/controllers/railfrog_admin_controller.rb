@@ -64,7 +64,7 @@ class RailfrogAdminController < ApplicationController
 
   def create_folder
     begin
-      @site_mapping = SiteMapping.create(params[:site_mapping])
+      @site_mapping = SiteMapping.find(params[:parent_id]).find_or_create_child(params[:site_mapping])
       render :update do |page|
         page.redirect_to :action => 'index'
       end
