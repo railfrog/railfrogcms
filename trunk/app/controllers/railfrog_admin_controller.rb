@@ -158,7 +158,7 @@ class RailfrogAdminController < ApplicationController
 
   def new_chunk
     @site_mapping = SiteMapping.new
-    @site_mapping.parent_id = params[:parent_id]
+    @parent_id = params[:parent_id]
     @chunk = Chunk.new
     @chunk_version = ChunkVersion.new
     @use_xinha_editor = true
@@ -173,8 +173,10 @@ class RailfrogAdminController < ApplicationController
   def create_chunk
     @chunk = Chunk.new(params[:chunk])
     @chunk_version = @chunk.chunk_versions.build(params[:chunk_version])
-    @site_mapping = @chunk.site_mappings.build(params[:site_mapping])
 
+    @site_mapping = SiteMapping.find(params[:parent_id]).find_or_create_child(params[:site_mapping])
+
+    @chunk.site_mappings << @site_mapping
     begin
       @chunk.live_version = 1
       @chunk.mime_type = MimeType.find_by_file_name(params[:site_mapping][:path_segment])
@@ -249,7 +251,7 @@ class RailfrogAdminController < ApplicationController
   #  * [http://scottraymond.net/articles/2005/07/05/caching-images-in-rails Caching]
   def upload_file
     @site_mapping = SiteMapping.new
-    @site_mapping.parent_id = params[:mapping_id]
+    @parent_id = params[:mapping_id]
 
     @chunk = Chunk.new
     @chunk_version = ChunkVersion.new
@@ -271,7 +273,9 @@ class RailfrogAdminController < ApplicationController
 
       @chunk = Chunk.new(params[:chunk])
       @chunk_version = @chunk.chunk_versions.build(params[:chunk_version])
-      @site_mapping = @chunk.site_mappings.build(params[:site_mapping])
+  
+      @site_mapping = SiteMapping.find(params[:parent_id]).find_or_create_child(params[:site_mapping])
+      @chunk.site_mappings << @site_mapping
 
       begin
         @site_mapping.path_segment = file_name
