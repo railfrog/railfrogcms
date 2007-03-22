@@ -236,11 +236,11 @@ class SiteMappingTest < Test::Unit::TestCase
   end
 
   def test_find_mapping__with_version
-    #flunk 'need to be tested'
+    flunk 'need to be tested'
   end
 
   def test_find_mapping_plus
-    #flunk 'need to be tested'
+    flunk 'need to be tested'
   end
 
   def subtest_find_mapping(path, external_only = false)
