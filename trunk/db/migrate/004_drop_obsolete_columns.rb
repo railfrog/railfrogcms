@@ -1,8 +1,9 @@
-#FIXME replace remove_column by change_column or rename_column
+
 
 class DropObsoleteColumns < ActiveRecord::Migration
   def self.up
     change_column :site_mappings, :root_id, :integer, :default => nil
+    #FIXME drop depth column
     change_column :site_mappings, :depth, :integer, :default => nil
     change_column :site_mappings, :parent_id, :integer, :default => nil
     change_column :site_mappings, :lft, :integer, :default => nil

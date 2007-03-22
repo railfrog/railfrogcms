@@ -27,7 +27,7 @@
         <div id="chunk_version_summary" style="display:none"></div>
         <div id="context_menu">
           <%= render :partial => "folder_actions",
-              :locals => { :site_mapping => SiteMapping.find_or_create_root } %>
+              :locals => { :site_mapping => SiteMapping.find_root } %>
         </div>
         <div id="content" style="display:none"></div>
       </div>

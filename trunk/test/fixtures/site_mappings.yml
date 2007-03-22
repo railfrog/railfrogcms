@@ -1,0 +1,22 @@
+root:
+  id: 1
+  path_segment: "<%= SiteMapping::ROOT_DIR %>"
+
+styles:
+  id: 2
+  path_segment: styles
+  parent_id: 1
+
+images:
+  id: 3
+  path_segment: images
+  parent_id: 1
+
+layout:
+  id: 4
+  path_segment: layout
+  parent_id: 1
+  is_internal: true
+
+
+

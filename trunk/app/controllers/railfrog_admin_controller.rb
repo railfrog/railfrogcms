@@ -1,5 +1,3 @@
-require 'pp'
-
 class RailfrogAdminController < ApplicationController
   before_filter :ensure_logged_in
 
@@ -9,7 +7,13 @@ class RailfrogAdminController < ApplicationController
 
   def index
     @site_mappings = SiteMapping.get_all_tree.inject({}) do |hash, mapping|
-      (hash[mapping.parent_id] ||= []) << mapping
+      if mapping.parent_id.nil?
+        parent_id = 0
+      else
+        parent_id = mapping.parent_id
+      end
+      (hash[parent_id] ||= []) << mapping
+
       hash
     end
   end
@@ -50,7 +54,7 @@ class RailfrogAdminController < ApplicationController
 
   def new_folder
     @site_mapping = SiteMapping.new
-    @site_mapping.parent_id = params[:parent_id]
+    @parent_id = params[:parent_id]
 
     render :update do |page|
       page.replace_html 'content', :partial => 'new_folder'
@@ -60,6 +64,7 @@ class RailfrogAdminController < ApplicationController
 
   def create_folder
     begin
+
       @site_mapping = SiteMapping.create(params[:site_mapping])
       render :update do |page|
         page.redirect_to :action => 'index'
