@@ -1,8 +1,8 @@
 <!-- this is rendered in the folder div in index.rhtml -->
 <%= link_to_remote('[new]',
       :url => {:action => 'new_folder', :parent_id => site_mapping}) %>
-      
-<% unless SiteMapping.find_or_create_root.path_segment.empty? then # not root %>
+
+<% unless site_mapping.root? # not root %>
   <%= link_to_remote('[rename]',
     :url => {:action => 'rename_folder', :id => site_mapping}) %>
   <%= link_to_remote('[delete]',
