@@ -247,7 +247,7 @@ class RailfrogAdminController < ApplicationController
   #  * [http://wiki.rubyonrails.org/rails/pages/HowtoUploadFiles HowtoUploadFiles]
   #  * [http://wiki.rubyonrails.org/rails/pages/Upload+Progress+Bar Upload Progress Bar]
   #  * [http://manuals.rubyonrails.com/read/chapter/56 Sending and receiving files]
-  #  * http://api.rubyonrails.com/classes/ActionController/Streaming.html send_data API]
+  #  * [http://api.rubyonrails.com/classes/ActionController/Streaming.html send_data API]
   #  * [http://scottraymond.net/articles/2005/07/05/caching-images-in-rails Caching]
   def upload_file
     @site_mapping = SiteMapping.new
@@ -273,12 +273,14 @@ class RailfrogAdminController < ApplicationController
 
       @chunk = Chunk.new(params[:chunk])
       @chunk_version = @chunk.chunk_versions.build(params[:chunk_version])
-  
+
+      params[:site_mapping] ||= {}
+      params[:site_mapping][:path_segment] = file_name
       @site_mapping = SiteMapping.find(params[:parent_id]).find_or_create_child(params[:site_mapping])
+
       @chunk.site_mappings << @site_mapping
 
       begin
-        @site_mapping.path_segment = file_name
         @chunk.live_version = 1
         @chunk.mime_type_id = mime_type.id
         @chunk.save!
