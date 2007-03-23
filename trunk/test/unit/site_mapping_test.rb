@@ -2,41 +2,47 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class SiteMappingTest < Test::Unit::TestCase
 
-#  fixtures :site_mappings, :mapping_labels
+  fixtures :site_mappings, :mapping_labels
 
   def setup
-    assert_equal 0, SiteMapping.find(:all).size
-    @root = SiteMapping.find_root
-    assert_equal 1, SiteMapping.find(:all).size
+    @root = site_mappings(:root)
+    @count = SiteMapping.count
   end
 
-  def test_root
-    subtest SiteMapping::ROOT_DIR, @root
-    assert_equal 1, SiteMapping.find(:all).size
+  def test_find_root
+    subtest SiteMapping::ROOT_DIR, SiteMapping.find_root
+    assert_equal @count, SiteMapping.count
 
-    root = SiteMapping.find_root
-    subtest SiteMapping::ROOT_DIR, root
-    assert_equal 1, SiteMapping.find(:all).size
+    SiteMapping.destroy_all
+    assert_equal 0, SiteMapping.count
+
+    # the root folder should be created now
+    subtest SiteMapping::ROOT_DIR, SiteMapping.find_root
+    assert_equal 1, SiteMapping.count
+
+    # and now it should be returned from the db
+    subtest SiteMapping::ROOT_DIR, SiteMapping.find_root
+    assert_equal 1, SiteMapping.count
   end
 
   def test_create_child
     child = @root.create_child({ :path_segment => 'cakes' })
     subtest 'cakes', child
-    assert_equal 2, SiteMapping.find(:all).size
+    assert_equal @count+1, SiteMapping.count
     assert_equal @root.id, child.parent_id
     assert_equal @root.id, child.root.id
     assert_equal 1, child.level
 
     child2 = child.create_child({ :path_segment => 'index.html' })
     subtest 'index.html', child2
-    assert_equal 3, SiteMapping.find(:all).size
+    assert_equal @count+2, SiteMapping.count
     assert_equal child.id, child2.parent_id
     assert_equal @root.id, child2.root.id
     assert_equal 2, child2.level
 
-    child = @root.create_child({ :path_segment => 'index.html' })
-    subtest 'index.html', child
-    assert_equal 4, SiteMapping.find(:all).size
+    child = @root.create_child({ :path_segment => 'cakes2' })
+    subtest 'cakes2', child
+    assert_equal @count+3, SiteMapping.count
     assert_equal @root.id, child.parent_id
     assert_equal @root.id, child.root.id
     assert_equal 1, child.level
@@ -59,41 +65,41 @@ class SiteMappingTest < Test::Unit::TestCase
   def test_create_child__with_same_name
     child1 = @root.create_child({ :path_segment => 'child' })
     subtest 'child', child1
-    assert_equal 2, SiteMapping.find(:all).size
+    assert_equal @count+1, SiteMapping.count
 
     assert_raise(ActiveRecord::RecordInvalid) { @root.create_child({ :path_segment => 'child' }) }
-    assert_equal 2, SiteMapping.find(:all).size
+    assert_equal @count+1, SiteMapping.count
   end
 
   def test_find_or_create_child
     child = @root.find_or_create_child({ :path_segment => 'cakes' })
     subtest 'cakes', child
-    assert_equal 2, SiteMapping.find(:all).size
+    assert_equal @count+1, SiteMapping.count
     assert_equal @root.id, child.parent_id
     assert_equal @root.id, child.root.id
     assert_equal 1, child.level
 
     child = @root.find_or_create_child({ :path_segment => 'cakes' })
     subtest 'cakes', child
-    assert_equal 2, SiteMapping.find(:all).size
+    assert_equal @count+1, SiteMapping.count
 
     child2 = child.find_or_create_child({ :path_segment => 'index.html' })
     subtest 'index.html', child2
-    assert_equal 3, SiteMapping.find(:all).size
+    assert_equal @count+2, SiteMapping.count
     assert_equal child.id, child2.parent_id
     assert_equal @root.id, child2.root.id
     assert_equal 2, child2.level
 
     child = @root.find_or_create_child({ :path_segment => 'index.html' })
     subtest 'index.html', child
-    assert_equal 4, SiteMapping.find(:all).size
+    assert_equal @count+3, SiteMapping.count
     assert_equal @root.id, child.parent_id
     assert_equal @root.id, child.root.id
     assert_equal 1, child.level
 
     child = @root.find_or_create_child({ :path_segment => 'index.html' })
     subtest 'index.html', child
-    assert_equal 4, SiteMapping.find(:all).size
+    assert_equal @count+3, SiteMapping.count
   end
 
   def test_is_root
@@ -105,26 +111,29 @@ class SiteMappingTest < Test::Unit::TestCase
     child = child.create_child({ :path_segment => 'index.html' })
     assert !child.root?
 
+    child = child.find_or_create_child({ :path_segment => 'index.html' })
+    assert !child.root?
+
     root = SiteMapping.find_root
     assert root.root?
   end
 
   def test_destroy
-    assert_equal 1, SiteMapping.find(:all).size
+    assert @count > 0
     @root.destroy
-    assert_equal 0, SiteMapping.find(:all).size
+    assert_equal 0, SiteMapping.count
 
     root = SiteMapping.find_root
     root.create_child({ :path_segment => 'cakes' }).create_child({ :path_segment => 'chocolate_cakes' }).create_child({ :path_segment => 'index.html' })
-    assert_equal 4, SiteMapping.find(:all).size
+    assert_equal 4, SiteMapping.count
     root.destroy
-    assert_equal 0, SiteMapping.find(:all).size
+    assert_equal 0, SiteMapping.count
 
     branch = SiteMapping.find_root.create_child({ :path_segment => 'cakes' })
     branch.create_child({ :path_segment => 'chocolate_cakes' }).create_child({ :path_segment => 'index.html' })
-    assert_equal 4, SiteMapping.find(:all).size
+    assert_equal 4, SiteMapping.count
     branch.destroy
-    assert_equal 1, SiteMapping.find(:all).size
+    assert_equal 1, SiteMapping.count
     assert_equal SiteMapping::ROOT_DIR, SiteMapping.find(:first).path_segment
   end
 
