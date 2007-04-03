@@ -30,8 +30,11 @@ class SiteMapping < ActiveRecord::Base
     SiteMapping.find_by_parent_id_and_path_segment(self.id, path_segment)
   end
 
-  # The only method to create child site_mappings
-  def create_child(params = {})
+  def create_child_by_path_segment(path_segment)
+    create_child({:path_segment => path_segment})
+  end
+
+  def create_child(params)
     child = SiteMapping.new params
     if child.save
       child.move_to_child_of self

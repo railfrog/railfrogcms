@@ -13,7 +13,7 @@ class SiteMappingTest < Test::Unit::TestCase
     subtest SiteMapping::ROOT_DIR, SiteMapping.find_root
     assert_equal @count, SiteMapping.count
 
-    SiteMapping.destroy_all
+    @root.destroy
     assert_equal 0, SiteMapping.count
 
     # the root folder should be created now
@@ -71,6 +71,10 @@ class SiteMappingTest < Test::Unit::TestCase
     assert_equal @count+1, SiteMapping.count
   end
 
+  def test_create_by_path_segment
+    #flunk 'need to be tested'
+  end
+
   def test_find_or_create_child
     child = @root.find_or_create_child({ :path_segment => 'cakes' })
     subtest 'cakes', child
@@ -90,15 +94,15 @@ class SiteMappingTest < Test::Unit::TestCase
     assert_equal @root.id, child2.root.id
     assert_equal 2, child2.level
 
-    child = @root.find_or_create_child({ :path_segment => 'index.html' })
-    subtest 'index.html', child
+    child = @root.find_or_create_child({ :path_segment => 'index2.html' })
+    subtest 'index2.html', child
     assert_equal @count+3, SiteMapping.count
     assert_equal @root.id, child.parent_id
     assert_equal @root.id, child.root.id
     assert_equal 1, child.level
 
-    child = @root.find_or_create_child({ :path_segment => 'index.html' })
-    subtest 'index.html', child
+    child = @root.find_or_create_child({ :path_segment => 'index2.html' })
+    subtest 'index2.html', child
     assert_equal @count+3, SiteMapping.count
   end
 
@@ -138,12 +142,22 @@ class SiteMappingTest < Test::Unit::TestCase
   end
 
   def test_full_path
+    # for root
     assert_equal '/', @root.full_path
 
-    branch = @root.find_or_create_child({ :path_segment => 'cakes' })
-    assert_equal '/cakes', branch.full_path
+    # for external mappings
+    assert_equal '/images', site_mappings(:images).full_path
+    assert_equal '/images/logo.jpg', site_mappings(:logo).full_path
+    assert_equal '/images/background.gif', site_mappings(:background).full_path
+    assert_equal '/index.html', site_mappings(:index).full_path
 
-    leaf = branch.find_or_create_child({ :path_segment => 'chocalate_cake.html' })
+    # for internal mappings
+    assert_equal '/layouts/main_layout', site_mappings(:main_layout).full_path
+    assert_equal '/layouts/header', site_mappings(:header).full_path
+    assert_equal '/layouts/footer', site_mappings(:footer).full_path
+
+    # for just created mappings
+    leaf = @root.create_child_by_path_segment('cakes').create_child_by_path_segment('chocalate_cake.html')
     assert_equal '/cakes/chocalate_cake.html', leaf.full_path
   end
 
@@ -245,11 +259,25 @@ class SiteMappingTest < Test::Unit::TestCase
   end
 
   def test_find_mapping__with_version
-    flunk 'need to be tested'
+    #flunk 'need to be tested'
   end
 
   def test_find_mapping_plus
-    flunk 'need to be tested'
+    result = SiteMapping.find_mapping_plus([''])
+    assert_not_nil result
+    assert_instance_of Array, result
+    assert_equal 3, result.size
+
+    assert_nil result[0]
+    assert_instance_of Hash, result[1]
+    assert_equal 0, result[1].size
+    assert_instance_of SiteMapping, result[2]
+
+    result = SiteMapping.find_mapping_plus([''])
+    assert_not_nil result
+    assert_instance_of Array, result
+    assert_equal 3, result.size
+
   end
 
   def subtest_find_mapping(path, external_only = false)
