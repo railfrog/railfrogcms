@@ -62,4 +62,5 @@ index:
   parent_id: 1
   lft: 16
   rgt: 17
+  is_internal: false
 

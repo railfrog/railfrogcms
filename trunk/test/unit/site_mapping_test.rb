@@ -10,38 +10,38 @@ class SiteMappingTest < Test::Unit::TestCase
   end
 
   def test_find_root
-    subtest SiteMapping::ROOT_DIR, SiteMapping.find_root
+    common_test SiteMapping::ROOT_DIR, SiteMapping.find_root
     assert_equal @count, SiteMapping.count
 
     @root.destroy
     assert_equal 0, SiteMapping.count
 
     # the root folder should be created now
-    subtest SiteMapping::ROOT_DIR, SiteMapping.find_root
+    common_test SiteMapping::ROOT_DIR, SiteMapping.find_root
     assert_equal 1, SiteMapping.count
 
     # and now it should be returned from the db
-    subtest SiteMapping::ROOT_DIR, SiteMapping.find_root
+    common_test SiteMapping::ROOT_DIR, SiteMapping.find_root
     assert_equal 1, SiteMapping.count
   end
 
   def test_create_child
     child = @root.create_child({ :path_segment => 'cakes' })
-    subtest 'cakes', child
+    common_test 'cakes', child
     assert_equal @count+1, SiteMapping.count
     assert_equal @root.id, child.parent_id
     assert_equal @root.id, child.root.id
     assert_equal 1, child.level
 
     child2 = child.create_child({ :path_segment => 'index.html' })
-    subtest 'index.html', child2
+    common_test 'index.html', child2
     assert_equal @count+2, SiteMapping.count
     assert_equal child.id, child2.parent_id
     assert_equal @root.id, child2.root.id
     assert_equal 2, child2.level
 
     child = @root.create_child({ :path_segment => 'cakes2' })
-    subtest 'cakes2', child
+    common_test 'cakes2', child
     assert_equal @count+3, SiteMapping.count
     assert_equal @root.id, child.parent_id
     assert_equal @root.id, child.root.id
@@ -64,7 +64,7 @@ class SiteMappingTest < Test::Unit::TestCase
 
   def test_create_child__with_same_name
     child1 = @root.create_child({ :path_segment => 'child' })
-    subtest 'child', child1
+    common_test 'child', child1
     assert_equal @count+1, SiteMapping.count
 
     assert_raise(ActiveRecord::RecordInvalid) { @root.create_child({ :path_segment => 'child' }) }
@@ -72,54 +72,78 @@ class SiteMappingTest < Test::Unit::TestCase
   end
 
   def test_create_by_path_segment
-    #flunk 'need to be tested'
+    child = @root.create_child_by_path_segment('cakes')
+    common_test 'cakes', child
+    assert_equal @count+1, SiteMapping.count
+    assert_equal @root.id, child.parent_id
+    assert_equal @root.id, child.root.id
+    assert_equal 1, child.level
+
+    child2 = child.create_child_by_path_segment('index.html')
+    common_test 'index.html', child2
+    assert_equal @count+2, SiteMapping.count
+    assert_equal child.id, child2.parent_id
+    assert_equal @root.id, child2.root.id
+    assert_equal 2, child2.level
+
+    child = @root.create_child_by_path_segment('cakes2')
+    common_test 'cakes2', child
+    assert_equal @count+3, SiteMapping.count
+    assert_equal @root.id, child.parent_id
+    assert_equal @root.id, child.root.id
+    assert_equal 1, child.level
   end
 
   def test_find_or_create_child
     child = @root.find_or_create_child({ :path_segment => 'cakes' })
-    subtest 'cakes', child
+    common_test 'cakes', child
     assert_equal @count+1, SiteMapping.count
     assert_equal @root.id, child.parent_id
     assert_equal @root.id, child.root.id
     assert_equal 1, child.level
 
     child = @root.find_or_create_child({ :path_segment => 'cakes' })
-    subtest 'cakes', child
+    common_test 'cakes', child
     assert_equal @count+1, SiteMapping.count
 
     child2 = child.find_or_create_child({ :path_segment => 'index.html' })
-    subtest 'index.html', child2
+    common_test 'index.html', child2
     assert_equal @count+2, SiteMapping.count
     assert_equal child.id, child2.parent_id
     assert_equal @root.id, child2.root.id
     assert_equal 2, child2.level
 
     child = @root.find_or_create_child({ :path_segment => 'index2.html' })
-    subtest 'index2.html', child
+    common_test 'index2.html', child
     assert_equal @count+3, SiteMapping.count
     assert_equal @root.id, child.parent_id
     assert_equal @root.id, child.root.id
     assert_equal 1, child.level
 
     child = @root.find_or_create_child({ :path_segment => 'index2.html' })
-    subtest 'index2.html', child
+    common_test 'index2.html', child
     assert_equal @count+3, SiteMapping.count
   end
 
   def test_is_root
     assert @root.root?
+    assert_nil @root.parent_mapping
 
     child = @root.create_child({ :path_segment => 'cakes' })
     assert !child.root?
+    common_test SiteMapping::ROOT_DIR, child.parent_mapping
 
     child = child.create_child({ :path_segment => 'index.html' })
     assert !child.root?
+    common_test 'cakes', child.parent_mapping
 
     child = child.find_or_create_child({ :path_segment => 'index.html' })
     assert !child.root?
+    common_test 'index.html', child.parent_mapping
 
     root = SiteMapping.find_root
     assert root.root?
+    assert_nil root.parent_mapping
   end
 
   def test_destroy
@@ -162,100 +186,92 @@ class SiteMappingTest < Test::Unit::TestCase
   end
 
   def test_find_mapping
-    cakes = @root.find_or_create_child({ :path_segment => 'cakes' })
-    cakes_index = cakes.find_or_create_child({ :path_segment => 'index.html' })
-    cookies = @root.find_or_create_child({ :path_segment => 'cookies' })
-    cookies_index = cookies.find_or_create_child({ :path_segment => 'index.html' })
-
-    sm = SiteMapping.find_mapping
-    subtest SiteMapping::ROOT_DIR, sm
-    assert_nil sm.parent_mapping
-
-    sm = SiteMapping.find_mapping([])
-    subtest SiteMapping::ROOT_DIR, sm
-    assert_nil sm.parent_mapping
+    common_test SiteMapping::ROOT_DIR, SiteMapping.find_mapping
+    common_test SiteMapping::ROOT_DIR, SiteMapping.find_mapping([])
 
     subtest_find_mapping [SiteMapping::ROOT_DIR]
-    subtest_find_mapping [SiteMapping::ROOT_DIR, 'cakes']
-    subtest_find_mapping ['cakes']
-    subtest_find_mapping [SiteMapping::ROOT_DIR, 'cakes', 'index.html']
-    subtest_find_mapping ['cakes', 'index.html']
-    subtest_find_mapping [SiteMapping::ROOT_DIR, 'cookies', 'index.html']
-    subtest_find_mapping ['cookies', 'index.html']
+    subtest_find_mapping [SiteMapping::ROOT_DIR, 'images']
+    subtest_find_mapping ['images']
+    subtest_find_mapping [SiteMapping::ROOT_DIR, 'images', 'logo.jpg']
+    subtest_find_mapping ['images', 'logo.jpg']
+    subtest_find_mapping [SiteMapping::ROOT_DIR, 'images', 'background.gif']
+    subtest_find_mapping ['images', 'background.gif']
+    subtest_find_mapping [SiteMapping::ROOT_DIR, 'layouts', 'main_layout']
+    subtest_find_mapping ['layouts', 'main_layout']
+    subtest_find_mapping [SiteMapping::ROOT_DIR, 'layouts', 'header']
+    subtest_find_mapping ['layouts', 'header']
+    subtest_find_mapping [SiteMapping::ROOT_DIR, 'layouts', 'footer']
+    subtest_find_mapping ['layouts', 'footer']
+    subtest_find_mapping [SiteMapping::ROOT_DIR, 'index.html']
+    subtest_find_mapping ['index.html']
 
-    sm = SiteMapping.find_mapping(['no', 'such', 'path'])
-    assert_nil sm
+    assert_nil SiteMapping.find_mapping(['no'])
+    assert_nil SiteMapping.find_mapping(['no', 'such'])
+    assert_nil SiteMapping.find_mapping(['no', 'such', 'path'])
   end
 
   def test_find_mapping__internal
-    @root.
-      create_child({ :path_segment => 'child1', :is_internal => true }).
-      create_child({ :path_segment => 'child2' }).
-      create_child({ :path_segment => 'child3', :is_internal =>  false }).
-      create_child({ :path_segment => 'child4', :is_internal =>  true })
+    # find internal site_mapping with external_only = true
+    assert_nil SiteMapping.find_mapping(['layouts', 'main_layout'], nil, true)
+    assert_nil SiteMapping.find_mapping(['layouts', 'header'], nil, true)
+    assert_nil SiteMapping.find_mapping(['layouts', 'footer'], nil, true)
 
-    subtest_find_mapping ['child1', 'child2', 'child3', 'child4']
-    subtest_find_mapping(['child1', 'child2', 'child3', 'child4'], false)
+    # check with default external_only = false
+    common_test 'main_layout', SiteMapping.find_mapping(['layouts', 'main_layout'])
+    common_test 'header', SiteMapping.find_mapping(['layouts', 'header'])
+    common_test 'footer', SiteMapping.find_mapping(['layouts', 'footer'])
 
-    sm = SiteMapping.find_mapping(['child1', 'child2', 'child3', 'child4'], nil, true)
-    assert_nil sm
-    sm = SiteMapping.find_mapping(['child1'], nil, true)
-    assert_nil sm
+    # check with external_only = false
+    common_test 'main_layout', SiteMapping.find_mapping(['layouts', 'main_layout'], nil, false)
+    common_test 'header', SiteMapping.find_mapping(['layouts', 'header'], nil, false)
+    common_test 'footer', SiteMapping.find_mapping(['layouts', 'footer'], nil, false)
 
-    subtest_find_mapping(['child1', 'child2'], true)
-    subtest_find_mapping(['child1', 'child2', 'child3'], true)
+    # check site_mapping with explicit is_internal = false
+    common_test 'index.html', SiteMapping.find_mapping(['index.html'])
+    common_test 'index.html', SiteMapping.find_mapping(['index.html'], nil, false)
+    common_test 'index.html', SiteMapping.find_mapping(['index.html'], nil, true)
+
+    # check site_mapping with implicit is_internal = false (database default value)
+    common_test 'logo.jpg', SiteMapping.find_mapping(['images', 'logo.jpg'])
+    common_test 'logo.jpg', SiteMapping.find_mapping(['images', 'logo.jpg'], nil, false)
+    common_test 'logo.jpg', SiteMapping.find_mapping(['images', 'logo.jpg'], nil, true)
   end
 
   def test_find_mapping__with_labels
-    insert_data_for_labels_tests
-
-    sm = SiteMapping.find_mapping(['child1', 'child2', 'child3'])
+    sm = SiteMapping.find_mapping(['images', 'logo.jpg'])
 
     assert_not_nil sm.instance_variables.find {|v| v == '@mapping_labels'}
     assert_not_nil sm.parent_mapping.instance_variables.find {|v| v == '@mapping_labels'}
     assert_not_nil sm.parent_mapping.parent_mapping.instance_variables.find {|v| v == '@mapping_labels'}
-    assert_not_nil sm.parent_mapping.parent_mapping.parent_mapping.instance_variables.find {|v| v == '@mapping_labels'}
 
-    assert_equal 2, sm.mapping_labels.size
+    assert_equal 4, sm.mapping_labels.size
+    assert_equal mapping_labels(:logo_label1), sm.mapping_labels[0]
+    assert_equal mapping_labels(:logo_label2), sm.mapping_labels[1]
+    assert_equal mapping_labels(:logo_label3), sm.mapping_labels[2]
+    assert_equal mapping_labels(:logo_label4), sm.mapping_labels[3]
+
     assert_equal 0, sm.parent_mapping.mapping_labels.size
+
     assert_equal 1, sm.parent_mapping.parent_mapping.mapping_labels.size
-    assert_equal 4, sm.parent_mapping.parent_mapping.parent_mapping.mapping_labels.size
+    assert_equal mapping_labels(:root_label), sm.parent_mapping.parent_mapping.mapping_labels[0]
   end
 
   def test_process_labels
-    sm = SiteMapping.find_root
-    result = {}
-    assert_equal result, SiteMapping.process_labels(sm)
+    result = { "index-page" => 'index.html' }
+    assert_equal result, SiteMapping.process_labels(SiteMapping.find_root)
+    assert_equal result, SiteMapping.process_labels(SiteMapping.find_mapping)
+    assert_equal result, SiteMapping.process_labels(SiteMapping.find_mapping( ['images']))
+    assert_equal result, SiteMapping.process_labels(SiteMapping.find_mapping( ['images', 'background.gif']))
 
-    sm = SiteMapping.find_mapping
-    result = {}
-    assert_equal result, SiteMapping.process_labels(sm)
+    result['label1'] = 'value1'
+    result['label2'] = 'value2'
+    result['label3'] = 'value3'
+    result['label4'] = 'value4'
+    assert_equal result, SiteMapping.process_labels(SiteMapping.find_mapping( ['images', 'logo.jpg'] ))
 
-    insert_data_for_labels_tests
-
-    result = {
-      'label1' => 'value1',
-      'label2' => 'value2',
-      'label3' => 'value3',
-      'label4' => 'value4'}
-
-    sm = SiteMapping.find_root
-    assert_equal result, SiteMapping.process_labels(sm)
-
-    sm = SiteMapping.find_mapping
-    assert_equal result, SiteMapping.process_labels(sm)
-
-    sm = SiteMapping.find_mapping(['child1'])
-    result['label1'] = 'value1-new'
-    assert_equal result, SiteMapping.process_labels(sm)
-
-    sm = SiteMapping.find_mapping(['child1', 'child2'])
-    assert_equal result, SiteMapping.process_labels(sm)
-
-    sm = SiteMapping.find_mapping(['child1', 'child2', 'child3'])
-    result['label3'] = 'value3-new'
-    result['label33'] = 'value33'
-    assert_equal result, SiteMapping.process_labels(sm)
+    result = { 'index-page' => mapping_labels(:layouts_label).value }
+    assert_equal result, SiteMapping.process_labels(SiteMapping.find_mapping( ['layouts']))
+    assert_equal result, SiteMapping.process_labels(SiteMapping.find_mapping( ['layouts', 'main_layout'] ))
   end
 
   def test_find_mapping__with_version
@@ -267,31 +283,57 @@ class SiteMappingTest < Test::Unit::TestCase
     assert_not_nil result
     assert_instance_of Array, result
     assert_equal 3, result.size
-
     assert_nil result[0]
     assert_instance_of Hash, result[1]
-    assert_equal 0, result[1].size
+    assert_equal 1, result[1].size
     assert_instance_of SiteMapping, result[2]
 
-    result = SiteMapping.find_mapping_plus([''])
+    result = SiteMapping.find_mapping_plus(['images'])
     assert_not_nil result
     assert_instance_of Array, result
     assert_equal 3, result.size
+    assert_nil result[0]
+    assert_instance_of Hash, result[1]
+    assert_equal 1, result[1].size
+    assert_instance_of SiteMapping, result[2]
 
+    result = SiteMapping.find_mapping_plus(['images', 'logo.jpg'])
+    assert_not_nil result
+    assert_instance_of Array, result
+    assert_equal 3, result.size
+    assert_nil result[0]
+    assert_instance_of Hash, result[1]
+    assert_equal 5, result[1].size
+    assert_instance_of SiteMapping, result[2]
+
+    # fails on internal chunk
+    result = SiteMapping.find_mapping_plus(['layouts', 'main_layout'])
+    assert_not_nil result
+    assert_instance_of Array, result
+    assert_equal 3, result.size
+    assert_nil result[0]
+    assert_instance_of Hash, result[1]
+    assert_equal 1, result[1].size
+    assert_instance_of SiteMapping, result[2]
+
+    # fails on internal chunk
+    assert_nil SiteMapping.find_mapping_plus(['layouts', 'main_layout'], nil, true)
+
+    # fails on bad path
+    assert_nil SiteMapping.find_mapping_plus(['no-such-path'])
   end
 
   def subtest_find_mapping(path, external_only = false)
     sm = SiteMapping.find_mapping(path, nil, external_only)
-    if external_only
-      assert !sm.is_internal
-    end
+    assert !sm.is_internal if external_only
+
     path.reverse.each_with_index {|p, i|
-      subtest p, sm
+      common_test p, sm
       sm = sm.parent_mapping
     }
   end
 
-  def subtest(path_segment, sm)
+  def common_test(path_segment, sm)
     assert_not_nil sm
     assert_instance_of SiteMapping, sm
     assert_valid sm
@@ -299,19 +341,4 @@ class SiteMappingTest < Test::Unit::TestCase
     assert_equal path_segment, sm.path_segment
   end
 
-  def insert_data_for_labels_tests
-    child1 = @root.create_child({ :path_segment => 'child1' })
-    child2 = child1.create_child({ :path_segment => 'child2' })
-    child3 = child2.create_child({ :path_segment => 'child3' })
-
-    @root.mapping_labels.create(:name => 'label1', :value => 'value1')
-    @root.mapping_labels.create(:name => 'label2', :value => 'value2')
-    @root.mapping_labels.create(:name => 'label3', :value => 'value3')
-    @root.mapping_labels.create(:name => 'label4', :value => 'value4')
-
-    child1.mapping_labels.create(:name => 'label1', :value => 'value1-new')
-
-    child3.mapping_labels.create(:name => 'label3', :value => 'value3-new')
-    child3.mapping_labels.create(:name => 'label33', :value => 'value33')
-  end
 end

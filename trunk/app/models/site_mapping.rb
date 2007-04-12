@@ -9,8 +9,7 @@ class SiteMapping < ActiveRecord::Base
   has_many :mapping_labels, :dependent => :destroy
   belongs_to :parent_mapping,
     :class_name => "SiteMapping",
-    :foreign_key => "parent_id",
-    :include => {:chunk, :mapping_labels}
+    :foreign_key => "parent_id"
 
   validates_uniqueness_of :path_segment, :scope => "parent_id"
 
