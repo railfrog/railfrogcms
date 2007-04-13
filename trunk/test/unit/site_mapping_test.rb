@@ -152,13 +152,13 @@ class SiteMappingTest < Test::Unit::TestCase
     assert_equal 0, SiteMapping.count
 
     root = SiteMapping.find_root
-    root.create_child({ :path_segment => 'cakes' }).create_child({ :path_segment => 'chocolate_cakes' }).create_child({ :path_segment => 'index.html' })
+    root.create_child_by_path_segment('cakes').create_child_by_path_segment('chocolate_cakes').create_child_by_path_segment('index.html')
     assert_equal 4, SiteMapping.count
     root.destroy
     assert_equal 0, SiteMapping.count
 
-    branch = SiteMapping.find_root.create_child({ :path_segment => 'cakes' })
-    branch.create_child({ :path_segment => 'chocolate_cakes' }).create_child({ :path_segment => 'index.html' })
+    branch = SiteMapping.find_root.create_child_by_path_segment('cakes')
+    branch.create_child_by_path_segment('chocolate_cakes').create_child_by_path_segment('index.html')
     assert_equal 4, SiteMapping.count
     branch.destroy
     assert_equal 1, SiteMapping.count
@@ -204,6 +204,11 @@ class SiteMappingTest < Test::Unit::TestCase
     subtest_find_mapping ['layouts', 'footer']
     subtest_find_mapping [SiteMapping::ROOT_DIR, 'index.html']
     subtest_find_mapping ['index.html']
+
+    # for just created mappings
+    leaf = @root.create_child_by_path_segment('cakes').create_child_by_path_segment('chocalate_cake.html')
+    subtest_find_mapping ['cakes', 'chocalate_cake.html']
+    subtest_find_mapping [SiteMapping::ROOT_DIR, 'cakes', 'chocalate_cake.html']
 
     assert_nil SiteMapping.find_mapping(['no'])
     assert_nil SiteMapping.find_mapping(['no', 'such'])
@@ -321,6 +326,10 @@ class SiteMappingTest < Test::Unit::TestCase
 
     # fails on bad path
     assert_nil SiteMapping.find_mapping_plus(['no-such-path'])
+  end
+
+  def test_kid_dirs
+    # flunk
   end
 
   def subtest_find_mapping(path, external_only = false)
