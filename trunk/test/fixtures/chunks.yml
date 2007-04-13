@@ -1,3 +1,4 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 index:
   id:           1
   description:  RailFrog Index Page

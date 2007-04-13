@@ -148,8 +148,10 @@ class SiteMappingTest < Test::Unit::TestCase
 
   def test_destroy
     assert @count > 0
+    assert MappingLabel.count > 0
     @root.destroy
     assert_equal 0, SiteMapping.count
+    assert 0, MappingLabel.count
 
     root = SiteMapping.find_root
     root.create_child_by_path_segment('cakes').create_child_by_path_segment('chocolate_cakes').create_child_by_path_segment('index.html')

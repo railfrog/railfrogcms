@@ -1,3 +1,4 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 root:
   id: 1
   path_segment: "<%= SiteMapping::ROOT_DIR %>"
