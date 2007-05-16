@@ -1,4 +1,5 @@
-require File.join(RAILS_ROOT, 'db', 'util', 'site_loader')
+require File.join(RAILS_ROOT, 'config', 'environment')
+require File.join(RAILS_ROOT, 'lib', 'site_loader')
 
 namespace :rf do
   desc "Load site to database"
@@ -6,7 +7,7 @@ namespace :rf do
     if ENV['SITE'].blank?
       raise "No SITE value given. Set SITE=db/sites/railfrog"
     else
-      SiteLoader.load_site(ENV['SITE'])
+      Railfrog::SiteLoader.load_site(ENV['SITE'])
     end
   end
 end

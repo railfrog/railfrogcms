@@ -34,21 +34,15 @@ class SiteMapping < ActiveRecord::Base
   end
 
   def create_child(params)
-    child = SiteMapping.new params
-    if child.save
-      child.move_to_child_of self
-    end
-
-    # FIXME validates_uniqueness_of :path_segment, :scope => "parent_id" -- is not working
-    # I need to check validness manually and destroy child if invalid
-    return child if child.valid?
-    child.destroy
-    raise ActiveRecord::RecordInvalid.new(child)
+    child = SiteMapping.create(params)
+    add_child(child)
+    child.save!
+    child
   end
 
   # Finds all site_mappings including labels and chunk for last mappings 
   # and process labels
-  def self.find_mapping_plus(path = [], version = nil, external_only = false)
+  def self.find_mapping_and_labels_and_chunk(path = [], version = nil, external_only = false)
     m = find_mapping(path, version, external_only)
 
     # FIXME following code should be refactoried
@@ -62,7 +56,7 @@ class SiteMapping < ActiveRecord::Base
 
       chunk = Chunk.find_version({:id => m.chunk_id, :version => version})
 
-      return chunk, process_labels(m), m
+      return m, process_labels(m), chunk
     end
   end
 
@@ -129,6 +123,29 @@ class SiteMapping < ActiveRecord::Base
     p
   end
 
+  def root
+    SiteMapping.find_root
+  end
+
+  def root?
+    super \
+      || (
+        (self.lft.nil? || self.lft == 0) \
+        && (self.rgt.nil? || self.rgt == 0) \
+        && (self.parent_id.nil? || self.parent_id == 0) \
+        && SiteMapping.count == 1)
+  end
+
+  def self_and_ancestors
+    return [self] if self.lft.nil?
+    SiteMapping.find(:all, :conditions => "(#{self.lft} BETWEEN lft AND rgt)", :order => 'lft' )
+  end
+
+  def level
+    return 0 if self.parent_id.nil?
+    SiteMapping.count(:conditions => "(#{self.lft} BETWEEN lft AND rgt)") - 1
+  end
+
   def kid_dirs
     SiteMapping.find(:all,
       :conditions => { :parent_id => self.id, :chunk_id => nil },
@@ -144,5 +161,14 @@ class SiteMapping < ActiveRecord::Base
     end
 
     tree
+  end
+
+  # need to drop all dependend mapping labels
+  def before_destroy
+    return if self.rgt.nil? || self.lft.nil?
+    ids = SiteMapping.find_by_sql("select id from site_mappings where lft > #{self.lft} and rgt < #{self.rgt}")
+
+    MappingLabel.delete_all("site_mapping_id IN (#{ids.collect(&:id).join(', ')})") unless ids.empty?
+    super
   end
 end

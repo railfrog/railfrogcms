@@ -5,14 +5,14 @@ class SiteMapperController < ApplicationController
 
     path = params[:path]
 
-    @chunk_version, @rf_labels, @mapping = SiteMapping.find_mapping_plus(path, params[:version], true)
+    @mapping, @rf_labels, @chunk_version = SiteMapping.find_mapping_and_labels_and_chunk(path, params[:version], true)
 
     if @chunk_version.nil?
       unless @rf_labels.nil?
         logger.info "Chunk is not found for path: #{path.join('/')}. Trying to get index-page: #{@rf_labels['index-page']} ..."
         path.push @rf_labels['index-page']
 
-        @chunk_version, @rf_labels, @mapping = SiteMapping.find_mapping_plus(path, params[:version], true)
+        @mapping, @rf_labels, @chunk_version = SiteMapping.find_mapping_and_labels_and_chunk(path, params[:version], true)
       end
     end
 

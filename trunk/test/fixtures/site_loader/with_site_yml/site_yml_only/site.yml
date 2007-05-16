@@ -1,0 +1,37 @@
+root:
+  rf-labels:
+    index-page: index.html
+    layout: "mapping:/layout/rf_layout"
+
+  index.html:
+    content: |
+      <h1>Welcome</h>
+      <a href="http://groups.google.com/group/railfrog-dev">Pond</a>
+    rf-labels:
+      active_menu_item: "1"
+
+  dir1:
+    dir2:
+      pond.html:
+        content: |
+          <h1>Pond</h>
+          <a href="http://groups.google.com/group/railfrog-dev">Pond</a>
+        rf-labels:
+          active_menu_item: "3"
+
+  layouts:
+    rf-internal: true
+    rf-labels:
+      foo: bar
+      barbar: foo
+
+    header:
+      content: |
+        <title>Welcome</title>
+
+  internal-index.html:
+    rf-internal: true
+    content: |
+      <h1>Internal welcome</h>
+      <a href="http://groups.google.com/group/railfrog-dev">Pond</a>
+
