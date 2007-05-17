@@ -1,7 +1,7 @@
 class MimeType < ActiveRecord::Base
   has_many :file_extensions
 
-  def self.create(mime_type, file_extensions)
+  def self.create_type_and_exts(mime_type, file_extensions)
     mt = MimeType.create :mime_type => mime_type
 
     file_extensions.each do |e|

@@ -102,7 +102,7 @@ class InitialSchema < ActiveRecord::Migration
         # not empty string and not comment
         if parts.size > 0 && !(parts[0].squeeze("#") == "#") then
           mime_type = parts.delete_at(0)
-          MimeType.create(mime_type, parts)
+          MimeType.create_type_and_exts(mime_type, parts)
         end
       end
     end
