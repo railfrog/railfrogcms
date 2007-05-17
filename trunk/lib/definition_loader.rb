@@ -55,7 +55,7 @@ class Railfrog::SiteDefinitionLoader
           parse_definition(site_mapping, node)
         end
 
-        Chunk.find_or_create_by_site_mapping_and_content(site_mapping, content) if content
+        Railfrog::create_chunk(site_mapping, content) if content
       end
     }
   end
@@ -68,7 +68,7 @@ class Railfrog::SiteDefinitionLoader
     if node.class == Hash && node.has_key?(RF_LABELS_TAG)
       Railfrog::info "      loading labels for '#{site_mapping.full_path}'"
       node[RF_LABELS_TAG].each { |name, value|
-        site_mapping.mapping_labels.create :name => name, :value => value
+        site_mapping.mapping_labels.create(:name => name, :value => value) if MappingLabel.find_by_site_mapping_id_and_name_and_value(site_mapping.id, name, value).nil?
       }
     end
   end

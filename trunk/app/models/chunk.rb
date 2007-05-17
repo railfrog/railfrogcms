@@ -14,7 +14,7 @@ class Chunk < ActiveRecord::Base
 
   def self.find_or_create_by_site_mapping_and_content(site_mapping, content)
 
-    if site_mapping.chunk_id then
+    if site_mapping.chunk_id
       c = Chunk.find(site_mapping.chunk_id)
       next_version = ChunkVersion.next_version(c.id)
       c.live_version = next_version

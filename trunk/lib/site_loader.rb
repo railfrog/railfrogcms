@@ -45,12 +45,11 @@ module Railfrog
     # Load chunk content from the file. The file name
     # we will get from the SiteMapping
     def self.load_file(site_mapping)
-      return unless site_mapping.chunk.nil?
       file = File.join(@@path, site_mapping.full_path)
 
       Railfrog::info "    loading content of the chunk from file: '#{file}'"
       content = Railfrog::load_file(file)
-      Chunk.find_or_create_by_site_mapping_and_content(site_mapping, content)
+      Railfrog::create_chunk(site_mapping, content)
       Railfrog::set_internal_if_parent_is_internal(site_mapping)
     end
 
@@ -71,5 +70,9 @@ module Railfrog
       site_mapping.is_internal = true
       site_mapping.save!
     end
+  end
+
+  def self.create_chunk(site_mapping, content)
+    Chunk.find_or_create_by_site_mapping_and_content(site_mapping, content) if site_mapping.chunk.nil?
   end
 end

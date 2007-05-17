@@ -10,4 +10,11 @@ namespace :rf do
       Railfrog::SiteLoader.load_site(ENV['SITE'])
     end
   end
+
+  task :drop_site => :environment  do
+    MappingLabel.delete_all
+    SiteMapping.delete_all
+    ChunkVersion.delete_all
+    Chunk.delete_all
+  end
 end
