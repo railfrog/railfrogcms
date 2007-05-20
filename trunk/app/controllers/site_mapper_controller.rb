@@ -36,11 +36,9 @@ class SiteMapperController < ApplicationController
         layout = @rf_labels['layout']
         rendering_options = {}
         if layout then
-          if layout.include?("mapping:") then
-            layout.gsub!("mapping:", "")
-
-            layout_chunk = SiteMapping.find_mapping(layout.split('/'))
-            if layout_chunk then
+          if layout =~ /mapping:(.+)/
+            layout_chunk = SiteMapping.find_chunk($1.split('/'))
+            if layout_chunk
               rendering_options[:inline] = layout_chunk.content
             else
               rendering_options[:inline] = "Couldn't find layout #{layout}" 

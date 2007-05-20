@@ -44,25 +44,27 @@ class SiteMapping < ActiveRecord::Base
   # and process labels
   def self.find_mapping_and_labels_and_chunk(path = [], version = nil, external_only = false)
     m = find_mapping(path, version, external_only)
+    return nil if m.nil?
 
-    # FIXME following code should be refactoried
-    if m.nil?
-      nil
-    else
-      # find chunk version
-      unless version
-        version = m.version
-      end
+    chunk = find_chunk(path, version, external_only, m)
 
-      chunk = Chunk.find_version({:id => m.chunk_id, :version => version})
+    return m, process_labels(m), chunk
+  end
 
-      return m, process_labels(m), chunk
+  def self.find_chunk(path = [], version = nil, external_only = false, m = nil)
+    m = find_mapping(path, version, external_only) if m.nil?
+    return nil if m.nil?
+
+    # find chunk version
+    unless version
+      version = m.version
     end
+
+    Chunk.find_version({:id => m.chunk_id, :version => version})
   end
 
   # Finds all site_mappings including labels and chunk for last mappings
   def self.find_mapping(path = [], version = nil, external_only = false)
-
     path.insert(0, ROOT_DIR) unless path[0] == ROOT_DIR
 
     parent_mappings = nil

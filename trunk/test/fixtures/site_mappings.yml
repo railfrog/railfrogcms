@@ -64,4 +64,5 @@ index:
   lft: 16
   rgt: 17
   is_internal: false
+  chunk_id: 1
 
