@@ -5,9 +5,11 @@ class SiteMapperController < ApplicationController
 
     path = params[:path]
 
+    logger.info "Looking for site_mapping for #{path.join('/')} path"
+
     @mapping, @rf_labels, @chunk_version = SiteMapping.find_mapping_and_labels_and_chunk(path, params[:version], true)
 
-    if @chunk_version.nil?
+    if @mapping.nil? || @mapping.chunk.nil?
       unless @rf_labels.nil?
         logger.info "Chunk is not found for path: #{path.join('/')}. Trying to get index-page: #{@rf_labels['index-page']} ..."
         path.push @rf_labels['index-page']
@@ -16,14 +18,14 @@ class SiteMapperController < ApplicationController
       end
     end
 
-    if @chunk_version then
-      @chunk_content = @chunk_version.content
+    if @mapping && @mapping.chunk
+      @chunk_content = @mapping.chunk.live_chunk_version.content
 
       # options for sending chunk content back to user
       data_options = {:disposition => 'inline'}
 
-      if @chunk_version.chunk.mime_type then
-        mime_type = @chunk_version.chunk.mime_type.mime_type
+      if @mapping.chunk.mime_type
+        mime_type = @mapping.chunk.mime_type.mime_type
       else
         mime_type = "text/html"
       end
@@ -37,9 +39,11 @@ class SiteMapperController < ApplicationController
         rendering_options = {}
         if layout then
           if layout =~ /mapping:(.+)/
-            layout_chunk = SiteMapping.find_chunk($1.split('/'))
-            if layout_chunk
-              rendering_options[:inline] = layout_chunk.content
+            logger.info "Looking for the layout..."
+            layout_mapping = SiteMapping.find_mapping($1.split('/'))
+
+            if layout_mapping && layout_mapping.chunk
+              rendering_options[:inline] = layout_mapping.chunk.live_chunk_version.content
             else
               rendering_options[:inline] = "Couldn't find layout #{layout}" 
             end

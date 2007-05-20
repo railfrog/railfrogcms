@@ -46,21 +46,20 @@ class SiteMapping < ActiveRecord::Base
     m = find_mapping(path, version, external_only)
     return nil if m.nil?
 
-    chunk = find_chunk(path, version, external_only, m)
-
-    return m, process_labels(m), chunk
-  end
-
-  def self.find_chunk(path = [], version = nil, external_only = false, m = nil)
-    m = find_mapping(path, version, external_only) if m.nil?
-    return nil if m.nil?
-
     # find chunk version
     unless version
       version = m.version
     end
 
-    Chunk.find_version({:id => m.chunk_id, :version => version})
+    if m.chunk && m.chunk.live_chunk_version && (version.nil? || m.chunk.live_version == version)
+      logger.info "Already got required chunk version"
+      chunk = m.chunk.live_chunk_version
+    else
+      logger.info "Looking for chunk version"
+      chunk = Chunk.find_version({:id => m.chunk_id, :version => version})
+    end
+
+    return m, process_labels(m), chunk
   end
 
   # Finds all site_mappings including labels and chunk for last mappings
@@ -99,7 +98,7 @@ class SiteMapping < ActiveRecord::Base
 
     conditions = [conditions.join(' AND ')] + bindings
 
-    include = [:chunk, :mapping_labels]
+    include = [{ :chunk => [:live_chunk_version, :mime_type] }, :mapping_labels]
     include << parent_mappings if parent_mappings
 
     find(:first,
