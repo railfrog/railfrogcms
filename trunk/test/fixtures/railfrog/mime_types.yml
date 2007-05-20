@@ -1,0 +1,121 @@
+--- 
+mime_type_14: 
+  mime_type: text/comma-separated-values
+  id: 14
+  description: 
+mime_type_7: 
+  mime_type: image/pcx
+  id: 7
+  description: 
+mime_type_25: 
+  mime_type: application/zip
+  id: 25
+  description: 
+mime_type_26: 
+  mime_type: audio/mpeg
+  id: 26
+  description: 
+mime_type_8: 
+  mime_type: image/png
+  id: 8
+  description: 
+mime_type_15: 
+  mime_type: text/css
+  id: 15
+  description: 
+mime_type_16: 
+  mime_type: text/directory
+  id: 16
+  description: 
+mime_type_9: 
+  mime_type: image/prs.btif
+  id: 9
+  description: 
+mime_type_27: 
+  mime_type: text/plain
+  id: 27
+  description: 
+mime_type_28: 
+  mime_type: video/mpeg
+  id: 28
+  description: 
+mime_type_17: 
+  mime_type: text/english
+  id: 17
+  description: 
+mime_type_30: 
+  mime_type: video/quicktime
+  id: 30
+  description: 
+mime_type_18: 
+  mime_type: text/enriched
+  id: 18
+  description: 
+mime_type_1: 
+  mime_type: image/cgm
+  id: 1
+  description: 
+mime_type_29: 
+  mime_type: video/mp4
+  id: 29
+  description: 
+mime_type_20: 
+  mime_type: text/html
+  id: 20
+  description: 
+mime_type_2: 
+  mime_type: image/g3fax
+  id: 2
+  description: 
+mime_type_19: 
+  mime_type: text/h323
+  id: 19
+  description: 
+mime_type_10: 
+  mime_type: image/prs.pti
+  id: 10
+  description: 
+mime_type_3: 
+  mime_type: image/gif
+  id: 3
+  description: 
+mime_type_21: 
+  mime_type: application/x-javascript
+  id: 21
+  description: 
+mime_type_22: 
+  mime_type: application/msword
+  id: 22
+  description: 
+mime_type_4: 
+  mime_type: image/ief
+  id: 4
+  description: 
+mime_type_11: 
+  mime_type: image/svg+xml
+  id: 11
+  description: 
+mime_type_12: 
+  mime_type: image/tiff
+  id: 12
+  description: 
+mime_type_5: 
+  mime_type: image/jpeg
+  id: 5
+  description: 
+mime_type_23: 
+  mime_type: application/pdf
+  id: 23
+  description: 
+mime_type_24: 
+  mime_type: application/xml
+  id: 24
+  description: 
+mime_type_6: 
+  mime_type: image/naplps
+  id: 6
+  description: 
+mime_type_13: 
+  mime_type: text/calendar
+  id: 13
+  description: 

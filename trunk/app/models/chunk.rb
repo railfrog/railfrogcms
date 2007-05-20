@@ -30,7 +30,7 @@ class Chunk < ActiveRecord::Base
       next_version = 1
     end
 
-    c.chunk_versions.create :version => next_version, :base_version => 0, :content => content
+    c.chunk_versions.create :version => next_version, :base_version => 0, :content => content, :comments => filename
 
     c
   end

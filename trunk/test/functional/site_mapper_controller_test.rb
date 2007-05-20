@@ -5,23 +5,52 @@ require 'site_mapper_controller'
 class SiteMapperController; def rescue_action(e) raise e end; end
 
 class SiteMapperControllerTest < Test::Unit::TestCase
-#  fixture_path = File.dirname(__FILE__) + '/../fixtures/railfrog'
-  fixtures :site_mappings, :mapping_labels, :chunks, :chunk_versions, :mime_types, :file_extensions
-
+  FIXTURES = ['site_mappings', 'mapping_labels', 'chunks', 'chunk_versions', 'mime_types', 'file_extensions']
 
   def setup
     @controller = SiteMapperController.new
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
+
+    SiteMapping.delete_all
+    MappingLabel.delete_all
+    Chunk.delete_all
+    ChunkVersion.delete_all
+    MimeType.delete_all
+    FileExtension.delete_all
+
+    assert_equal 0, SiteMapping.count, "But got #{SiteMapping.count}"
+    assert_equal 0, MappingLabel.count
+    assert_equal 0, Chunk.count
+    assert_equal 0, ChunkVersion.count
+
+
+    FIXTURES.each {|f|
+      fs = Fixtures.create_fixtures(RAILS_ROOT + "/test/fixtures/railfrog/", f)
+    }
+
+    assert_equal 20, SiteMapping.count, "But got #{SiteMapping.count}"
+    assert_equal 5, MappingLabel.count
+    assert_equal 16, Chunk.count
+    assert_equal 16, ChunkVersion.count
   end
 
     # 1. check layout
     # 2. check labels
     # 3. check internal
 
+  def test_
+    get :show_chunk, :path => ['']
+    assert_response :success
+    assert_select 'title', { :text => 'RailFrog / CMS Ridin&rsquo; on Rails', :count => 1 }
+  end
+
   def test_index_html
     get :show_chunk, :path => ['index.html']
     assert_response :success
+    assert_select 'title', { :text => 'RailFrog / CMS Ridin&rsquo; on Rails', :count => 1 }
+    assert_select 'li.first-child a', 'About'
+    assert_select 'h2', 'A modest proposal'
   end
 
   def test_internal
@@ -40,3 +69,4 @@ class SiteMapperControllerTest < Test::Unit::TestCase
     assert_response :missing
   end
 end
+

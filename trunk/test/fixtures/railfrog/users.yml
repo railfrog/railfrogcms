@@ -1,0 +1,9 @@
+--- 
+user_1: 
+  updated_at: 2007-05-20 18:32:45 +04:00
+  id: 1
+  first_name: Test
+  password: a94a8fe5ccb19ba61c4c0873d391e987982fbbd3
+  last_name: Tester
+  email: test@test.com
+  created_at: 2007-05-20 18:32:45 +04:00

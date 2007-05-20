@@ -97,7 +97,7 @@ class SiteDefinitionLoaderTest < Test::Unit::TestCase
     assert_equal 20, SiteMapping.count
     assert_equal 5, MappingLabel.count
     assert_equal 16, Chunk.count
-    assert_equal 16, ChunkVersion.count, "But got #{ChunkVersion.count}"
+    assert_equal 16, ChunkVersion.count
 
     # check site_mappings
     assert_not_nil SiteMapping.find_mapping(['images'])
