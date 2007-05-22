@@ -1,16 +1,6 @@
 class MimeType < ActiveRecord::Base
   has_many :file_extensions
 
-  def self.create_type_and_exts(mime_type, file_extensions)
-    mt = MimeType.create :mime_type => mime_type
-
-    file_extensions.each do |e|
-      mt.file_extensions.create :extension => e
-    end
-
-    mt
-  end
-
   def self.find_by_file_name(filename)
     find_by_file_ext filename.chomp.split(/\./).pop
   end

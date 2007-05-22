@@ -1,4 +1,19 @@
+require 'mime_type'
+
+class MimeType < ActiveRecord::Base
+  def self.create_type_and_exts(mime_type, file_extensions)
+    mt = MimeType.create :mime_type => mime_type
+
+    file_extensions.each do |e|
+      mt.file_extensions.create :extension => e
+    end
+
+    mt
+  end
+end
+
 class InitialSchema < ActiveRecord::Migration
+
   def self.up
     create_table "mime_types", :force => true do |t|
       t.column "mime_type", :string
@@ -109,16 +124,16 @@ class InitialSchema < ActiveRecord::Migration
   end
 
   def self.set_mapping_ids_in_chunk_table
-    SiteMapping.find(:all, :conditions => "chunk_id is not null").each do |sm| 
+    SiteMapping.find(:all, :conditions => "chunk_id is not null").each do |sm|
       extension = sm.path_segment.chomp.split(/\./).pop
-      if extension then
+      if extension
         fe = FileExtension.find(:first, :conditions => ["extension = ?", extension])
         sm.chunk.mime_type_id = fe.mime_type.id
         sm.save
       end
     end
 
-    Chunk.find(:all, :conditions => "mime_type_id is null").each do |c| 
+    Chunk.find(:all, :conditions => "mime_type_id is null").each do |c|
       c.mime_type_id = MimeType.find_default_mime_type.id
       c.save
     end

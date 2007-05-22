@@ -1,6 +1,8 @@
 class SiteMapperController < ApplicationController
   # FIXME - disabled caching #  caches_page :show_chunk
 
+  helper_method :render_chunk
+
   def show_chunk
 
     path = params[:path]
@@ -63,7 +65,7 @@ class SiteMapperController < ApplicationController
         begin
           data = render_to_string rendering_options
         rescue Exception => exc
-          data = %Q{<h1>500 RailFrog Error</h1>
+          data = %Q{<h1>500 Railfrog Error</h1>
             <p>Message: #{exc.message}</p>
             <p>#{exc.backtrace.join("<br />")}</p>}
 
@@ -79,7 +81,7 @@ class SiteMapperController < ApplicationController
     end
   end
 
-  hide_action :render_chunk
+  private
   def render_chunk(options)
     render_to_string :inline => Chunk.find_version(options).content, :locals => {:rf_labels => session[:rf_labels]}
   end

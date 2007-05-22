@@ -2849,26 +2849,26 @@ chunk_version_2:
     \t\t  <p>Read about the latest news in the <a href=\"http://chronicle.railfrog.com\">Pond Chronicle</a>.</p>\n\n\
     \t\t</div>\n\n\
     \t\t<div class=\"introduction\"> \n\
-    \t\t  <p>RailFrog is a user-friendly, open-source web site deployment and content \n\
+    \t\t  <p>Railfrog is a user-friendly, open-source web site deployment and content \n\
     \t\t\tmanagement system built with Rails; producing well structured and standards-compliant \n\
     \t\t\tpages with Web 2.0 goodness.</p>\n\
     \t\t</div>\n\
     \t\t\n\
     \t\n\
-    \t\t<h2>A modest proposal</h2>\n    <p>I&rsquo;m endeavoring to help jumpstart the development of an open-source \n      CMS application, built using <a class=\"xlink\" href=\"http://www.rubyonrails.com\">Ruby \n      on Rails</a>, that will will empower writers, editors, publishers, designers, \n      developers, and site owners with the ability to make their websites <strong>work \n      <em>for</em> them.</strong> Named RailFrog, this application will endeavor \n      to be what Tom Peters calls a <a class=\"xlink\" href=\"http://www.tompeters.com/tpc/wow_projects.php\">WOW! \n      Project</a> and help the Rails framework and community more quickly reach \n      its &ldquo;tipping point.&rdquo;</p>\n\n\
+    \t\t<h2>A modest proposal</h2>\n    <p>I&rsquo;m endeavoring to help jumpstart the development of an open-source \n      CMS application, built using <a class=\"xlink\" href=\"http://www.rubyonrails.com\">Ruby \n      on Rails</a>, that will will empower writers, editors, publishers, designers, \n      developers, and site owners with the ability to make their websites <strong>work \n      <em>for</em> them.</strong> Named Railfrog, this application will endeavor \n      to be what Tom Peters calls a <a class=\"xlink\" href=\"http://www.tompeters.com/tpc/wow_projects.php\">WOW! \n      Project</a> and help the Rails framework and community more quickly reach \n      its &ldquo;tipping point.&rdquo;</p>\n\n\
     \t\t<p>It is my desire to get this project going and contribute in any appropriate way. I&rsquo;m coming from a designer/developer&rsquo;s perspective and\n\
     \t\t I hope the Rails community and those already working on Rails CMS applications can benefit from this fledgling, but sincere effort. \n\
     \t\t <a href=\"&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#114;&#112;&#105;&#101;&#114;&#99;&#101;&#64;&#114;&#97;&#105;&#108;&#102;&#114;&#111;&#103;&#46;&#99;&#111;&#109;\">Let me know</a> \n\
     \t\t if you&rsquo;d like to help with (or even lead) this effort.</p>\n\
     \t\t\n\
-    \t\t<h2>What will RailFrog be?</h2>\n\
+    \t\t<h2>What will Railfrog be?</h2>\n\
     \t\t<p>Fulfilling <a class=\"xlink\" href=\"http://www.adaptivepath.com/publications/essays/archives/000365.php\">Jeffery \n\
     \t\t  Veen&rsquo;s CMS wishlist</a> wouldn&rsquo;t be a bad place to start. Here&rsquo;s an adaptation of that list:</p>\n\n\
     \t\t<ol>\n\
     \t\t<li>It will be easy to install.</li>\n\
     \t\t<li>It will be easy to get started.</li>\n\
     \t\t<li>It will be powerful, flexible and won&rsquo;t impose any content or structural preconceptions on the designer/developer.</li>\n\
-    \t\t<li>It will be easy to build a site that end users will never know (either visually or structurally) is powered by RailFrog (unless you want them to).</li>\n\
+    \t\t<li>It will be easy to build a site that end users will never know (either visually or structurally) is powered by Railfrog (unless you want them to).</li>\n\
     \t\t<li>It will feature task-based tutorials (created first) backed up by comprehensive feature documentation.</li>\n\n\
     \t\t<li>It will make clear distinctions between the interfaces for content management users (writers, editors, publishers) and site development users (designers, developers, owners).</li>\n\
     \t\t<li>It will implement web user interface improvements using Ajax.</li>\n\
@@ -2880,7 +2880,7 @@ chunk_version_2:
     \t\t\t<li>Develop this website to function as a full communication vehicle (ala <a class=\"xlink\" href=\"http://www.rubyonrails.com\">rubyonrails.com</a>)</li>\n\n\
     \t\t\t<li>Attract participants and organize interested people</li>\n\
     \t\t\t<li>Begin to clarify project scope and goals</li>\n\
-    \t\t\t<li>Develop to the point where RailFrog.com becomes the first RailFrog site</li>\n\
+    \t\t\t<li>Develop to the point where Railfrog.com becomes the first Railfrog site</li>\n\
     \t\t\t<li>Deploy beta version to users for feedback and testing</li>\n\
     \t\t</ol>\n\
     \t\t\t\n\
@@ -2897,11 +2897,11 @@ chunk_version_2:
     \t\t\n\
     \t\t<h2>Why me, why now?</h2>\n\
     \t\t\n\
-    \t\t<p><strong>I am not a programmer</strong>, but I am a designer/developer (among other things). I think something great like RailFrog will only come about from the efforts of a cooperative team of programmers, developers, \n\
+    \t\t<p><strong>I am not a programmer</strong>, but I am a designer/developer (among other things). I think something great like Railfrog will only come about from the efforts of a cooperative team of programmers, developers, \n\
     \t\tdesigners coming together to create something they can all be proud of. I&rsquo;d like to be a part of such a team.</p>\n\n\
     \t\t<p>I believe that Rails is the best framework for such an effort and that the convergence of people, technology and events, \n\
     \t\tis happening to make this an ideal time for this type of open-source effort.</p>\n\
-    \t\t\n    <p>Currently, I&rsquo;m one of the stewards of a niche <a class=\"xlink\" href=\"http://www.c3mediagroup.com\">media \n      company</a> and I represent (what I believe is) the core target user of \n      RailFrog. I wear many hats throughout the day (businessman, designer, videographer, \n      web developer, editor, writer, publisher, etc.) and have been desparately \n      looking for, and been frustrated in my efforts to find, a CMS that makes \n      me smile (<a class=\"xlink\" href=\"http://www.textpattern.com\">TextPattern</a> \n      has come closest). I want a solution that will help me create sites that \n      support our efforts, without having to get deeply mired in all the intricacies \n      of deployment, structure and all other complexities involved. I don&rsquo;t \n      believe a great solution exists yet.</p>\n\n\
+    \t\t\n    <p>Currently, I&rsquo;m one of the stewards of a niche <a class=\"xlink\" href=\"http://www.c3mediagroup.com\">media \n      company</a> and I represent (what I believe is) the core target user of \n      Railfrog. I wear many hats throughout the day (businessman, designer, videographer, \n      web developer, editor, writer, publisher, etc.) and have been desparately \n      looking for, and been frustrated in my efforts to find, a CMS that makes \n      me smile (<a class=\"xlink\" href=\"http://www.textpattern.com\">TextPattern</a> \n      has come closest). I want a solution that will help me create sites that \n      support our efforts, without having to get deeply mired in all the intricacies \n      of deployment, structure and all other complexities involved. I don&rsquo;t \n      believe a great solution exists yet.</p>\n\n\
     \t\t<p>I want to help create just such a solution.</p>\t\n\
     \t\t<h2>Acknowledgements</h2>\n\n\
     \t\n\
@@ -2910,7 +2910,7 @@ chunk_version_2:
     \t\t\tsupport via <a class=\"xlink\" href=\"http://www.textdrive.com\">TextDrive</a>, \n\
     \t\t\t<a href=\"mailto:rails@lists.rubyonrails.org\">Rails List</a> subscriber, etc.), there are those out \n\
     \t\t\tthere who are already well underway in their own Rails CMS development and adventures. For all of you: thanks, \n\
-    \t\t\tand I hope we can somehow consolidate efforts to make a great app (even if RailFrog falls by the wayside in favor of something better.)</li>\n\n\
+    \t\t\tand I hope we can somehow consolidate efforts to make a great app (even if Railfrog falls by the wayside in favor of something better.)</li>\n\n\
     \t\t\t<li><a class=\"xlink\" href=\"http://www.loudthinking.com/\">David Heinemeier Hansson</a> for conceiving, coding and evangelizing Rails.</li>\n\n\
     \t\t\t<li>Jason Fried and all the guys at <a class=\"xlink\" href=\"http://www.37signals.com\">37 Signals</a> for making some insanely great stuff (and for graciously putting up with my early support requests.)</li>\n\
     \t\t\t\n\
@@ -3079,9 +3079,9 @@ chunk_version_4:
   id: 4
   version: 1
   content: "      <div id=\"header\">\t\t\t\n\
-    \t\t<div id=\"logo\"><a href=\"http://www.railfrog.com\" title=\"RailFrog CMS\"><img src=\"/images/railfrog_logo2.png\" alt=\"RailFrog\"></a>\n\
+    \t\t<div id=\"logo\"><a href=\"http://www.railfrog.com\" title=\"Railfrog CMS\"><img src=\"/images/railfrog_logo2.png\" alt=\"Railfrog\"></a>\n\
     \t\t</div>\n\
-    \t\t<h1>RailFrog CMS</h1>\n\
+    \t\t<h1>Railfrog CMS</h1>\n\
     \t\t<%%= render_chunk :path => '/layout/nav_main' %>\n\
     \t  </div>      \n"
   created_at: 2007-05-20 18:33:38 +04:00
@@ -3111,9 +3111,9 @@ chunk_version_14:
     <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">   
     <head>
       <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />    
-      <title>RailFrog / CMS Ridin&rsquo; on Rails</title>   
+      <title>Railfrog / CMS Ridin&rsquo; on Rails</title>   
       <meta name="keywords" content="Rails, Ruby, Ruby on Rails, CMS" />
-      <meta name="description" content="RailFrog is a user-friendly, open source content management system for websites built using Ruby on Rails" />
+      <meta name="description" content="Railfrog is a user-friendly, open source content management system for websites built using Ruby on Rails" />
       <link rel="stylesheet" href="/styles/base.css" type="text/css" media="screen" />
       <link rel="Start" title="Home" href="/" />   
     </head>

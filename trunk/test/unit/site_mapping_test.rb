@@ -157,7 +157,7 @@ class SiteMappingTest < Test::Unit::TestCase
 
     #FIXME: think about this point - any better approches?
     exc = assert_raise( ActiveRecord::RecordInvalid) { @root.create_child({ :path_segment => 'child' })  }
-    assert_equal 'Validation failed: Path segment has already been taken', exc.message
+    assert /Path segment has already been taken/ =~ exc.message
 
     assert_equal @count+2, SiteMapping.count
 

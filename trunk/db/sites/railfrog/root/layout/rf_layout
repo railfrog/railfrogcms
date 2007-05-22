@@ -2,9 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">   
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />    
-  <title>RailFrog / CMS Ridin&rsquo; on Rails</title>   
+  <title>Railfrog / CMS Ridin&rsquo; on Rails</title>   
   <meta name="keywords" content="Rails, Ruby, Ruby on Rails, CMS" />
-  <meta name="description" content="RailFrog is a user-friendly, open source content management system for websites built using Ruby on Rails" />
+  <meta name="description" content="Railfrog is a user-friendly, open source content management system for websites built using Ruby on Rails" />
   <link rel="stylesheet" href="/styles/base.css" type="text/css" media="screen" />
   <link rel="Start" title="Home" href="/" />   
 </head>

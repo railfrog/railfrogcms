@@ -55,7 +55,7 @@ class Railfrog::SiteDefinitionLoader
           parse_definition(site_mapping, node)
         end
 
-        Railfrog::create_chunk(site_mapping, content) if content
+        site_mapping.create_chunk_version(content) if content
       end
     }
   end
@@ -79,7 +79,7 @@ class Railfrog::SiteDefinitionLoader
       site_mapping.is_internal = node[RF_INTERANAL_TAG]
       site_mapping.save!
     else
-      Railfrog::set_internal_if_parent_is_internal site_mapping
+      site_mapping.set_internal_if_parent_is_internal
     end
   end
 

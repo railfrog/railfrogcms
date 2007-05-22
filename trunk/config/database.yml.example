@@ -1,7 +1,7 @@
 # RailFrog sample database config. If you use the same login for dev,
 # test and production then you can set username and password here and
 # re-use it on the other blocks.  See the README for notes on creating
-# your databases.  The RailFrog team are currently supporting two
+# your databases.  The Railfrog team are currently supporting two
 # databases: PostgreSQL 7.4+ and MySQL 4.x+.  Specify 'adapter' as
 # 'postgresql' or 'mysql'.
 

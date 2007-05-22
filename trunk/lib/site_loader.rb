@@ -1,4 +1,45 @@
+require 'site_mapping'
+require 'chunk'
 require File.dirname(__FILE__) + '/definition_loader'
+
+class SiteMapping < ActiveRecord::Base
+  def set_internal_if_parent_is_internal
+    if self.parent_mapping.is_internal
+      Railfrog::info "      '#{self.full_path}' is internal because of internal parent"
+      self.is_internal = true
+      self.save!
+    end
+  end
+
+  def create_chunk_version(content)
+    Chunk.find_or_create_by_site_mapping_and_content(self, content) if self.chunk.nil?
+  end
+end
+
+class Chunk < ActiveRecord::Base
+  def self.find_or_create_by_site_mapping_and_content(site_mapping, content)
+
+    if site_mapping.chunk_id
+      c = Chunk.find(site_mapping.chunk_id)
+      next_version = ChunkVersion.next_version(c.id)
+      c.live_version = next_version
+    else
+      filename = site_mapping.path_segment
+      mime_type = MimeType.find_by_file_name(filename)
+
+      c = Chunk.create :description => filename, :live_version => 1, :mime_type_id => mime_type.id
+      c.save
+      site_mapping.chunk_id = c.id 
+      site_mapping.save
+
+      next_version = 1
+    end
+
+    c.chunk_versions.create :version => next_version, :base_version => 0, :content => content, :comments => filename
+
+    c
+  end
+end
 
 module Railfrog
 
@@ -29,6 +70,7 @@ module Railfrog
       end
     end
 
+    private
     def self.load_files(parent = SiteMapping.find_root)
       Dir.foreach(File.join(@@path, parent.full_path)) {|f|
         if f != '.' && f != '..' && !SKIP_LIST.include?(f)
@@ -48,11 +90,9 @@ module Railfrog
       file = File.join(@@path, site_mapping.full_path)
 
       Railfrog::info "    loading content of the chunk from file: '#{file}'"
-      content = Railfrog::load_file(file)
-      Railfrog::create_chunk(site_mapping, content)
-      Railfrog::set_internal_if_parent_is_internal(site_mapping)
+      site_mapping.create_chunk_version(Railfrog::load_file(file))
+      site_mapping.set_internal_if_parent_is_internal
     end
-
   end
 
   def self.info(message)
@@ -63,16 +103,4 @@ module Railfrog
     File.new(file).binmode.read
   end
 
-  def self.set_internal_if_parent_is_internal(site_mapping)
-    parent = SiteMapping.find(site_mapping.parent_id)
-    if parent.is_internal
-      Railfrog::info "      '#{site_mapping.full_path}' is internal because of internal parent"
-      site_mapping.is_internal = true
-      site_mapping.save!
-    end
-  end
-
-  def self.create_chunk(site_mapping, content)
-    Chunk.find_or_create_by_site_mapping_and_content(site_mapping, content) if site_mapping.chunk.nil?
-  end
 end

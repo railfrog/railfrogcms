@@ -5,7 +5,7 @@ index_first_version:
   version: 1
   content: |
     <html>
-      <title>RailFrog</title>
+      <title>Railfrog</title>
       <body>
         <a href="/admin">Admin pages</a>
       </body>
@@ -19,9 +19,9 @@ index_second_version:
   version: 2
   content: |
     <html>
-      <title>Welcome to RailFrog!</title>
+      <title>Welcome to Railfrog!</title>
       <body>
-        <h1>Welcome to RailFrog CMS</h1>
+        <h1>Welcome to Railfrog CMS</h1>
         <a href="/admin">Admin pages</a>
       </body>
     </html>
