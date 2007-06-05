@@ -384,10 +384,10 @@ class SiteMappingTest < Test::Unit::TestCase
     assert_not_nil sm.parent_mapping.parent_mapping.instance_variables.find {|v| v == '@mapping_labels'}
 
     assert_equal 4, sm.mapping_labels.size
-    assert_equal mapping_labels(:logo_label1), sm.mapping_labels[0]
-    assert_equal mapping_labels(:logo_label2), sm.mapping_labels[1]
-    assert_equal mapping_labels(:logo_label3), sm.mapping_labels[2]
-    assert_equal mapping_labels(:logo_label4), sm.mapping_labels[3]
+    assert sm.mapping_labels.include?(mapping_labels(:logo_label1))
+    assert sm.mapping_labels.include?(mapping_labels(:logo_label2))
+    assert sm.mapping_labels.include?(mapping_labels(:logo_label3))
+    assert sm.mapping_labels.include?(mapping_labels(:logo_label4))
 
     assert_equal 0, sm.parent_mapping.mapping_labels.size
 
