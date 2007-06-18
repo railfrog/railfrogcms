@@ -42,13 +42,13 @@ class SiteMapperControllerTest < Test::Unit::TestCase
   def test_
     get :show_chunk, :path => ['']
     assert_response :success
-    assert_select 'title', { :text => 'RailFrog / CMS Ridin&rsquo; on Rails', :count => 1 }
+    assert_select 'title', { :text => 'Railfrog / CMS Ridin&rsquo; on Rails', :count => 1 }
   end
 
   def test_index_html
     get :show_chunk, :path => ['index.html']
     assert_response :success
-    assert_select 'title', { :text => 'RailFrog / CMS Ridin&rsquo; on Rails', :count => 1 }
+    assert_select 'title', { :text => 'Railfrog / CMS Ridin&rsquo; on Rails', :count => 1 }
     assert_select 'li.first-child a', 'About'
     assert_select 'h2', 'A modest proposal'
   end
