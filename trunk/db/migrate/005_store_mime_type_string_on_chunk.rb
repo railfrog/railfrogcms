@@ -15,6 +15,6 @@ class StoreMimeTypeStringOnChunk < ActiveRecord::Migration
   end
 
   def self.down
-    drop_column :chunks, :mime_type_str
+    remove_column :chunks, :mime_type_str
   end
 end
