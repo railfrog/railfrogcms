@@ -1,0 +1,10 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+admin:
+  id: 1
+  first_name: Test
+  last_name: Tester
+  email: test@test.com
+  password: a94a8fe5ccb19ba61c4c0873d391e987982fbbd3
+  created_at: <%= 1.month.ago.to_formatted_s(:db) %>
+  updated_at: <%= 1.week.ago.to_formatted_s(:db) %>
+
