@@ -3,45 +3,47 @@ class SiteMapperController < ApplicationController
 
   helper_method :render_chunk
 
+  # retrieve chunk for :path (and optional :version), apply appropriate layout if specified, set content-type and render
+  # params[:path] - # array of path segments
+  # params[:version] - if specified, retrieve this version, otherise retrieve version marked as live
   def show_chunk
-
     path = params[:path]
-
-    logger.info "Looking for site_mapping for #{path.join('/')} path"
+    logger.info "Looking for site_mapping for path: \'#{path.join('/')}\'"
 
     @mapping, @rf_labels, @chunk_version = SiteMapping.find_mapping_and_labels_and_chunk(path, params[:version], true)
-
     if @mapping.nil? || @mapping.chunk.nil?
-      unless @rf_labels.nil?
-        logger.info "Chunk is not found for path: #{path.join('/')}. Trying to get index-page: #{@rf_labels['index-page']} ..."
-        path.push @rf_labels['index-page']
-
-        @mapping, @rf_labels, @chunk_version = SiteMapping.find_mapping_and_labels_and_chunk(path, params[:version], true)
-      end
+      # FIXME: do *not* return /foo/bar/index.html for /foo/bar -- only for /foo/bar/ ; use redirect if /foo/bar is requested
+      index_page = @rf_labels['index_page'] unless @rf_labels.nil?
+      index_page = "index.html" if index_page.nil? || index_page.empty?
+      logger.info "Chunk not found for path: \'#{path.join('/')}\'. Trying to get index-page: \'#{index_page}\' ..."
+      path.push index_page
+      @mapping, @rf_labels, @chunk_version = SiteMapping.find_mapping_and_labels_and_chunk(path, params[:version], true)
     end
-
-    if @mapping && @mapping.chunk
+    logger.debug "mapping for path  \'#{path.join('/')}\' is \'#{@mapping}\'"
+    if @mapping && @mapping.chunk     # this is a data node, since a folder node will not have an associated chunk
       @chunk_content = @mapping.chunk.live_chunk_version.content
 
-      # options for sending chunk content back to user
+      # options for sending chunk content back to user -- see docs for #render
       data_options = {:disposition => 'inline'}
 
-      if @mapping.chunk.mime_type
-        mime_type = @mapping.chunk.mime_type.mime_type
+      if @mapping.chunk.mime_type_str && !@mapping.chunk.mime_type_str.empty?
+        mime_type_str = @mapping.chunk.mime_type_str
       else
-        mime_type = "text/html"
+        mime_type_str = "text/html"
       end
+      logger.debug "mime_type_str is \'#{mime_type_str}\'"
 
-      data_options[:type] = mime_type
+      data_options[:type] = mime_type_str
       data_options[:filename] = params[:path].last
 
-      if mime_type.include?("html") && params[:layout] != 'false' then
-        # it is a html doc, then render our data inside the layout
+      if mime_type_str.include?("html") && params[:layout] != 'false' then
+        # if it is an html doc, then render our data inside the layout
         layout = @rf_labels['layout']
+        logger.debug("rf_labels sets layout to #{layout}")
         rendering_options = {}
         if layout then
           if layout =~ /mapping:(.+)/
-            logger.info "Looking for the layout..."
+            logger.debug "Looking for the layout..."
             layout_mapping = SiteMapping.find_mapping($1.split('/'))
 
             if layout_mapping && layout_mapping.chunk

@@ -70,3 +70,6 @@ class SiteMapperControllerTest < Test::Unit::TestCase
   end
 end
 
+def test_create_chunk  # TODO implement
+  true
+end

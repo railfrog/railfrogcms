@@ -4,10 +4,13 @@
 
 <!--[form:post]-->
 
-<p><label for="site_mapping_path_segment">File Name</label><br/>
-<%= text_field 'site_mapping', 'path_segment'  %></p>
+<p><label for="site_mapping_path_segment">Document Name</label><br/>
+<%= text_field 'site_mapping', 'path_segment'  %><br/>
+&nbsp; &nbsp; the document name will be the last part of the URL for this document</p>
+
 <p><label for="site_mapping_is_internal">Is Internal</label><br/>
-<%= check_box 'site_mapping', 'is_internal'  %></p>
+<%= check_box 'site_mapping', 'is_internal'  %><br/>
+&nbsp; &nbsp; internal documents can be included by layouts but not viewed directly</p>
 <p><label for="chunk_version_description">Document Description</label><br/>
 <%= text_field 'chunk', 'description'  %></p>
 <p><label for="chunk_version_content">Content</label><br/>

@@ -25,3 +25,13 @@ module RailfrogAdminHelper
     tree
   end
 end
+
+def humanize_markup_name(markup)
+  if markup.nil?
+    '(unknown)'
+  elsif markup.downcase == 'html'
+    'HTML'
+  else
+    markup.humanize
+  end
+end
