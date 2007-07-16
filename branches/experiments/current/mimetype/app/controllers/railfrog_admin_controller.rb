@@ -20,7 +20,7 @@ class RailfrogAdminController < ApplicationController
 
   def show
     if mapping_id = params[:mapping_id] then
-      @site_mapping = SiteMapping.find(mapping_id)
+      @site_mapping = SiteMapping.find(mapping_id, :include => :chunk)
     else
       @site_mapping = SiteMapping.root
     end

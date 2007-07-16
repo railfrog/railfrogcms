@@ -12,8 +12,7 @@ require 'mime/types'
 # Rails 1.2.x has neither a comprehensive list of types nor a lookup mechanism by extension - so we
 # fake them out using the MIME::Type (gem) code while keeping Mime::Type as the primary representation.
 class MimeTypeTools
-
-  @@DEFAULT_MIME_TYPE = nil
+  @@custom_types_loaded = false
 
   # returns: Mime::Type or nil    
   def self.find_by_file_name(filename)
@@ -21,10 +20,7 @@ class MimeTypeTools
   end
   
   def self.find_default_mime_type
-    if @@DEFAULT_MIME_TYPE.nil?
-      @@DEFAULT_MIME_TYPE = Mime::Type.lookup("text/html")
-    end
-    @@DEFAULT_MIME_TYPE
+    Mime::Type.lookup("text/html")
   end
 
   # returns: Mime::Type or nil
@@ -45,7 +41,7 @@ class MimeTypeTools
     mt = MIME::Type.new(string) do |t|
       t.extensions = (symbol) ? symbol.to_s.to_a : []
       t.extensions.concat(extension_synonyms) unless extension_synonyms == nil
-      t.registered = false
+      t.registered = false    # This is not an officially registered IANA mime type
     end
     MIME::Types.add(mt)
     # Now add to the Rails Mime::Type registry
@@ -54,15 +50,11 @@ class MimeTypeTools
   end
 
 
-  @@custom_types_loaded = false
-
-
-
   private
 
   def self.lazy_load
     if !@@custom_types_loaded
-      # See thread http://www.mail-archive.com/markdown-discuss@six.pairlist.net/msg00654.html
+      # See thread http://www.mail-archive.com/markdown-discuss@six.pairlist.net/msg00654.html for list of Markdown extensions
       register("text/x-markdown", :markdown, [], 
                ["md", "mdown", "mkdwn", "mark","markdn", "mdtext", "mdml", "mkd"])
       register("text/x-textile", :textile, [])
