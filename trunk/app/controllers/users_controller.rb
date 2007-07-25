@@ -29,7 +29,7 @@ class UsersController < ApplicationController
     session[:first_name] = nil
     session[:last_name] = nil
     flash[:notice] = 'Logout Sucessful'
-    redirect_to :controller => 'index'
+    redirect_to ''
   end
   
   # User Administration

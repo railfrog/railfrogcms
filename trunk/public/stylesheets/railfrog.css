@@ -137,3 +137,7 @@ a.internal {
   color: #6BB618;
   font-style: italic;
 }
+
+#logout {
+  float:right;
+}
