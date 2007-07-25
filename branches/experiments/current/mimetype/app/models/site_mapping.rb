@@ -98,7 +98,7 @@ class SiteMapping < ActiveRecord::Base
 
     conditions = [conditions.join(' AND ')] + bindings
 
-    include = [{ :chunk => [:live_chunk_version, :mime_type] }, :mapping_labels]
+    include = [{ :chunk => [:live_chunk_version] }, :mapping_labels]
     include << parent_mappings if parent_mappings
 
     find(:first,

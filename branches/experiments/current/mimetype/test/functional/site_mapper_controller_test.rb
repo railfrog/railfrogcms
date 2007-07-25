@@ -5,7 +5,7 @@ require 'site_mapper_controller'
 class SiteMapperController; def rescue_action(e) raise e end; end
 
 class SiteMapperControllerTest < Test::Unit::TestCase
-  FIXTURES = ['site_mappings', 'mapping_labels', 'chunks', 'chunk_versions', 'mime_types', 'file_extensions']
+  FIXTURES = ['site_mappings', 'mapping_labels', 'chunks', 'chunk_versions']
 
   def setup
     @controller = SiteMapperController.new
