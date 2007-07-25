@@ -11,10 +11,10 @@ Railfrog is a lightweight Content Management System for building websites.
 == Loading site content ==
 
 To load the Railfrog default site, use:
-{{{$ rake rf:load_site SITE=db/sites/railfrog}}}
+{{{$ rake railfrog:site:load SITE=db/sites/railfrog}}}
 
 Note: if you'd like to load site content of your own to the Railfrog database use 
-{{{$ rake rf:load_site SITE=<path-to-your-site>}}}
+{{{$ rake railfrog:site:load SITE=<path-to-your-site>}}}
 
 == Starting Railfrog ==
 
