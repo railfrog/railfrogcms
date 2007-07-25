@@ -1,3 +1,4 @@
+require 'fileutils'
 require File.dirname(__FILE__) + '/../test_helper'
 require File.dirname(__FILE__) + '/../../lib/site_loader'
 require File.dirname(__FILE__) + '/../../lib/definition_loader'
@@ -94,6 +95,20 @@ class SiteDefinitionLoaderTest < Test::Unit::TestCase
     dir = File.join("db/sites/railfrog")
     assert_nothing_raised { SiteLoader.load_site(dir)  }
 
+    subtest_railfrog_site
+  end
+
+  def test_dump_site
+    dir = File.join("db/sites/railfrog")
+    assert_nothing_raised { SiteLoader.load_site(dir)  }
+    assert_nothing_raised { SiteLoader.dump_site(dir + "_temp")  }
+    assert_nothing_raised { SiteLoader.load_site(dir + "_temp")  }
+
+    subtest_railfrog_site
+#    FileUtils.rm_rf(dir + "_temp")
+  end
+
+  def subtest_railfrog_site
     assert_equal 20, SiteMapping.count
     assert_equal 5, MappingLabel.count
     assert_equal 16, Chunk.count
