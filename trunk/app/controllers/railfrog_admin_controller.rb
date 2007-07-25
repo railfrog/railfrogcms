@@ -222,7 +222,7 @@ class RailfrogAdminController < ApplicationController
 
         @chunk_version.base_version = @old_chunk_version.version
 
-        if params[:put][:live] == "1" then
+        if params[:put_live] == "1" then
           @chunk.live_version = @chunk_version.next_version
         end
 
@@ -319,7 +319,7 @@ class RailfrogAdminController < ApplicationController
       @chunk_version = @chunk.chunk_versions.build(params[:chunk_version])
 
       begin
-        if params[:put][:live] == "1" then
+        if params[:put_live] == "1" then
           @chunk.live_version = @chunk_version.next_version
           expire SiteMapping.find(params[:site_mapping][:id])
         end
