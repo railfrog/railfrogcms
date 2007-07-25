@@ -180,19 +180,17 @@ class RailfrogAdminController < ApplicationController
     @chunk.site_mappings << @site_mapping
     begin
       @chunk.live_version = 1
-      mt = MimeTypeTools.find_by_file_name(params[:site_mapping][:path_segment])
-      mt_fixme = MimeType.find_by_file_name(params[:site_mapping][:path_segment])
-      @chunk.mime_type_id = mt_fixme
-      @chunk.mime_type_str = mt.to_s
+      mime_type = MimeTypeTools.find_by_file_name(params[:site_mapping][:path_segment])
+      @chunk.mime_type_str = mime_type.to_s
       @chunk.save!
       render :update do |page|
         page.redirect_to :action => 'index'
       end
-###    rescue
-###      render :update do |page|
-###        page.replace_html 'content', :partial => 'new_chunk'
-###        page.show 'content'
-###      end
+    rescue
+      render :update do |page|
+        page.replace_html 'content', :partial => 'new_chunk'
+        page.show 'content'
+      end
     end
   end
 
@@ -272,7 +270,7 @@ class RailfrogAdminController < ApplicationController
       render :action => 'upload'
     else
       file_name = params['chunk_version']['tmp_file'].original_filename.gsub(/[^a-zA-Z0-9.]/, '_') # This makes sure filenames are sane
-      mime_type = MimeTypeTools.find_by_file_name(file_name).to_s
+      mime_type = MimeTypeTools.find_by_file_name(file_name)
       params['chunk_version']['content'] = params['chunk_version']['tmp_file'].read
       params['chunk_version'].delete('tmp_file')
 
@@ -287,7 +285,7 @@ class RailfrogAdminController < ApplicationController
 
       begin
         @chunk.live_version = 1
-        @chunk.mime_type_id = mime_type.id ### TODO:CLEANUP
+        @chunk.mime_type_str = mime_type.to_s
         @chunk.save!
 
         redirect_to :action => 'index'
@@ -316,8 +314,7 @@ class RailfrogAdminController < ApplicationController
       render :action => 'upload_new_version'
     else
       file_name = params['chunk_version']['tmp_file'].original_filename.gsub(/[^a-zA-Z0-9.]/, '_') # This makes sure filenames are sane
-      mime_type_fixme = MimeType.find_by_file_name(file_name)
-      mime_type = MimeTypeTools.find_by_file_name(file_name).to_s
+      mime_type = MimeTypeTools.find_by_file_name(file_name)
       params['chunk_version']['content'] = params['chunk_version']['tmp_file'].read
       params['chunk_version'].delete('tmp_file')
 
@@ -330,9 +327,8 @@ class RailfrogAdminController < ApplicationController
           expire SiteMapping.find(params[:site_mapping][:id])
         end
 
-        @chunk.mime_type_id = mime_type_fixme.id     ### TODO:CLEANUP
+        @chunk.mime_type_str = mime_type.to_s
         @chunk.save!
-
 
         redirect_to :action => 'index'
       rescue
