@@ -1,3 +1,4 @@
+require 'fileutils'
 require 'site_mapping'
 require 'chunk'
 require File.dirname(__FILE__) + '/definition_loader'
@@ -93,6 +94,53 @@ module Railfrog
       site_mapping.create_chunk_version(Railfrog::load_file(file))
       site_mapping.set_internal_if_parent_is_internal
     end
+
+    def self.dump_site(path)
+      root = SiteMapping.find_root
+
+      site_dir = File.join(path, SITE_DIR)
+      root.full_set.each { |sm|
+        puts "Dumping #{sm.full_path}"
+        if sm.chunk_id.nil? 
+          # directory
+          FileUtils.mkdir_p(File.join(site_dir, sm.full_path))
+        else 
+          # file
+          parts = sm.full_path.split(SiteMapping::FILE_SEPARATOR)
+          dir = File.join(site_dir, parts[0...-1].join(SiteMapping::FILE_SEPARATOR))
+          file_name = parts.pop
+          FileUtils.mkdir_p(dir)
+          File.open(File.join(dir, file_name), "wb").write(sm.chunk.find_version.content)
+        end
+      }
+
+      dump_site_yml(path)
+    end
+    
+    private 
+    def self.dump_site_yml(path)
+      File.open(File.join(path, SITE_YML), "w").write(site_yml.to_yaml)
+    end
+
+    def self.site_yml(mapping = SiteMapping.find_root, hash = {})
+      kids = mapping.direct_children.inject({}) { |h, kid|
+        site_yml(kid, h)
+        h
+      }
+      unless mapping.mapping_labels.empty?
+        kids[SiteDefinitionLoader::RF_LABELS_TAG] = mapping.mapping_labels.inject({}) { |ls, l| ls[l.name] = l.value; ls }
+      end
+
+
+      if !mapping.root? && mapping.is_internal != mapping.parent_mapping.is_internal
+        kids[SiteDefinitionLoader::RF_INTERNAL_TAG] = mapping.is_internal
+      end
+
+      hash[mapping.root? ? SITE_DIR : mapping.path_segment] = kids unless kids.empty?
+
+      hash
+    end
+    
   end
 
   def self.info(message)

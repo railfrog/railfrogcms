@@ -14,7 +14,7 @@ class Railfrog::SiteDefinitionLoader
   #     index-page=index.html
   #     layout=chunk:1
   RF_LABELS_TAG = "rf-labels"
-  RF_INTERANAL_TAG = "rf-internal"
+  RF_INTERNAL_TAG = "rf-internal"
 
   def self.load_definition(path, file)
     @@path = path
@@ -34,7 +34,7 @@ class Railfrog::SiteDefinitionLoader
     end
 
     parent_node.each { |path_segment, node|
-      next if path_segment == RF_LABELS_TAG || path_segment == RF_INTERANAL_TAG
+      next if path_segment == RF_LABELS_TAG || path_segment == RF_INTERNAL_TAG
 
       site_mapping = parent_site_mapping.find_or_create_child(:path_segment => path_segment)
       Railfrog::info "    processing '#{site_mapping.full_path}'"
@@ -74,9 +74,9 @@ class Railfrog::SiteDefinitionLoader
   end
 
   def self.load_is_internal(site_mapping, node)
-    if node.class == Hash && node.has_key?(RF_INTERANAL_TAG)
+    if node.class == Hash && node.has_key?(RF_INTERNAL_TAG)
       Railfrog::info "      '#{site_mapping.full_path}' is internal"
-      site_mapping.is_internal = node[RF_INTERANAL_TAG]
+      site_mapping.is_internal = node[RF_INTERNAL_TAG]
       site_mapping.save!
     else
       site_mapping.set_internal_if_parent_is_internal
