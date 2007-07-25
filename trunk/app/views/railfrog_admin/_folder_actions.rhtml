@@ -4,8 +4,16 @@
       :url => {:action => 'new_folder', :parent_id => site_mapping}) %>
   </li>
   <li>
-    <%= link_to_remote('New document',
-      :url => {:action => 'new_chunk', :parent_id => site_mapping}) %>
+  <li>
+    <%= link_to_remote('New Markdown Document',
+      :url => {:action => 'new_chunk', :parent_id => site_mapping, :markup => :markdown}) %>
+  </li>
+  <li>
+    <%= link_to_remote('New Textile Document',
+      :url => {:action => 'new_chunk', :parent_id => site_mapping, :markup => :textile}) %>
+  </li>
+    <%= link_to_remote('New HTML Document',
+      :url => {:action => 'new_chunk', :parent_id => site_mapping, :markup => :html}) %>
   </li>
   <li>
     <%= link_to_remote('Upload file',

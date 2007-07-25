@@ -4,7 +4,6 @@ class Chunk < ActiveRecord::Base
   has_one :live_chunk_version,
     :class_name => 'ChunkVersion',
     :foreign_key => 'chunk_id', :conditions => 'chunk_versions.version = chunks.live_version'
-  belongs_to :mime_type
 
 
   def find_version(version = nil)

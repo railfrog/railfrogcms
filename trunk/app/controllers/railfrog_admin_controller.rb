@@ -20,7 +20,7 @@ class RailfrogAdminController < ApplicationController
 
   def show
     if mapping_id = params[:mapping_id] then
-      @site_mapping = SiteMapping.find(mapping_id, :include => [:chunk => [:mime_type]])
+      @site_mapping = SiteMapping.find(mapping_id, :include => :chunk)
     else
       @site_mapping = SiteMapping.root
     end
@@ -36,7 +36,7 @@ class RailfrogAdminController < ApplicationController
         page.replace_html 'chunk_version_summary', :partial => 'chunk_version_summary'
         page.replace_html 'context_menu', :partial => 'chunk_actions'
         page.replace_html 'content', :partial => 'chunk_content',
-          :locals => { :file_name => @file_name, :mime_type => @chunk.mime_type.mime_type }
+          :locals => { :file_name => @file_name, :mime_type => @chunk.mime_type_str }
         page.show 'chunk_version_summary'
         page.show 'content'
       end
@@ -159,13 +159,14 @@ class RailfrogAdminController < ApplicationController
   def new_chunk
     @site_mapping = SiteMapping.new
     @parent_id = params[:parent_id]
+    @markup = params[:markup]
     @chunk = Chunk.new
     @chunk_version = ChunkVersion.new
-    @use_xinha_editor = true
+    @use_xinha_editor = (@markup == 'html')
 
     render :update do |page|
       page.replace_html 'content', :partial => 'new_chunk'
-      page << XINHA_RUNNER_SCRIPT
+      page << XINHA_RUNNER_SCRIPT if @use_xinha_editor
       page.show 'content'
     end
   end
@@ -179,7 +180,8 @@ class RailfrogAdminController < ApplicationController
     @chunk.site_mappings << @site_mapping
     begin
       @chunk.live_version = 1
-      @chunk.mime_type = MimeType.find_by_file_name(params[:site_mapping][:path_segment])
+      mime_type = MimeTypeTools.find_by_file_name(params[:site_mapping][:path_segment])
+      @chunk.mime_type_str = mime_type.to_s
       @chunk.save!
       render :update do |page|
         page.redirect_to :action => 'index'
@@ -194,6 +196,7 @@ class RailfrogAdminController < ApplicationController
 
   def edit_chunk
     @use_xinha_editor = params[:source] ? false : true
+    # FIXME: switch off xinha if @markup is not 'html'
     @site_mapping = SiteMapping.find(params[:site_mapping_id])
     @chunk_version = @old_chunk_version = ChunkVersion.find(params[:chunk_version_id])
     @chunk = @chunk_version.chunk
@@ -267,7 +270,7 @@ class RailfrogAdminController < ApplicationController
       render :action => 'upload'
     else
       file_name = params['chunk_version']['tmp_file'].original_filename.gsub(/[^a-zA-Z0-9.]/, '_') # This makes sure filenames are sane
-      mime_type = MimeType.find_by_file_name(file_name)
+      mime_type = MimeTypeTools.find_by_file_name(file_name)
       params['chunk_version']['content'] = params['chunk_version']['tmp_file'].read
       params['chunk_version'].delete('tmp_file')
 
@@ -282,7 +285,7 @@ class RailfrogAdminController < ApplicationController
 
       begin
         @chunk.live_version = 1
-        @chunk.mime_type_id = mime_type.id
+        @chunk.mime_type_str = mime_type.to_s
         @chunk.save!
 
         redirect_to :action => 'index'
@@ -311,7 +314,7 @@ class RailfrogAdminController < ApplicationController
       render :action => 'upload_new_version'
     else
       file_name = params['chunk_version']['tmp_file'].original_filename.gsub(/[^a-zA-Z0-9.]/, '_') # This makes sure filenames are sane
-      mime_type = MimeType.find_by_file_name(file_name)
+      mime_type = MimeTypeTools.find_by_file_name(file_name)
       params['chunk_version']['content'] = params['chunk_version']['tmp_file'].read
       params['chunk_version'].delete('tmp_file')
 
@@ -324,9 +327,8 @@ class RailfrogAdminController < ApplicationController
           expire SiteMapping.find(params[:site_mapping][:id])
         end
 
-        @chunk.mime_type_id = mime_type.id
+        @chunk.mime_type_str = mime_type.to_s
         @chunk.save!
-
 
         redirect_to :action => 'index'
       rescue
