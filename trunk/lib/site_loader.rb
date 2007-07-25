@@ -100,7 +100,7 @@ module Railfrog
 
       site_dir = File.join(path, SITE_DIR)
       root.full_set.each { |sm|
-        puts "Dumping #{sm.full_path}"
+        Railfrog::info "Dumping #{sm.full_path}"
         if sm.chunk_id.nil? 
           # directory
           FileUtils.mkdir_p(File.join(site_dir, sm.full_path))
@@ -110,7 +110,7 @@ module Railfrog
           dir = File.join(site_dir, parts[0...-1].join(SiteMapping::FILE_SEPARATOR))
           file_name = parts.pop
           FileUtils.mkdir_p(dir)
-          File.open(File.join(dir, file_name), "wb").write(sm.chunk.find_version.content)
+          File.open(File.join(dir, file_name), "wb") { |f| f.write(sm.chunk.find_version.content) }
         end
       }
 
@@ -119,7 +119,8 @@ module Railfrog
     
     private 
     def self.dump_site_yml(path)
-      File.open(File.join(path, SITE_YML), "w").write(site_yml.to_yaml)
+      Railfrog::info "Dumping #{SITE_YML}"
+      File.open(File.join(path, SITE_YML), "w") { |f| f.write(site_yml.to_yaml) }
     end
 
     def self.site_yml(mapping = SiteMapping.find_root, hash = {})
