@@ -105,7 +105,7 @@ class SiteDefinitionLoaderTest < Test::Unit::TestCase
     assert_nothing_raised { SiteLoader.load_site(dir + "_temp")  }
 
     subtest_railfrog_site
-#    FileUtils.rm_rf(dir + "_temp")
+    FileUtils.rm_rf(dir + "_temp")
   end
 
   def subtest_railfrog_site
