@@ -4,7 +4,6 @@
       :url => {:action => 'new_folder', :parent_id => site_mapping}) %>
   </li>
   <li>
-  <li>
     <%= link_to_remote('New Markdown Document',
       :url => {:action => 'new_chunk', :parent_id => site_mapping, :markup => :markdown}) %>
   </li>
@@ -12,6 +11,7 @@
     <%= link_to_remote('New Textile Document',
       :url => {:action => 'new_chunk', :parent_id => site_mapping, :markup => :textile}) %>
   </li>
+  <li>
     <%= link_to_remote('New HTML Document',
       :url => {:action => 'new_chunk', :parent_id => site_mapping, :markup => :html}) %>
   </li>
@@ -25,7 +25,7 @@
       :site_mapping_id => site_mapping}) %>
   </li>
 
-  <% unless site_mapping.root? then # not root %>
+  <% unless site_mapping.root? %>
   <li>
     <%= link_to_remote('Rename Folder',
       :url => {:action => 'rename_folder', :id => site_mapping}) %>
