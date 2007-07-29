@@ -25,6 +25,7 @@ namespace :railfrog do
       end
     end
 
+
     desc "Cleanup database"
     task :cleanup => :environment  do
       MappingLabel.delete_all
@@ -35,4 +36,21 @@ namespace :railfrog do
 
   end
 
+  namespace :fixtures do
+    desc "Dumps data from all tables to fixtures"
+    task :dump => :environment  do
+      SKIP_TABLES = %w{ schema_info }
+      (ActiveRecord::Base.connection.tables - SKIP_TABLES).each do |table|
+        begin
+          puts "Dumping data from the #{table} table"
+          Object.const_set("SourceRecord", Class.new(ActiveRecord::Base))
+          SourceRecord.set_table_name table
+          SourceRecord.to_fixture
+        rescue => exc
+          STDERR.puts exc.message
+          STDERR.puts exc.backtrace.join("\n")
+        end
+      end
+    end
+  end
 end
