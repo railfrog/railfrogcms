@@ -1,5 +1,16 @@
+require 'maruku'
 class SiteMapperController < ApplicationController
-  # FIXME - disabled caching #  caches_page :show_chunk
+=begin
+  helper_method :expire
+  
+  def expire(path)
+    expire_page :controller => 'site_mapper', 
+      :action => 'show_chunk',
+      :path => path.split('/')
+  end
+  caches_page :show_chunk
+=end  
+
 
   helper_method :render_chunk
 
@@ -27,7 +38,16 @@ class SiteMapperController < ApplicationController
       data_options = {:disposition => 'inline'}
 
       if @mapping.chunk.mime_type_str && !@mapping.chunk.mime_type_str.empty?
-        mime_type_str = @mapping.chunk.mime_type_str
+        if Mime::Type.lookup(@mapping.chunk.mime_type_str) == Mime::MARKDOWN 
+          mime_type_str = "text/html"
+	  begin
+            @chunk_content = Maruku.new(@chunk_content).to_html
+          rescue
+	    @chunk_content = "<p style='color:red'>Please install maruku gem</p>" + @chunk_content
+	  end
+        else 
+	  mime_type_str = @mapping.chunk.mime_type_str
+	end
       else
         mime_type_str = "text/html"
       end
@@ -36,7 +56,7 @@ class SiteMapperController < ApplicationController
       data_options[:type] = mime_type_str
       data_options[:filename] = params[:path].last
 
-      if mime_type_str.include?("html") && params[:layout] != 'false' then
+      if data_options[:type].include?("html") && params[:layout] != 'false' then
         # if it is an html doc, then render our data inside the layout
         layout = @rf_labels['layout']
         logger.debug("rf_labels sets layout to #{layout}")
