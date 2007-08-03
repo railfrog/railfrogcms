@@ -1,4 +1,5 @@
-require 'maruku'
+require 'rubygems'
+
 class SiteMapperController < ApplicationController
 =begin
   helper_method :expire
@@ -37,13 +38,22 @@ class SiteMapperController < ApplicationController
       # options for sending chunk content back to user -- see docs for #render
       data_options = {:disposition => 'inline'}
 
+      # TODO: Use Maruku as first choice, BlueCloth as fallback.
+      MimeTypeTools.lazy_load    # FIXME rename this method and init in env.rb
       if @mapping.chunk.mime_type_str && !@mapping.chunk.mime_type_str.empty?
         if Mime::Type.lookup(@mapping.chunk.mime_type_str) == Mime::MARKDOWN 
           mime_type_str = "text/html"
 	  begin
+            require 'maruku'
             @chunk_content = Maruku.new(@chunk_content).to_html
-          rescue
-	    @chunk_content = "<p style='color:red'>Please install maruku gem</p>" + @chunk_content
+          rescue LoadError => e    # FIXME: catch Maruku errors too
+	    msg =  "<p style='color:red'>We're sorry, the maruku gem has not been installed." 
+            msg += "The site administrator has been notified.<br/>"
+            msg += "Here is the unprocessed content:</p>"
+            msg += "<p><pre>"
+            msg += @chunk_content
+            msg += "</pre></p>"
+            @chunk_content = msg
 	  end
         else 
 	  mime_type_str = @mapping.chunk.mime_type_str
