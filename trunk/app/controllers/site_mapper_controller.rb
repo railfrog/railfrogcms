@@ -1,4 +1,5 @@
 require 'rubygems'
+require 'railfrog'
 
 class SiteMapperController < ApplicationController
 =begin
@@ -38,32 +39,16 @@ class SiteMapperController < ApplicationController
       # options for sending chunk content back to user -- see docs for #render
       data_options = {:disposition => 'inline'}
 
-      # TODO: Use Maruku as first choice, BlueCloth as fallback.
-      MimeTypeTools.lazy_load    # FIXME rename this method and init in env.rb
+      render_mt = Mime::HTML.to_str
       if @mapping.chunk.mime_type_str && !@mapping.chunk.mime_type_str.empty?
-        if Mime::Type.lookup(@mapping.chunk.mime_type_str) == Mime::MARKDOWN 
-          mime_type_str = "text/html"
-	  begin
-            require 'maruku'
-            @chunk_content = Maruku.new(@chunk_content).to_html
-          rescue LoadError => e    # FIXME: catch Maruku errors too
-	    msg =  "<p style='color:red'>We're sorry, the maruku gem has not been installed." 
-            msg += "The site administrator has been notified.<br/>"
-            msg += "Here is the unprocessed content:</p>"
-            msg += "<p><pre>"
-            msg += @chunk_content
-            msg += "</pre></p>"
-            @chunk_content = msg
-	  end
-        else 
-	  mime_type_str = @mapping.chunk.mime_type_str
-	end
-      else
-        mime_type_str = "text/html"
+        chunk_mt = Mime::Type.lookup(@mapping.chunk.mime_type_str).to_str    # Normalize in case of synonyms
+        render_mt = chunk_mt
+        tm = Railfrog::Transform::TransformManager.instance
+        tm.transform!(@chunk_content, chunk_mt, render_mt)    # may alter chunk_content and render_mt
       end
-      logger.debug "mime_type_str is \'#{mime_type_str}\'"
+      logger.debug "render_mt is \'#{render_mt}\'"
 
-      data_options[:type] = mime_type_str
+      data_options[:type] = render_mt
       data_options[:filename] = params[:path].last
 
       if data_options[:type].include?("html") && params[:layout] != 'false' then
@@ -83,6 +68,7 @@ class SiteMapperController < ApplicationController
             end
 
             @rf_labels["chunk_content"] = @chunk_content
+            @rf_labels["chunk-content"] = @chunk_content    # Allow either hyphen or underscore
           else
             rendering_options[:partial] = "chunk_content"
             rendering_options[:layout] = layout
