@@ -25,7 +25,7 @@ class SiteMapperController < ApplicationController
 
     @mapping, @rf_labels, @chunk_version = SiteMapping.find_mapping_and_labels_and_chunk(path, params[:version], true)
     if @mapping.nil? || @mapping.chunk.nil?
-      # FIXME: do *not* return /foo/bar/index.html for /foo/bar -- only for /foo/bar/ ; use redirect if /foo/bar is requested
+      # TODO: do *not* return /foo/bar/index.html for /foo/bar -- see ticket:182
       index_page = @rf_labels['index_page'] unless @rf_labels.nil?
       index_page = "index.html" if index_page.nil? || index_page.empty?
       logger.info "Chunk not found for path: \'#{path.join('/')}\'. Trying to get index-page: \'#{index_page}\' ..."

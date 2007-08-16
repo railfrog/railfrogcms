@@ -198,7 +198,7 @@ class RailfrogAdminController < ApplicationController
 
   def edit_chunk
     @use_xinha_editor = params[:source] ? false : true
-    # FIXME: switch off xinha if @markup is not 'html'
+    @use_xinha_editor = (params[:markup] == 'html') if @use_xinha_editor
     @site_mapping = SiteMapping.find(params[:site_mapping_id])
     @chunk_version = @old_chunk_version = ChunkVersion.find(params[:chunk_version_id])
     @chunk = @chunk_version.chunk
