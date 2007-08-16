@@ -180,7 +180,7 @@ class RailfrogAdminController < ApplicationController
     @chunk.site_mappings << @site_mapping
     begin
       @chunk.live_version = 1
-      mime_type = MimeTypeTools.find_by_file_name(params[:site_mapping][:path_segment])
+      mime_type = Railfrog::MimeType::Tools.find_by_file_name(params[:site_mapping][:path_segment])
       @chunk.mime_type_str = mime_type.to_str
       @chunk.mime_type_str = Mime::MARKDOWN.to_str if params[:markup] == 'markdown'
       @chunk.mime_type_str = Mime::TEXTILE.to_str if params[:markup] == 'textile'
@@ -272,7 +272,7 @@ class RailfrogAdminController < ApplicationController
       render :action => 'upload'
     else
       file_name = params['chunk_version']['tmp_file'].original_filename.gsub(/[^a-zA-Z0-9.]/, '_') # This makes sure filenames are sane
-      mime_type = MimeTypeTools.find_by_file_name(file_name)
+      mime_type = Railfrog::MimeType::Tools.find_by_file_name(file_name)
       params['chunk_version']['content'] = params['chunk_version']['tmp_file'].read
       params['chunk_version'].delete('tmp_file')
 
@@ -316,7 +316,7 @@ class RailfrogAdminController < ApplicationController
       render :action => 'upload_new_version'
     else
       file_name = params['chunk_version']['tmp_file'].original_filename.gsub(/[^a-zA-Z0-9.]/, '_') # This makes sure filenames are sane
-      mime_type = MimeTypeTools.find_by_file_name(file_name)
+      mime_type = Railfrog::MimeType::Tools.find_by_file_name(file_name)
       params['chunk_version']['content'] = params['chunk_version']['tmp_file'].read
       params['chunk_version'].delete('tmp_file')
 

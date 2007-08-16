@@ -1,4 +1,4 @@
-require 'mime_type_tools'
+require 'railfrog/mime_type/tools'
 
 module Railfrog
   module Transform

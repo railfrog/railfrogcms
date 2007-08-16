@@ -6,7 +6,6 @@ class TransformTest < Test::Unit::TestCase
 
   def test_transform_manager
     tm = Railfrog::Transform::TransformManager.instance
-    MimeTypeTools.lazy_load
     # Register a stupid transform to check the plumbing
     tm.register(Railfrog::Transform::BaseTransformer.new, Mime::JS, Mime::HTML)
     hello = "Hello"

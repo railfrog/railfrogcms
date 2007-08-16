@@ -1,8 +1,9 @@
+require 'railfrog'
+require 'railfrog/transform/base_transformer'
+
 module Railfrog
   module Transform
 
-    require 'mime_type_tools'
-    require 'railfrog/transform/base_transformer'
 
     # Maruku is a processor for Markdown content - see http://www.maruku.org/
     class MarukuTransformer < BaseTransformer
@@ -11,7 +12,6 @@ module Railfrog
         return nil if content.nil?
         new_content = nil
         new_out_mime_type = nil
-        MimeTypeTools.lazy_load
         # Only Markdown to HTML transformation is supported
         return content unless in_mime_type == Mime::MARKDOWN.to_str
         begin

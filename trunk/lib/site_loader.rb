@@ -26,7 +26,7 @@ class Chunk < ActiveRecord::Base
       c.live_version = next_version
     else
       filename = site_mapping.path_segment
-      mime_type = MimeTypeTools.find_by_file_name(filename)
+      mime_type = Railfrog::MimeType::Tools.find_by_file_name(filename)
 
       c = Chunk.create :description => filename, :live_version => 1, :mime_type_str => mime_type.to_s
       c.save
