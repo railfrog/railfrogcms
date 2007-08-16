@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+  map.from_plugin :railfrog
+
   # The priority is based upon order of creation: first created -> highest priority.
   
   # Sample of regular route:

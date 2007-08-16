@@ -1,0 +1,18 @@
+<h4>Upload new version</h4>
+
+  <%= form_tag_with_upload_progress(:action=>'store_uploaded_version')%>
+    <%= hidden_field 'site_mapping', 'id' %>
+    <%= hidden_field 'chunk', 'id' %>
+    <p><label for="chunk_version_content">Content</label><br/>
+    <%= file_field :chunk_version, :tmp_file %>
+    <p><label for="chunk_version_comments">Comments</label><br/>
+    <%= text_field 'chunk_version', 'comments'  %></p>
+    <p><label for="put_live">Put Live</label>
+    <%= check_box_tag('put_live', '1', true) %>
+    <%= submit_tag 'Upload' %>
+    <%= upload_status_tag %>
+
+  </form>
+
+
+
