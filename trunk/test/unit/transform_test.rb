@@ -18,8 +18,8 @@ class TransformTest < Test::Unit::TestCase
     tm = Railfrog::Transform::TransformManager.instance
     tm.register(Railfrog::Transform::MarukuTransformer.new, Mime::MARKDOWN, Mime::HTML)    
     hello = "#Aloha\n\n**Hello** and welcome to reality."
-#FIXME failing!    tm.transform!(hello, Mime::MARKDOWN, Mime::HTML)
-#FIXME failing!    assert_equal("\n<h1 id='aloha'>Aloha</h1>\n\n<p><strong>Hello</strong> and welcome to reality.</p>\n", hello)
+    tm.transform!(hello, Mime::MARKDOWN, Mime::HTML)
+    assert_equal("\n<h1 id='aloha'>Aloha</h1>\n\n<p><strong>Hello</strong> and welcome to reality.</p>\n", hello)
   end
 end
 

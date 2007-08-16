@@ -9,7 +9,16 @@ module Railfrog
 
       def register(transformer, in_mime_type, out_mime_type)
         @transformer_table ||= []
-        @transformer_table << [transformer, in_mime_type, out_mime_type]
+        new_row = [transformer, in_mime_type, out_mime_type]
+        # Delete if already present - avoid duplicates but make sure the new transformer is at the end of the list
+        @transformer_table.each_index do |i|
+          row = @transformer_table[i]
+          if row[0].class == transformer.class && row[1] == in_mime_type && row[2] == out_mime_type
+            @transformer_table[i] = nil
+          end
+        end
+        @transformer_table.compact!    # Remove nils
+        @transformer_table << new_row
       end
       
 

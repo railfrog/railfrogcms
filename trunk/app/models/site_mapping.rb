@@ -124,6 +124,8 @@ class SiteMapping < ActiveRecord::Base
     p
   end
 
+  alias to_str full_path
+
   def root
     SiteMapping.find_root
   end

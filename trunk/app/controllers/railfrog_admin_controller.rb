@@ -181,7 +181,9 @@ class RailfrogAdminController < ApplicationController
     begin
       @chunk.live_version = 1
       mime_type = MimeTypeTools.find_by_file_name(params[:site_mapping][:path_segment])
-      @chunk.mime_type_str = mime_type.to_s
+      @chunk.mime_type_str = mime_type.to_str
+      @chunk.mime_type_str = Mime::MARKDOWN.to_str if params[:markup] == 'markdown'
+      @chunk.mime_type_str = Mime::TEXTILE.to_str if params[:markup] == 'textile'
       @chunk.save!
       render :update do |page|
         page.redirect_to :action => 'index'

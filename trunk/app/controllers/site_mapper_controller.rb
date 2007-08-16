@@ -32,7 +32,7 @@ class SiteMapperController < ApplicationController
       path.push index_page
       @mapping, @rf_labels, @chunk_version = SiteMapping.find_mapping_and_labels_and_chunk(path, params[:version], true)
     end
-    logger.debug "mapping for path  \'#{path.join('/')}\' is \'#{@mapping}\'"
+    logger.debug "mapping for path  \'#{path.join('/')}\' is #{@mapping.id}" if @mapping
     if @mapping && @mapping.chunk     # this is a data node, since a folder node will not have an associated chunk
       @chunk_content = @mapping.chunk.live_chunk_version.content
 
