@@ -1,14 +1,13 @@
 <html>
 <head>
-<title>Railfrog-test</title>
+<title>Railfrog</title>
   <script type="text/javascript">
-    _editor_url  = "/xinha/"  // (preferably absolute) URL (including trailing slash) where Xinha is installed
+    _editor_url  = "/plugin_assets/railfrog/xinha/"  // (preferably absolute) URL (including trailing slash) where Xinha is installed
     _editor_lang = "en";      // And the language we need to use in the editor.
   </script>
-  <script type="text/javascript" src="/xinha/XinhaCore.js"></script>
-
-<%= javascript_include_tag :defaults, 'xinha_config' %>
-
+  <%= javascript_include_tag :defaults %>
+  <%= javascript_include_tag "/plugin_assets/railfrog/xinha/XinhaCore.js" %>
+  <%= javascript_include_tag "xinha_config", :plugin => "railfrog" %>
 <style type="text/css">
 <!--
 
