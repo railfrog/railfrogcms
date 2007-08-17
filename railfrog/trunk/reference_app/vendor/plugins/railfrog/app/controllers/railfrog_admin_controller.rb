@@ -166,7 +166,7 @@ class RailfrogAdminController < ApplicationController
 
     render :update do |page|
       page.replace_html 'content', :partial => 'new_chunk'
-      page << XINHA_RUNNER_SCRIPT if @use_xinha_editor
+      page << Railfrog::XINHA_RUNNER_SCRIPT if @use_xinha_editor
       page.show 'content'
     end
   end
@@ -207,7 +207,7 @@ class RailfrogAdminController < ApplicationController
       page.replace_html 'content', :partial => 'edit_chunk'
 
       if @use_xinha_editor
-        page << XINHA_RUNNER_SCRIPT
+        page << Railfrog::XINHA_RUNNER_SCRIPT
       end
 
       page.show 'content'
