@@ -197,8 +197,7 @@ class RailfrogAdminController < ApplicationController
   end
 
   def edit_chunk
-    @use_xinha_editor = params[:source] ? false : true
-    @use_xinha_editor = (params[:markup] == 'html') if @use_xinha_editor
+    @use_xinha_editor = params[:source] && params[:markup] == 'html' ? false : true
     @site_mapping = SiteMapping.find(params[:site_mapping_id])
     @chunk_version = @old_chunk_version = ChunkVersion.find(params[:chunk_version_id])
     @chunk = @chunk_version.chunk
