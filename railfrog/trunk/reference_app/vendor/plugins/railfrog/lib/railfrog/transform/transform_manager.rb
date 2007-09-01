@@ -30,7 +30,7 @@ module Railfrog
           if tt[1] == in_mime_type && tt[2] == out_mime_type
             begin
               tt[0].transform!(content, in_mime_type, out_mime_type) unless tt[0].nil?
-              logger.debug("run transform ok")
+              logger.debug("transform ok") if logger
               return content
             rescue StandardError => e
               logger.warn "Error applying transformer #{tt[0].class.to_s}: #{e.message}" if logger
