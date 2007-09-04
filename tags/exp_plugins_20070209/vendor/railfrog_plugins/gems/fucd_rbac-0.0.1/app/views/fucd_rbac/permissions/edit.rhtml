@@ -1,8 +1,0 @@
-<h2>Edit Permission</h2>
-
-<% form_for :permission, @permission,
-            :url => fucd_rbac_permission_url(:id => @permission, :role_id => params[:role_id]),
-            :html => { :method => :put } do |f| %>
-<%= render :partial => "form", :locals => { :f => f } %>
-<%= submit_tag 'Update' %>
-<% end %>

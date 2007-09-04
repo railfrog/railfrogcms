@@ -1,7 +1,0 @@
-= Railfrog =
-
-== For Deveolpers ==
-
-=== BDD / RSpec ===
-Parts of Railforg are written behaviour-driven using RSpec (on Rails). See
-rspec.rubyforge.org for more information about RSpec and installation Howtos.
