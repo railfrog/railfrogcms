@@ -1,6 +1,0 @@
-      <div id="header">			
-		<div id="logo"><a href="http://www.railfrog.com" title="RailFrog CMS"><img src="/images/railfrog_logo2.png" alt="RailFrog"></a>
-		</div>
-		<h1>RailFrog CMS</h1>
-		<%= render_chunk :path => '/layout/nav_main' %>
-	  </div>      
