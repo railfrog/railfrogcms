@@ -1,9 +1,0 @@
-<h1>Editing chunk</h1>
-
-<%= start_form_tag :action => 'update_chunk', :site_mapping_id => @site_mapping %>
-  <%= hidden_field 'old_chunk_version', 'id' %>
-  <%= render :partial => 'chunk_form' %>
-  <%= submit_tag 'Save' %>
-<%= end_form_tag %>
-
-<%= link_to 'Back', :action => 'index' %>
