@@ -1,9 +1,0 @@
-<h1>Add new document</h1>
-
-<%= form_remote_tag :url => {:action => 'create_chunk'} %>
-  <%= hidden_field 'site_mapping', 'parent_id' %>
-  <%= render :partial => 'chunk_form' %>
-  <%= submit_tag 'Save' %>
-<%= end_form_tag %>
-
-
