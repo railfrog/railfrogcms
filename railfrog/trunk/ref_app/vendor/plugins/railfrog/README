@@ -10,4 +10,6 @@
   
     Railfrog.config_param = "my_config_value"
 
+4. Install engines
 
+5. Install upload_progress
