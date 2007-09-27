@@ -3,6 +3,8 @@ class RailfrogAdminController < ApplicationController
 
   upload_status_for :store_uploaded, :store_uploaded_version
 
+  helper_method :use_xinha?
+
   layout 'default'
 
   def index
@@ -162,11 +164,12 @@ class RailfrogAdminController < ApplicationController
     @markup = params[:markup]
     @chunk = Chunk.new
     @chunk_version = ChunkVersion.new
-    @use_xinha_editor = (@markup == 'html')
+    source = false
 
     render :update do |page|
       page.replace_html 'content', :partial => 'new_chunk'
-      page << Railfrog::XINHA_RUNNER_SCRIPT if @use_xinha_editor
+      puts ">>>>>>>>>>>>>>>> about to call use_xinha?..."  #  FIXME
+      page << Railfrog::XINHA_RUNNER_SCRIPT if use_xinha?(@markup, source)
       page.show 'content'
     end
   end
@@ -197,18 +200,16 @@ class RailfrogAdminController < ApplicationController
   end
 
   def edit_chunk
-    @use_xinha_editor = params[:source] && params[:markup] == 'html' ? false : true
     @site_mapping = SiteMapping.find(params[:site_mapping_id])
     @chunk_version = @old_chunk_version = ChunkVersion.find(params[:chunk_version_id])
     @chunk = @chunk_version.chunk
+    markup = Railfrog::MimeType::Tools.markup_for_mime_type(@chunk.mime_type_str).to_s
+    source = params[:source]  # Has user selected 'Edit Source'?
 
     render :update do |page|
       page.replace_html 'content', :partial => 'edit_chunk'
-
-      if @use_xinha_editor
-        page << Railfrog::XINHA_RUNNER_SCRIPT
-      end
-
+      puts ">>>>>>>>>>>>>>>> about to call use_xinha? in edit_chunk..."  #  FIXME
+      page << Railfrog::XINHA_RUNNER_SCRIPT if use_xinha?(markup, source)
       page.show 'content'
     end
   end
@@ -403,6 +404,16 @@ class RailfrogAdminController < ApplicationController
     #redirect_to_login
     redirect_to :controller => 'users', :action => 'login'
     return false
+  end
+
+  def use_xinha?(markup,source)
+    puts ">>>>>>>>>>>>>>>>>>>> use_xinha? :: params #{params.inspect}"   # FIXME debug...
+    puts ">>>>>>>>>>>>>>>>>>>> use_xinha? :: Railfrog.xinha_enabled is #{Railfrog.xinha_enabled.inspect}"   # FIXME debug...
+    puts ">>>>>>>>>>>>>>>>>>>> use_xinha? :: markup is \'#{markup.inspect}\'"   # FIXME debug...
+    puts ">>>>>>>>>>>>>>>>>>>> use_xinha? :: source is \'#{source.inspect}\'"   # FIXME debug...
+    retval = ((markup == 'html') && (source != 'true') && Railfrog.xinha_enabled) ? true : false
+    puts ">>>>>>>>>>>>>>>>>>>> use_xinha? returns #{retval}"   # FIXME debug...
+    retval
   end
 
 end

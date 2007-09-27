@@ -33,6 +33,11 @@ module Railfrog
         Mime::Type.lookup(mt.to_s)
       end
       
+      # Return a lowercase Symbol for this mime_type - eg :markdown for text/x-markdown
+      def self.markup_for_mime_type(mt_in)
+        mt = Mime::Type.lookup(mt_in)
+        (mt == nil) ? :nil : mt.to_sym
+      end
       
       # TODO:REFACTOR ]The register method matches the 2007-06-27 Edge Rails syntax
       # Here it is being used also to update the non-Rails MIME::Type repository

@@ -10,11 +10,16 @@ tm.register(Railfrog::Transform::MarukuTransformer.new, Mime::MARKDOWN, Mime::MA
 
 module Railfrog
 
-  mattr_accessor :config_param
+#  Global config options: can be set in environment.rb
+#  mattr_accessor :config_param
+#  self.config_param = "config_value"
 
-  self.config_param = "config_value"
+  mattr_accessor :xinha_enabled
+  self.xinha_enabled = true
 
-  XINHA_RUNNER_SCRIPT =<<END_OF_SCRIPT
+
+  if not Railfrog.const_defined? :XINHA_RUNNER_SCRIPT
+    XINHA_RUNNER_SCRIPT =<<END_OF_SCRIPT
         //
         // the code snippet got from the http://xinha.gogo.co.nz/punbb/viewtopic.php?id=651
         //
@@ -45,5 +50,5 @@ module Railfrog
         // show the editor
         HTMLArea.startEditors(xinha_editors);
 END_OF_SCRIPT
-
+  end
 end
