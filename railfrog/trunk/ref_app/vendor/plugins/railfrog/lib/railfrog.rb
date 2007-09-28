@@ -15,7 +15,7 @@ module Railfrog
 #  self.config_param = "config_value"
 
   mattr_accessor :xinha_enabled
-  self.xinha_enabled = true
+  self.xinha_enabled = false
 
 
   if not Railfrog.const_defined? :XINHA_RUNNER_SCRIPT
