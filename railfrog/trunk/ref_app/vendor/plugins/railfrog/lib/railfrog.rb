@@ -5,7 +5,7 @@ require File.dirname(__FILE__) + '/railfrog/mime_type/tools'
 
 Railfrog::MimeType::Tools.lazy_load
 tm = Railfrog::Transform::TransformManager.instance
-tm.register(Railfrog::Transform::MarukuTransformer.new, Mime::MARKDOWN, Mime::MARKDOWN)
+tm.register(Railfrog::Transform::MarukuTransformer.new, Mime::MARKDOWN, Mime::HTML)
 
 
 module Railfrog

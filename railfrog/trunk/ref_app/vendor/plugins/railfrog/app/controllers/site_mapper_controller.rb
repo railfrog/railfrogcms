@@ -21,32 +21,31 @@ class SiteMapperController < ApplicationController
   # params[:version] - if specified, retrieve this version, otherise retrieve version marked as live
   def show_chunk
     path = params[:path]
-    logger.info "Looking for site_mapping for path: \'#{path.join('/')}\'"
+    logger.debug "show_chunk >>>> looking for site_mapping for path: \'#{path.join('/')}\'"
 
     @mapping, @rf_labels, @chunk_version = SiteMapping.find_mapping_and_labels_and_chunk(path, params[:version], true)
     if @mapping.nil? || @mapping.chunk.nil?
       # TODO: do *not* return /foo/bar/index.html for /foo/bar -- see ticket:182
       index_page = @rf_labels['index_page'] unless @rf_labels.nil?
       index_page = "index.html" if index_page.nil? || index_page.empty?
-      logger.info "Chunk not found for path: \'#{path.join('/')}\'. Trying to get index-page: \'#{index_page}\' ..."
+      logger.debug "show_chunk >>>> chunk not found for path: \'#{path.join('/')}\', trying to get index-page: \'#{index_page}\' ..."
       path.push index_page
       @mapping, @rf_labels, @chunk_version = SiteMapping.find_mapping_and_labels_and_chunk(path, params[:version], true)
     end
-    logger.debug "mapping for path  \'#{path.join('/')}\' is #{@mapping.id}" if @mapping
+    logger.debug "show_chunk >>>> mapping for path  \'#{path.join('/')}\' is #{@mapping.id}" if @mapping
     if @mapping && @mapping.chunk     # this is a data node, since a folder node will not have an associated chunk
       @chunk_content = @mapping.chunk.live_chunk_version.content
 
       # options for sending chunk content back to user -- see docs for #render
       data_options = {:disposition => 'inline'}
-
       render_mt = Mime::HTML.to_str
       if @mapping.chunk.mime_type_str && !@mapping.chunk.mime_type_str.empty?
+        requested_mt = Mime::HTML.to_str  #  TODO: use respond_to and file extension to determine the requested mime type
         chunk_mt = Mime::Type.lookup(@mapping.chunk.mime_type_str).to_str    # Normalize in case of synonyms
-        render_mt = chunk_mt
         tm = Railfrog::Transform::TransformManager.instance
-        tm.transform!(@chunk_content, chunk_mt, render_mt)    # may alter chunk_content and render_mt
+        @chunk_content, render_mt = tm.transform(@chunk_content, chunk_mt, requested_mt)
       end
-      logger.debug "render_mt is \'#{render_mt}\'"
+      logger.debug "show_chunk >>>> render_mt is \'#{render_mt}\'"
 
       data_options[:type] = render_mt
       data_options[:filename] = params[:path].last
@@ -54,11 +53,10 @@ class SiteMapperController < ApplicationController
       if data_options[:type].include?("html") && params[:layout] != 'false' then
         # if it is an html doc, then render our data inside the layout
         layout = @rf_labels['layout']
-        logger.debug("rf_labels sets layout to #{layout}")
+        logger.debug "show_chunk >>>> rf_labels sets layout to #{layout}"
         rendering_options = {}
         if layout then
           if layout =~ /mapping:(.+)/
-            logger.debug "Looking for the layout..."
             layout_mapping = SiteMapping.find_mapping($1.split('/'))
 
             if layout_mapping && layout_mapping.chunk

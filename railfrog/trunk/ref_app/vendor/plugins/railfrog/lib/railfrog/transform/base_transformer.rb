@@ -4,10 +4,11 @@ module Railfrog
   module Transform
     
     class BaseTransformer
-      def transform!(content, in_mime_type, out_mime_type)
-        return nil if content.nil?
+      # Return [content, mimetype] for default transform
+      def transform(content, in_mime_type, requested_mime_type)
+        return nil, nil if content.nil?
         custom_message = "Railfrog error: transformer not installed"
-        content.replace(content_for_error(custom_message, content))
+        return content_for_error(custom_message, content), Mime::HTML.to_str
       end
 
       def content_for_error(custom_message, raw_content)

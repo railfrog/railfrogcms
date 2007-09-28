@@ -22,31 +22,34 @@ module Railfrog
       end
       
 
-      # Find an appropriate transformer matching the input/output mime types and use it to transform the content.
+      # Find an appropriate transformer matching the input/requested mime types and use it to transform the content.
       # Reverse-search to find the last (i.e. most-recently-added) one.
       # If the transformation fails, iterate backwards through matching transformers until one works.
-      def transform!(content, in_mime_type, out_mime_type, logger = nil)
-        @transformer_table.reverse_each do |tt|
-          if tt[1] == in_mime_type && tt[2] == out_mime_type
+      # If none match, pass back the incoming parameters
+      def transform(content, in_mime_type, requested_mime_type, logger = nil)
+        @transformer_table.reverse_each do |ttrow|
+          if ttrow[1] == in_mime_type && ttrow[2] == requested_mime_type
             begin
-              tt[0].transform!(content, in_mime_type, out_mime_type) unless tt[0].nil?
+              content, out_mime_type = ttrow[0].transform(content, in_mime_type, requested_mime_type) unless ttrow[0].nil?
               logger.debug("transform ok") if logger
-              return content
+              return content, out_mime_type
             rescue StandardError => e
-              logger.warn "Error applying transformer #{tt[0].class.to_s}: #{e.message}" if logger
+              logger.warn "Error applying transformer #{ttrow[0].class.to_s}: #{e.message}" if logger
             end
           end
         end
-        nil
+        # None match so leave as-is:
+        return content, in_mime_type
       end
-    end # class TransformManager
 
-    class BaseTransformer
-      def transform!(content, in_mime_type, out_mime_type)
-        new_content = "<h2>Railfrog error: transformer not installed</h2>" + content
-        content.replace(new_content)
+      # Is a transformer registered to transform between these mimetypes?
+      def handles?(in_mime_type, requested_mime_type)
+        @transformer_table.reverse_each do |ttrow|
+          return true if ttrow[1] == in_mime_type && ttrow[2] == requested_mime_type
+        end
+        false
       end
-    end # class BaseTransformer
+    end
 
-  end # module Transform
-end # module Railfrog
+  end
+end

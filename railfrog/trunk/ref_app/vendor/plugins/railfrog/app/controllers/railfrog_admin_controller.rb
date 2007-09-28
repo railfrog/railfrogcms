@@ -1,3 +1,5 @@
+require 'railfrog'
+
 class RailfrogAdminController < ApplicationController
   before_filter :ensure_logged_in
 
@@ -37,8 +39,12 @@ class RailfrogAdminController < ApplicationController
         page.replace_html 'summary', :partial => 'chunk_summary'
         page.replace_html 'chunk_version_summary', :partial => 'chunk_version_summary'
         page.replace_html 'context_menu', :partial => 'chunk_actions'
+        # Check whether chunk mime_type will be **transformed** into HTML, if so render as html
+        render_mt = @chunk.mime_type_str
+        tm = Railfrog::Transform::TransformManager.instance
+        render_mt = Mime::HTML.to_str if tm.handles?(render_mt, Mime::HTML.to_str)
         page.replace_html 'content', :partial => 'chunk_content',
-          :locals => { :file_name => @file_name, :mime_type => @chunk.mime_type_str }
+          :locals => { :file_name => @file_name, :mime_type => render_mt }
         page.show 'chunk_version_summary'
         page.show 'content'
       end
