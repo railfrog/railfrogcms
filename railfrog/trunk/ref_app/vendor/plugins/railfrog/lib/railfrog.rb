@@ -1,11 +1,13 @@
 require File.dirname(__FILE__) + '/railfrog/transform/transform_manager'
 require File.dirname(__FILE__) + '/railfrog/transform/base_transformer'
-require File.dirname(__FILE__) + '/railfrog/transform/maruku_transformer'  # TODO add BlueCloth also
+require File.dirname(__FILE__) + '/railfrog/transform/maruku_transformer'
+require File.dirname(__FILE__) + '/railfrog/transform/red_cloth_transformer'
 require File.dirname(__FILE__) + '/railfrog/mime_type/tools'
 
 Railfrog::MimeType::Tools.lazy_load
 tm = Railfrog::Transform::TransformManager.instance
 tm.register(Railfrog::Transform::MarukuTransformer.new, Mime::MARKDOWN, Mime::HTML)
+tm.register(Railfrog::Transform::RedClothTransformer.new, Mime::TEXTILE, Mime::HTML)
 
 
 module Railfrog

@@ -29,8 +29,12 @@ end
 def humanize_markup_name(markup)
   if markup.nil?
     '(unknown)'
-  elsif markup.downcase == 'html'
+  elsif markup.downcase == 'html' || markup == 'text/html'
     'HTML'
+  elsif markup.downcase == 'markdown' || markup == 'text/x-markdown'
+    'Markdown'
+  elsif markup.downcase == 'textile' || markup == 'text/x-textile'
+    'Textile'
   else
     markup.humanize
   end
