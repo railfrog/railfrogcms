@@ -1,7 +1,11 @@
-<ul>
+<div id="tabsMenu">
+<ul id="folder_tabs" class="subsection_tabs">
+
   <li>
     <a href="<%= @file_name %>" target="_blank">View</a>
-  </li>
+  </li>	
+
+  
   <li>
     <%= link_to_remote('Edit',
       :url => { :action => 'edit_chunk',
@@ -15,6 +19,7 @@
       :site_mapping_id => @site_mapping,
       :source => true }) %>
   </li>
+  
   <li>
     <%= link_to_remote('Upload new version',
       :url => { :action => 'upload_new_version',
@@ -39,4 +44,4 @@
       :confirm => 'Are you sure?') %>
   </li>
 </ul>
-
+</div>
