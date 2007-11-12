@@ -1,11 +1,8 @@
 <h4>Labels</h4>
 
 <div id="mapping_labels">
-  <table width="100%" cellspacing="0" cellpadding="0">
-    <% if @mapping_labels %>
-    <tr>
-      <td valign="top" align="left">
-        <% if @mapping_id %>
+
+<% if @mapping_id %>
           <a href="#" onclick="Element.show('add_label_div'); return false;">Add Label</a>
           <div id="add_label_div">
             <%= form_remote_tag(:update => "mapping_labels", :url => { :action => :save_site_mapping_label } ) %>
@@ -19,13 +16,19 @@
           Element.hide('add_label_div'); 
           </script>
         <% end %>
-        <% for label in @mapping_labels %>
+
+ <% if @mapping_labels %>
+  <table>
+   <% count = 0 %>
+	<% for label in @mapping_labels %>
+    <tr id="<%= "label_#{label.id}_display_row" %>" class="<%= (count % 2 == 0 ? 'even' : 'odd' ) %>">
+      <td>
+        
+        
           <div id="<%= "label_#{label.id}_display_div" %>">
           <%= label.name + ": " + label.value %>
-          <a href="#" onclick="Element.show('<%= "label_#{label.id}_edit_div" %>'); Element.hide('<%= "label_#{label.id}_display_div" %>'); return false;">Edit</a>
-          <%= link_to_remote( "Delete", :update => "label_#{label.id}_display_div", :url =>{ :action => :delete_site_mapping_label, :label_id => label.id }, :confirm => 'Are you sure?') %><br>
-          </div>
-          <div id="<%= "label_#{label.id}_edit_div" %>">
+		  </div>
+		    <div id="<%= "label_#{label.id}_edit_div" %>">
             <%= form_remote_tag(:update => "mapping_labels", :url => { :action => :save_site_mapping_label } ) %>
               <%= text_field_tag :label_name, label.name %>
               <%= text_field_tag :label_value, label.value %>
@@ -36,9 +39,18 @@
           <script type="text/javascript">
           Element.hide('<%= "label_#{label.id}_edit_div" %>'); 
           </script>
-        <% end %>
+	</td>
+	<td>	  
+          <a href="#" onclick="Element.show('<%= "label_#{label.id}_edit_div" %>'); Element.hide('<%= "label_#{label.id}_display_div" %>'); return false;">Edit</a>
+          <%= link_to_remote( "Delete", :update => "label_#{label.id}_display_row", :url =>{ :action => :delete_site_mapping_label, :label_id => label.id }, :confirm => 'Are you sure?') %><br>
+          
+		  
+        
+        
       </td>
     </tr>
+	<% count += 1 %>
     <% end %>
   </table>
+ <% end %> 
 </div>
