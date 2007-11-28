@@ -1,5 +1,9 @@
 require 'chunk'
 
+class Chunk < ActiveRecord::Base
+  belongs_to :mime_type
+end
+
 class StoreMimeTypeStringOnChunk < ActiveRecord::Migration
   def self.up
     add_column :chunks, :mime_type_str, :string, :default => "", :limit => 100
