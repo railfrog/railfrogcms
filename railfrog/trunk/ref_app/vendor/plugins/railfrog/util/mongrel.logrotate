@@ -1,0 +1,11 @@
+    # Rotate contents of global mongrel log directory
+    /var/log/mongrel_cluster/*.log {
+    # compress
+    copytruncate
+    daily
+    dateext
+    # delaycompress
+    missingok
+    nomail
+    rotate 90
+    }
