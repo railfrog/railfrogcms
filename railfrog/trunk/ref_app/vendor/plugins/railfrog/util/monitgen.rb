@@ -27,8 +27,8 @@ header_template = %{
 # ================
 
 body_template = %{
-check process mongrel_harvest_<%= port %>
-   with pidfile /var/run/mongrel_cluster/mongrel_harvest.<%= port %>.pid
+check process mongrel_<%= project %>_<%= port %>
+   with pidfile /var/run/mongrel_cluster/mongrel_<%= project %>.<%= port %>.pid
    start program = "/usr/bin/mongrel_rails cluster::start --only <%= port %> --clean -C <%= cluster_yaml %>"
    stop program = "/usr/bin/mongrel_rails cluster::stop --only <%= port %> --clean -C <%= cluster_yaml %>"
    if totalmem is greater than 110.0 MB for 4 cycles then  
