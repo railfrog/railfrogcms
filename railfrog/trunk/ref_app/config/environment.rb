@@ -5,14 +5,19 @@
 # ENV['RAILS_ENV'] ||= 'production'
 
 # Specifies gem version of Rails to use when vendor/rails is not present
-RAILS_GEM_VERSION = '1.2.3' unless defined? RAILS_GEM_VERSION
+RAILS_GEM_VERSION = '2.0.2' unless defined? RAILS_GEM_VERSION
 
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
 
+# Require Engines bootloader
+require File.join(File.dirname(__FILE__), '../vendor/plugins/engines/boot')
+
 Rails::Initializer.run do |config|
   # Settings in config/environments/* take precedence over those specified here
   
+  config.action_controller.session = { :session_key => "_railfrog_session", :secret => "Railfrog - an ultralight CMS for the rest of us" } 
+
   # Skip frameworks you're not going to use (only works if using vendor/rails)
   # config.frameworks -= [ :action_web_service, :action_mailer ]
 
