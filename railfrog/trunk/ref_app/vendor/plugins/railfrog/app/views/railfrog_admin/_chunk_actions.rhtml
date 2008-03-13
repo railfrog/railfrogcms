@@ -1,0 +1,47 @@
+<div id="tabsMenu">
+<ul id="folder_tabs" class="subsection_tabs">
+
+  <li>
+    <a href="<%= @file_name %>" target="_blank">View</a>
+  </li>	
+
+  
+  <li>
+    <%= link_to_remote('Edit',
+      :url => { :action => 'edit_chunk',
+      :chunk_version_id => @chunk_version,
+      :site_mapping_id => @site_mapping }) %>
+  </li>
+  <li>
+    <%= link_to_remote('Edit Source',
+      :url => { :action => 'edit_chunk',
+      :chunk_version_id => @chunk_version,
+      :site_mapping_id => @site_mapping,
+      :source => true }) %>
+  </li>
+  
+  <li>
+    <%= link_to_remote('Upload new version',
+      :url => { :action => 'upload_new_version',
+      :chunk_version_id => @chunk_version,
+      :mapping_id => @site_mapping}) %>
+  </li>
+  <li>
+    <%= link_to_remote('Labels',
+      :url => { :action => 'show_labels',
+      :site_mapping_id => @site_mapping}) %>
+  </li>
+  <li>
+    <%= link_to_remote('Versions',
+      :url => { :action => 'show_versions',
+      :chunk_id => @chunk,
+      :mapping_id => @site_mapping}) %>
+  </li>
+  <li>
+    <%= link_to_remote('Delete document',
+      :url => {:action => 'delete_chunk',
+      :mapping_id => @site_mapping, :chunk_id => @chunk},
+      :confirm => 'Are you sure?') %>
+  </li>
+</ul>
+</div>

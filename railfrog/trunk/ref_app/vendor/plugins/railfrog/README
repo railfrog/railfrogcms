@@ -1,0 +1,15 @@
+# Railfrog
+
+## Installation notes
+
+1. add the line `map.from_plugin :railfrog` to `config/routes.rb` on the host application.
+
+2. run `script/generate plugin_migration && rake db:migrate`
+
+3. configure the plugin by adding the following lines to their `config/environment.rb`:
+  
+    Railfrog.config_param = "my_config_value"
+
+4. Install engines
+
+5. Install upload_progress

@@ -1,0 +1,18 @@
+<h1>Log In</h1>
+
+<% form_tag :action => 'authenticate', :controller => 'users' do %>
+<p><label>E-mail Address:</label><br />
+<%= text_field_tag :email %>
+</p>
+
+<p><label>Password:</label><br />
+<%= password_field_tag :password %>
+</p>
+
+<p><%= submit_tag 'Log In' %></p>
+<% end %>
+
+<p>
+email: test@test.com<br />
+pass: test
+</p>

@@ -1,0 +1,29 @@
+root:
+  rf-labels:
+    index-page: index.html
+    layout: "mapping:/layout/rf_layout"
+
+  index.html:
+    path: index.html
+    rf-labels:
+      active_menu_item: "1"
+
+  chronicle.html: 
+    path: chronicle.html
+    rf-labels:
+      active_menu_item: "2"
+
+  pond.html:
+    content: |
+      <h1>Pond</h>
+      <a href="http://groups.google.com/group/railfrog-dev">Pond</a>
+
+    rf-labels:
+      active_menu_item: "3"
+
+  layout:
+    rf-internal: true
+
+    header: 
+      path: layout/header
+
