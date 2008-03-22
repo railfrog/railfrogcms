@@ -75,7 +75,6 @@ class SiteMapperController < ApplicationController
           rendering_options[:partial] = "chunk_content"
         end
 
-        session[:rf_labels] = @rf_labels
         rendering_options[:locals] = {:rf_labels => @rf_labels}
 
         begin
@@ -99,6 +98,6 @@ class SiteMapperController < ApplicationController
 
   private
   def render_chunk(options)
-    render_to_string :inline => Chunk.find_version(options).content, :locals => {:rf_labels => session[:rf_labels]}
+    render_to_string :inline => Chunk.find_version(options).content, :locals => {:rf_labels => @rf_labels }
   end
 end
