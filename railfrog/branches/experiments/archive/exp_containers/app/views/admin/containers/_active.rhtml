@@ -1,9 +1,0 @@
-<div id="chunk_active_<%= active.id %>" class="active-chunk-item">
-  <div class="title">
-  <%= active.chunk.name %>
-  <span><%= link_to_remote "Delete", :url => { :action => "remove_chunk", :id => active.id } %></span>
-  </div>
-  <div class="content">
-  <%= active.chunk.latest_version.content %>
-  </div>
-</div>

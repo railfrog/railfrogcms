@@ -1,5 +1,0 @@
-<ul>
-<% @result.each do |item| %>
-<li><%=item.name%> - <%=item.version%> <%= link_to '[Install]', :action => 'install', :name => item.name, :version => item.version %></li>
-<% end %>
-<ul>

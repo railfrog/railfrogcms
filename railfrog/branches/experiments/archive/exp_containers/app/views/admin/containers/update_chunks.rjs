@@ -1,2 +1,0 @@
-page.replace 'chunk_available_'+@new_id.to_s, :partial => 'active', :object => @new_page
-page.sortable 'container_box', :url => { :action => 'update_chunks' }, :tag => 'div', :dropOnEmpty => 'true', :containment => ['container_box', 'available_box']

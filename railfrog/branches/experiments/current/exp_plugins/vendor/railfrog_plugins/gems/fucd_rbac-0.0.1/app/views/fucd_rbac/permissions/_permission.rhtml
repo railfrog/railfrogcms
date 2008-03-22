@@ -1,6 +1,0 @@
-<tr>
-  <td><%= permission.controller %></td>
-  <td><%= permission.action %></td>
-  <td><%= link_to "Edit", fucd_rbac_edit_permission_url(:id => permission, :role_id => params[:role_id]) %></td>
-  <td><%= button_to "Delete", fucd_rbac_permission_url(:id => permission, :role_id => params[:role_id]), :method => :delete %></td>
-</tr>

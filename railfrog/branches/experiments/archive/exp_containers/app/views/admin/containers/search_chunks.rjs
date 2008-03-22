@@ -1,2 +1,0 @@
-page.replace_html 'available_box', :partial => 'available', :collection => @chunks
-page.sortable 'available_box', :tag => 'div'

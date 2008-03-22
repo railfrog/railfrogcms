@@ -1,7 +1,0 @@
-<%= block_start 'chunk-summary', 'Chunk Summary' %>
-  <%= block_content_start 'chunk-summary' %>
-    <div><strong>Name:</strong> <%= chunk.path_segment %></div>
-    <div><strong>Version:</strong> <%= chunk_version.version %></div>
-    <div><strong>Last Edited:</strong> <%= time_ago_in_words(chunk_version.created_at) %> ago</div>
-  <%= block_content_end %>
-<%= block_end %>

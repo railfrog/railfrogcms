@@ -1,8 +1,0 @@
-<h2>Edit Role</h2>
-
-<% form_for :role, @role,
-            :url => fucd_rbac_role_url(@role),
-            :html => { :method => :put } do |f| %>
-<%= render :partial => "form", :locals => { :f => f } %>
-<%= submit_tag 'Update' %>
-<% end %>

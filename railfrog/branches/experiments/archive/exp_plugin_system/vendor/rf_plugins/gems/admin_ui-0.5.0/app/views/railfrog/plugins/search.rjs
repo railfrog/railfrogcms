@@ -1,1 +1,0 @@
-page.replace_html 'search_results', :partial => 'search_items'

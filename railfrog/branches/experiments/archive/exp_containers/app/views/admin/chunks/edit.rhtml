@@ -1,8 +1,0 @@
-<h1>Editing chunk</h1>
-
-<%= start_form_tag :action => 'update', :id => @chunk, :version => @chunk_version.version %>
-  <%= render :partial => 'form' %>
-  <%= submit_tag 'Edit' %>
-<%= end_form_tag %>
-
-<%= link_to 'Back', :action => 'list' %>

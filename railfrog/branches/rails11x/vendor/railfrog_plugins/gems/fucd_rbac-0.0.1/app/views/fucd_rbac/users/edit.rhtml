@@ -1,8 +1,0 @@
-<h2>Edit User</h2>
-
-<% form_for :user, @user,
-            :url => fucd_rbac_user_url(@user),
-            :html => { :method => :put } do |f| %>
-<%= render :partial => "form", :locals => { :f => f } %>
-<%= submit_tag 'Update' %>
-<% end %>
