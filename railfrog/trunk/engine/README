@@ -1,15 +1,55 @@
-# Railfrog
+= Railfrog
 
-## Installation notes
+Railfrog:http://railfrog.com is a user-friendly, open-source website deployment and 
+content management system built with Ruby on Rails, producing well structured and 
+standards-compliant pages with Web 2.0 goodness. Railfrog makes it easy for developers, 
+designers, webmasters, or just about anyone else to deploy and manage a website.
 
-1. add the line `map.from_plugin :railfrog` to `config/routes.rb` on the host application.
 
-2. run `script/generate plugin_migration && rake db:migrate`
+== Installation notes
 
-3. configure the plugin by adding the following lines to their `config/environment.rb`:
+=== ... for existing applications
+
+1. Install Rails Engines:
+
+  ruby script/plugin install http://svn.rails-engines.org/engines/trunk/
+
+2. Install acts_as_nested_set plugin:
+
+  ruby script/plugin install http://svn.rubyonrails.org/rails/plugins/acts_as_nested_set/
+
+3. Install upload_progress plugin:
+
+  ruby script/plugin install http://svn.rubyonrails.org/rails/plugins/upload_progress/
+
+4. Install Railfrog plugin:
+
+  ruby script/plugin install https://svn.versiondude.net/railfrog/cms/railfrog/trunk/engine railfrog
+
+5. Add following line to config/environment.rb, just after the require of Rails' boot file:
+
+  require File.join(File.dirname(__FILE__), '../vendor/plugins/engines/boot')
+
+6. Add following line to config/routes.rb, just after first line:
   
-    Railfrog.config_param = "my_config_value"
+  map.from_plugin :railfrog
 
-4. Install engines
+7. Run:
 
-5. Install upload_progress
+  ruby script/generate plugin_migration && rake db:migrate
+
+=== ... new application
+
+1. Grab our empty Rails 2.0.2 application with installed Railfrog:
+  
+  svn co https://svn.versiondude.net/railfrog/cms/railfrog/trunk/ref_app railfrog
+
+2. Run:
+
+  rake railfrog:site:load SITE=db/sites/railfrog
+
+== How to create new site
+
+
+
+
