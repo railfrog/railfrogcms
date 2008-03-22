@@ -1,0 +1,18 @@
+== Welcome to Railfrog Reference Application
+
+=== Prerequirements
+
+You need to have following:
+
+1. Ruby interpreter. See http://www.ruby-lang.org
+2. Rails. Run gem install rails -y
+3. SQLite or MySQL. Find full list of supported databases at http://api.rubyonrails.com/files/vendor/rails/activerecord/README.html
+
+=== Installation
+
+1. ruby script/server
+
+
+=== Testing
+
+
