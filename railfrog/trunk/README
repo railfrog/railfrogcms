@@ -13,7 +13,7 @@ just about anyone else to deploy and manage a website.
 
 # Grab our empty Rails 2.0.2 application with installed Railfrog:
 
-  svn co https://svn.versiondude.net/railfrog/cms/railfrog/trunk/ref_app railfrog
+  svn co https://svn.versiondude.net/railfrog/cms/reference_application/trunk railfrog
 
 # Run
 
@@ -35,7 +35,7 @@ just about anyone else to deploy and manage a website.
 
 # Install Railfrog plugin:
 
-  ruby script/plugin install http://svn.versiondude.net/railfrog/cms/railfrog/trunk/engine railfrog
+  ruby script/plugin install http://svn.versiondude.net/railfrog/cms/railfrog/trunk
 
 # Add following line to config/environment.rb, just after the require of Rails' boot file:
 
