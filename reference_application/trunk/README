@@ -10,9 +10,23 @@ You need to have following:
 
 === Installation
 
-1. ruby script/server
+# Grab our empty Rails 2.0.2 application with installed Railfrog:
 
+  svn co https://svn.versiondude.net/railfrog/cms/reference_application/trunk railfrog
 
-=== Testing
+# Edit config/database.yml if you need
 
+# Run
+
+  rake db:migrate
+
+=== How to use Railfrog
+
+Start service by running script/server and open http://localhost:3000/admin
+
+TBD
+
+=== More info
+
+Please find more info at vendor/plugins/railfrog/README
 
