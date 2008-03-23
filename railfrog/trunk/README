@@ -15,9 +15,12 @@ just about anyone else to deploy and manage a website.
 
   svn co https://svn.versiondude.net/railfrog/cms/reference_application/trunk railfrog
 
-# Run
+# Edit config/database.yml if you need
 
-  rake railfrog:site:load SITE=db/sites/railfrog
+# Run
+  
+  rake db:migrate
+
 
 ==== ... for existing applications
 
@@ -49,9 +52,20 @@ just about anyone else to deploy and manage a website.
 
   ruby script/generate plugin_migration && rake db:migrate
 
+
+=== How to use Railfrog
+
+Start service by running script/server and open http://localhost:3000/admin
+
+TBD
+
+
 === How to create new site
 
-You can find an example at db/sites/railfrog
+You can find an example at vendor/plugins/railfrog/db/sites/railfrog 
 
+To load example site from the file system run 
 
+  rake railfrog:site:load SITE=vendor/plugins/railfrog/db/sites/railfrog
 
+TBD
