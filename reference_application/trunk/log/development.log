@@ -1,1 +1,353 @@
-# Logfile created on Sat Mar 22 15:11:43 +0300 2008
+# Logfile created on Sat Mar 22 15:11:43 +0300 2008Creating public engine files directory '/home/yura/projects/railfrog/reference_application/trunk/public/plugin_assets'
+Attempting to copy plugin assets from '/home/yura/projects/railfrog/reference_application/trunk/vendor/plugins/railfrog/assets' to '/home/yura/projects/railfrog/reference_application/trunk/public/plugin_assets'
+Attempting to copy plugin assets from '/home/yura/projects/railfrog/reference_application/trunk/vendor/plugins/upload_progress/public' to '/home/yura/projects/railfrog/reference_application/trunk/public/plugin_assets'
+loading routes from /home/yura/projects/railfrog/reference_application/trunk/vendor/plugins/railfrog/routes.rb
+  [4;36;1mSQL (0.001103)[0m   [0;1mselect sqlite_version(*)[0m
+  [4;35;1mSQL (2.312608)[0m   [0mCREATE TABLE schema_info (version integer)[0m
+  [4;36;1mSQL (0.060811)[0m   [0;1mINSERT INTO schema_info (version) VALUES(0)[0m
+  [4;35;1mSQL (0.142473)[0m   [0m CREATE TABLE plugin_schema_info 
+ (plugin_name varchar(255), version integer)
+[0m
+  [4;36;1mSQL (0.000285)[0m   [0;1m SELECT version FROM plugin_schema_info 
+ WHERE plugin_name = 'railfrog'
+[0m
+  [4;35;1mSQL (0.004200)[0m   [0m INSERT INTO plugin_schema_info (version, plugin_name) 
+ VALUES (0,'railfrog')
+[0m
+Attempting to copy plugin assets from '/home/yura/projects/railfrog/reference_application/trunk/vendor/plugins/railfrog/assets' to '/home/yura/projects/railfrog/reference_application/trunk/public/plugin_assets'
+Attempting to copy plugin assets from '/home/yura/projects/railfrog/reference_application/trunk/vendor/plugins/upload_progress/public' to '/home/yura/projects/railfrog/reference_application/trunk/public/plugin_assets'
+loading routes from /home/yura/projects/railfrog/reference_application/trunk/vendor/plugins/railfrog/routes.rb
+  [4;36;1mSQL (0.000819)[0m   [0;1mselect sqlite_version(*)[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSQLite3::SQLException: table schema_info already exists: CREATE TABLE schema_info (version integer)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSQLite3::SQLException: table plugin_schema_info already exists: CREATE TABLE plugin_schema_info 
+ (plugin_name varchar(255), version integer)
+[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSQLite3::SQLException: table schema_info already exists: CREATE TABLE schema_info (version integer)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSQLite3::SQLException: table plugin_schema_info already exists: CREATE TABLE plugin_schema_info 
+ (plugin_name varchar(255), version integer)
+[0m
+  [4;35;1mSQL (0.000490)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to RailfrogToVersion6 (1)
+  [4;36;1mSQL (0.000000)[0m   [0;1mSQLite3::SQLException: table schema_info already exists: CREATE TABLE schema_info (version integer)[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSQLite3::SQLException: table plugin_schema_info already exists: CREATE TABLE plugin_schema_info 
+ (plugin_name varchar(255), version integer)
+[0m
+  [4;36;1mSQL (0.000497)[0m   [0;1m SELECT version FROM plugin_schema_info 
+ WHERE plugin_name = 'railfrog'
+[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSQLite3::SQLException: table schema_info already exists: CREATE TABLE schema_info (version integer)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSQLite3::SQLException: table plugin_schema_info already exists: CREATE TABLE plugin_schema_info 
+ (plugin_name varchar(255), version integer)
+[0m
+  [4;35;1mSQL (0.000597)[0m   [0m SELECT version FROM plugin_schema_info 
+ WHERE plugin_name = 'railfrog'
+[0m
+Migrating to InitialSchema (1)
+  [4;36;1mSQL (0.000000)[0m   [0;1mSQLite3::SQLException: no such table: mime_types: DROP TABLE mime_types[0m
+  [4;35;1mSQL (0.027203)[0m   [0mCREATE TABLE mime_types ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "mime_type" varchar(255) DEFAULT NULL, "description" varchar(255) DEFAULT NULL) [0m
+  [4;36;1mSQL (0.006617)[0m   [0;1mCREATE INDEX "mime_types_mime_type_index" ON mime_types ("mime_type")[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSQLite3::SQLException: no such table: file_extensions: DROP TABLE file_extensions[0m
+  [4;36;1mSQL (0.007017)[0m   [0;1mCREATE TABLE file_extensions ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "extension" varchar(255) DEFAULT NULL, "mime_type_id" integer DEFAULT NULL) [0m
+  [4;35;1mSQL (0.007688)[0m   [0mCREATE INDEX "file_extensions_mime_type_id_index" ON file_extensions ("mime_type_id")[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSQLite3::SQLException: no such table: chunks: DROP TABLE chunks[0m
+  [4;35;1mSQL (0.009610)[0m   [0mCREATE TABLE chunks ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "description" varchar(255) DEFAULT NULL, "live_version" integer DEFAULT NULL, "mime_type_id" integer DEFAULT NULL) [0m
+  [4;36;1mSQL (0.007166)[0m   [0;1mCREATE INDEX "chunks_mime_type_id_index" ON chunks ("mime_type_id")[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSQLite3::SQLException: no such table: chunk_versions: DROP TABLE chunk_versions[0m
+  [4;36;1mSQL (0.010736)[0m   [0;1mCREATE TABLE chunk_versions ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "chunk_id" integer DEFAULT NULL, "version" integer DEFAULT NULL, "base_version" integer DEFAULT NULL, "content" blob DEFAULT NULL, "created_at" datetime DEFAULT NULL, "updated_at" datetime DEFAULT NULL) [0m
+  [4;35;1mSQL (0.006846)[0m   [0mCREATE INDEX "chunk_versions_chunk_id_index" ON chunk_versions ("chunk_id")[0m
+  [4;36;1mSQL (0.007468)[0m   [0;1mCREATE INDEX "chunk_versions_version_index" ON chunk_versions ("version")[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSQLite3::SQLException: no such table: site_mappings: DROP TABLE site_mappings[0m
+  [4;36;1mSQL (0.029315)[0m   [0;1mCREATE TABLE site_mappings ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "path_segment" varchar(255) DEFAULT '' NOT NULL, "chunk_id" integer DEFAULT NULL, "version" integer DEFAULT NULL, "updated_at" datetime DEFAULT NULL, "root_id" integer DEFAULT 0, "parent_id" integer DEFAULT 0, "depth" integer DEFAULT 0, "lft" integer DEFAULT 0, "rgt" integer DEFAULT 0) [0m
+  [4;35;1mSQL (0.015736)[0m   [0mCREATE INDEX "site_mappings_chunk_id_index" ON site_mappings ("chunk_id")[0m
+  [4;36;1mSQL (0.007280)[0m   [0;1mCREATE INDEX "site_mappings_path_segment_index" ON site_mappings ("path_segment", "version")[0m
+  [4;35;1mSQL (0.007094)[0m   [0mCREATE INDEX "site_mappings_parent_id_index" ON site_mappings ("parent_id")[0m
+  [4;36;1mSQL (0.006813)[0m   [0;1mCREATE INDEX "site_mappings_lft_index" ON site_mappings ("lft", "rgt")[0m
+  [4;35;1mSQL (0.007988)[0m   [0mCREATE INDEX "site_mappings_depth_index" ON site_mappings ("depth")[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSQLite3::SQLException: no such table: mapping_labels: DROP TABLE mapping_labels[0m
+  [4;35;1mSQL (0.009645)[0m   [0mCREATE TABLE mapping_labels ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "site_mapping_id" integer DEFAULT NULL, "name" varchar(255) DEFAULT NULL, "value" varchar(255) DEFAULT NULL) [0m
+  [4;36;1mSQL (0.008299)[0m   [0;1mCREATE INDEX "mapping_labels_site_mapping_id_index" ON mapping_labels ("site_mapping_id")[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSQLite3::SQLException: no such table: users: DROP TABLE users[0m
+  [4;36;1mSQL (0.008824)[0m   [0;1mCREATE TABLE users ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "first_name" varchar(255) DEFAULT '' NOT NULL, "last_name" varchar(255) DEFAULT '' NOT NULL, "email" varchar(255) DEFAULT '' NOT NULL, "password" varchar(40) DEFAULT '' NOT NULL, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL) [0m
+  [4;35;1mUser Load (0.000319)[0m   [0mSELECT * FROM users WHERE (users.email = 'test@test.com') LIMIT 1[0m
+  [4;36;1mUser Create (0.000584)[0m   [0;1mINSERT INTO users ("updated_at", "first_name", "last_name", "password", "created_at", "email") VALUES('2008-03-23 13:53:54', 'Test', 'Tester', 'a94a8fe5ccb19ba61c4c0873d391e987982fbbd3', '2008-03-23 13:53:54', 'test@test.com')[0m
+  [4;35;1mMimeType Create (0.000604)[0m   [0mINSERT INTO mime_types ("mime_type", "description") VALUES('image/cgm', NULL)[0m
+  [4;36;1mMimeType Create (0.000549)[0m   [0;1mINSERT INTO mime_types ("mime_type", "description") VALUES('image/g3fax', NULL)[0m
+  [4;35;1mMimeType Create (0.000556)[0m   [0mINSERT INTO mime_types ("mime_type", "description") VALUES('image/gif', NULL)[0m
+  [4;36;1mFileExtension Create (0.000624)[0m   [0;1mINSERT INTO file_extensions ("extension", "mime_type_id") VALUES('gif', 3)[0m
+  [4;35;1mMimeType Create (0.000957)[0m   [0mINSERT INTO mime_types ("mime_type", "description") VALUES('image/ief', NULL)[0m
+  [4;36;1mFileExtension Create (0.000555)[0m   [0;1mINSERT INTO file_extensions ("extension", "mime_type_id") VALUES('ief', 4)[0m
+  [4;35;1mMimeType Create (0.000554)[0m   [0mINSERT INTO mime_types ("mime_type", "description") VALUES('image/jpeg', NULL)[0m
+  [4;36;1mFileExtension Create (0.000632)[0m   [0;1mINSERT INTO file_extensions ("extension", "mime_type_id") VALUES('jpeg', 5)[0m
+  [4;35;1mFileExtension Create (0.000578)[0m   [0mINSERT INTO file_extensions ("extension", "mime_type_id") VALUES('jpg', 5)[0m
+  [4;36;1mFileExtension Create (0.000649)[0m   [0;1mINSERT INTO file_extensions ("extension", "mime_type_id") VALUES('jpe', 5)[0m
+  [4;35;1mMimeType Create (0.000565)[0m   [0mINSERT INTO mime_types ("mime_type", "description") VALUES('image/naplps', NULL)[0m
+  [4;36;1mMimeType Create (0.000595)[0m   [0;1mINSERT INTO mime_types ("mime_type", "description") VALUES('image/pcx', NULL)[0m
+  [4;35;1mFileExtension Create (0.000562)[0m   [0mINSERT INTO file_extensions ("extension", "mime_type_id") VALUES('pcx', 7)[0m
+  [4;36;1mMimeType Create (0.000580)[0m   [0;1mINSERT INTO mime_types ("mime_type", "description") VALUES('image/png', NULL)[0m
+  [4;35;1mFileExtension Create (0.000638)[0m   [0mINSERT INTO file_extensions ("extension", "mime_type_id") VALUES('png', 8)[0m
+  [4;36;1mMimeType Create (0.000556)[0m   [0;1mINSERT INTO mime_types ("mime_type", "description") VALUES('image/prs.btif', NULL)[0m
+  [4;35;1mMimeType Create (0.000541)[0m   [0mINSERT INTO mime_types ("mime_type", "description") VALUES('image/prs.pti', NULL)[0m
+  [4;36;1mMimeType Create (0.000599)[0m   [0;1mINSERT INTO mime_types ("mime_type", "description") VALUES('image/svg+xml', NULL)[0m
+  [4;35;1mFileExtension Create (0.000569)[0m   [0mINSERT INTO file_extensions ("extension", "mime_type_id") VALUES('svg', 11)[0m
+  [4;36;1mFileExtension Create (0.000617)[0m   [0;1mINSERT INTO file_extensions ("extension", "mime_type_id") VALUES('svgz', 11)[0m
+  [4;35;1mMimeType Create (0.000550)[0m   [0mINSERT INTO mime_types ("mime_type", "description") VALUES('image/tiff', NULL)[0m
+  [4;36;1mFileExtension Create (0.000983)[0m   [0;1mINSERT INTO file_extensions ("extension", "mime_type_id") VALUES('tiff', 12)[0m
+  [4;35;1mFileExtension Create (0.000565)[0m   [0mINSERT INTO file_extensions ("extension", "mime_type_id") VALUES('tif', 12)[0m
+  [4;36;1mMimeType Create (0.000545)[0m   [0;1mINSERT INTO mime_types ("mime_type", "description") VALUES('text/calendar', NULL)[0m
+  [4;35;1mFileExtension Create (0.000578)[0m   [0mINSERT INTO file_extensions ("extension", "mime_type_id") VALUES('ics', 13)[0m
+  [4;36;1mFileExtension Create (0.000590)[0m   [0;1mINSERT INTO file_extensions ("extension", "mime_type_id") VALUES('icz', 13)[0m
+  [4;35;1mMimeType Create (0.000566)[0m   [0mINSERT INTO mime_types ("mime_type", "description") VALUES('text/comma-separated-values', NULL)[0m
+  [4;36;1mFileExtension Create (0.000559)[0m   [0;1mINSERT INTO file_extensions ("extension", "mime_type_id") VALUES('csv', 14)[0m
+  [4;35;1mMimeType Create (0.000561)[0m   [0mINSERT INTO mime_types ("mime_type", "description") VALUES('text/css', NULL)[0m
+  [4;36;1mFileExtension Create (0.000580)[0m   [0;1mINSERT INTO file_extensions ("extension", "mime_type_id") VALUES('css', 15)[0m
+  [4;35;1mMimeType Create (0.000778)[0m   [0mINSERT INTO mime_types ("mime_type", "description") VALUES('text/directory', NULL)[0m
+  [4;36;1mMimeType Create (0.000686)[0m   [0;1mINSERT INTO mime_types ("mime_type", "description") VALUES('text/english', NULL)[0m
+  [4;35;1mMimeType Create (0.000558)[0m   [0mINSERT INTO mime_types ("mime_type", "description") VALUES('text/enriched', NULL)[0m
+  [4;36;1mMimeType Create (0.000541)[0m   [0;1mINSERT INTO mime_types ("mime_type", "description") VALUES('text/h323', NULL)[0m
+  [4;35;1mFileExtension Create (0.000583)[0m   [0mINSERT INTO file_extensions ("extension", "mime_type_id") VALUES('323', 19)[0m
+  [4;36;1mMimeType Create (0.000586)[0m   [0;1mINSERT INTO mime_types ("mime_type", "description") VALUES('text/html', NULL)[0m
+  [4;35;1mFileExtension Create (0.000561)[0m   [0mINSERT INTO file_extensions ("extension", "mime_type_id") VALUES('html', 20)[0m
+  [4;36;1mFileExtension Create (0.000570)[0m   [0;1mINSERT INTO file_extensions ("extension", "mime_type_id") VALUES('htm', 20)[0m
+  [4;35;1mFileExtension Create (0.000551)[0m   [0mINSERT INTO file_extensions ("extension", "mime_type_id") VALUES('shtml', 20)[0m
+  [4;36;1mMimeType Create (0.000952)[0m   [0;1mINSERT INTO mime_types ("mime_type", "description") VALUES('application/x-javascript', NULL)[0m
+  [4;35;1mFileExtension Create (0.000565)[0m   [0mINSERT INTO file_extensions ("extension", "mime_type_id") VALUES('js', 21)[0m
+  [4;36;1mMimeType Create (0.000568)[0m   [0;1mINSERT INTO mime_types ("mime_type", "description") VALUES('application/msword', NULL)[0m
+  [4;35;1mFileExtension Create (0.000559)[0m   [0mINSERT INTO file_extensions ("extension", "mime_type_id") VALUES('doc', 22)[0m
+  [4;36;1mFileExtension Create (0.000600)[0m   [0;1mINSERT INTO file_extensions ("extension", "mime_type_id") VALUES('dot', 22)[0m
+  [4;35;1mMimeType Create (0.000611)[0m   [0mINSERT INTO mime_types ("mime_type", "description") VALUES('application/pdf', NULL)[0m
+  [4;36;1mFileExtension Create (0.000563)[0m   [0;1mINSERT INTO file_extensions ("extension", "mime_type_id") VALUES('pdf', 23)[0m
+  [4;35;1mMimeType Create (0.000563)[0m   [0mINSERT INTO mime_types ("mime_type", "description") VALUES('application/xml', NULL)[0m
+  [4;36;1mFileExtension Create (0.000567)[0m   [0;1mINSERT INTO file_extensions ("extension", "mime_type_id") VALUES('xml', 24)[0m
+  [4;35;1mFileExtension Create (0.000826)[0m   [0mINSERT INTO file_extensions ("extension", "mime_type_id") VALUES('xsl', 24)[0m
+  [4;36;1mMimeType Create (0.000579)[0m   [0;1mINSERT INTO mime_types ("mime_type", "description") VALUES('application/zip', NULL)[0m
+  [4;35;1mFileExtension Create (0.000585)[0m   [0mINSERT INTO file_extensions ("extension", "mime_type_id") VALUES('zip', 25)[0m
+  [4;36;1mMimeType Create (0.000584)[0m   [0;1mINSERT INTO mime_types ("mime_type", "description") VALUES('audio/mpeg', NULL)[0m
+  [4;35;1mFileExtension Create (0.000574)[0m   [0mINSERT INTO file_extensions ("extension", "mime_type_id") VALUES('mpga', 26)[0m
+  [4;36;1mFileExtension Create (0.000660)[0m   [0;1mINSERT INTO file_extensions ("extension", "mime_type_id") VALUES('mpega', 26)[0m
+  [4;35;1mFileExtension Create (0.000593)[0m   [0mINSERT INTO file_extensions ("extension", "mime_type_id") VALUES('mp2', 26)[0m
+  [4;36;1mFileExtension Create (0.000570)[0m   [0;1mINSERT INTO file_extensions ("extension", "mime_type_id") VALUES('mp3', 26)[0m
+  [4;35;1mFileExtension Create (0.000689)[0m   [0mINSERT INTO file_extensions ("extension", "mime_type_id") VALUES('m4a', 26)[0m
+  [4;36;1mMimeType Create (0.000576)[0m   [0;1mINSERT INTO mime_types ("mime_type", "description") VALUES('text/plain', NULL)[0m
+  [4;35;1mFileExtension Create (0.000707)[0m   [0mINSERT INTO file_extensions ("extension", "mime_type_id") VALUES('asc', 27)[0m
+  [4;36;1mFileExtension Create (0.000584)[0m   [0;1mINSERT INTO file_extensions ("extension", "mime_type_id") VALUES('txt', 27)[0m
+  [4;35;1mFileExtension Create (0.000600)[0m   [0mINSERT INTO file_extensions ("extension", "mime_type_id") VALUES('text', 27)[0m
+  [4;36;1mFileExtension Create (0.000584)[0m   [0;1mINSERT INTO file_extensions ("extension", "mime_type_id") VALUES('diff', 27)[0m
+  [4;35;1mFileExtension Create (0.000700)[0m   [0mINSERT INTO file_extensions ("extension", "mime_type_id") VALUES('pot', 27)[0m
+  [4;36;1mMimeType Create (0.000574)[0m   [0;1mINSERT INTO mime_types ("mime_type", "description") VALUES('video/mpeg', NULL)[0m
+  [4;35;1mFileExtension Create (0.000588)[0m   [0mINSERT INTO file_extensions ("extension", "mime_type_id") VALUES('mpeg', 28)[0m
+  [4;36;1mFileExtension Create (0.000571)[0m   [0;1mINSERT INTO file_extensions ("extension", "mime_type_id") VALUES('mpg', 28)[0m
+  [4;35;1mFileExtension Create (0.000589)[0m   [0mINSERT INTO file_extensions ("extension", "mime_type_id") VALUES('mpe', 28)[0m
+  [4;36;1mMimeType Create (0.000595)[0m   [0;1mINSERT INTO mime_types ("mime_type", "description") VALUES('video/mp4', NULL)[0m
+  [4;35;1mFileExtension Create (0.000706)[0m   [0mINSERT INTO file_extensions ("extension", "mime_type_id") VALUES('mp4', 29)[0m
+  [4;36;1mMimeType Create (0.000569)[0m   [0;1mINSERT INTO mime_types ("mime_type", "description") VALUES('video/quicktime', NULL)[0m
+  [4;35;1mFileExtension Create (0.000565)[0m   [0mINSERT INTO file_extensions ("extension", "mime_type_id") VALUES('qt', 30)[0m
+  [4;36;1mFileExtension Create (0.000600)[0m   [0;1mINSERT INTO file_extensions ("extension", "mime_type_id") VALUES('mov', 30)[0m
+  [4;35;1mSiteMapping Load (0.001179)[0m   [0mSELECT * FROM site_mappings WHERE (chunk_id is not null) [0m
+  [4;36;1mChunk Load (0.010203)[0m   [0;1mSELECT * FROM chunks WHERE (mime_type_id is null) [0m
+  [4;35;1mSQL (0.082021)[0m   [0m UPDATE plugin_schema_info 
+ SET version = 1 
+ WHERE plugin_name = 'railfrog'
+[0m
+  [4;36;1mSQL (0.000551)[0m   [0;1m SELECT version FROM plugin_schema_info 
+ WHERE plugin_name = 'railfrog'
+[0m
+Migrating to AddingCommentsFieldForChunkVersion (2)
+  [4;35;1mSQL (0.007305)[0m   [0mALTER TABLE chunk_versions ADD "comments" varchar(255)[0m
+  [4;36;1mSQL (0.018679)[0m   [0;1mVACUUM[0m
+  [4;35;1mSQL (0.008407)[0m   [0m UPDATE plugin_schema_info 
+ SET version = 2 
+ WHERE plugin_name = 'railfrog'
+[0m
+  [4;36;1mSQL (0.000499)[0m   [0;1m SELECT version FROM plugin_schema_info 
+ WHERE plugin_name = 'railfrog'
+[0m
+Migrating to AddIsInternalField (3)
+  [4;35;1mSQL (0.008642)[0m   [0mALTER TABLE site_mappings ADD "is_internal" boolean DEFAULT 'f'[0m
+  [4;36;1mSQL (0.019912)[0m   [0;1mVACUUM[0m
+  [4;35;1mSQL (0.005055)[0m   [0m UPDATE plugin_schema_info 
+ SET version = 3 
+ WHERE plugin_name = 'railfrog'
+[0m
+  [4;36;1mSQL (0.000492)[0m   [0;1m SELECT version FROM plugin_schema_info 
+ WHERE plugin_name = 'railfrog'
+[0m
+Migrating to DropObsoleteColumns (4)
+  [4;35;1mSQL (0.001154)[0m   [0mCREATE TEMPORARY TABLE altered_site_mappings ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "path_segment" varchar(255) DEFAULT '' NOT NULL, "chunk_id" integer DEFAULT NULL, "version" integer DEFAULT NULL, "updated_at" datetime DEFAULT NULL, "root_id" integer DEFAULT 0, "parent_id" integer DEFAULT 0, "depth" integer DEFAULT 0, "lft" integer DEFAULT 0, "rgt" integer DEFAULT 0, "is_internal" boolean DEFAULT 'f') [0m
+  [4;36;1mSQL (0.001047)[0m   [0;1mPRAGMA index_list(site_mappings)[0m
+  [4;35;1mSQL (0.000390)[0m   [0mPRAGMA index_info('site_mappings_depth_index')[0m
+  [4;36;1mSQL (0.000622)[0m   [0;1mPRAGMA index_info('site_mappings_lft_index')[0m
+  [4;35;1mSQL (0.000353)[0m   [0mPRAGMA index_info('site_mappings_parent_id_index')[0m
+  [4;36;1mSQL (0.000505)[0m   [0;1mPRAGMA index_info('site_mappings_path_segment_index')[0m
+  [4;35;1mSQL (0.000349)[0m   [0mPRAGMA index_info('site_mappings_chunk_id_index')[0m
+  [4;36;1mSQL (0.000439)[0m   [0;1mCREATE INDEX "temp_altered_site_mappings_depth_index" ON altered_site_mappings ("depth")[0m
+  [4;35;1mSQL (0.000368)[0m   [0mCREATE INDEX "temp_altered_site_mappings_lft_index" ON altered_site_mappings ("lft", "rgt")[0m
+  [4;36;1mSQL (0.000375)[0m   [0;1mCREATE INDEX "temp_altered_site_mappings_parent_id_index" ON altered_site_mappings ("parent_id")[0m
+  [4;35;1mSQL (0.000370)[0m   [0mCREATE INDEX "temp_altered_site_mappings_path_segment_index" ON altered_site_mappings ("path_segment", "version")[0m
+  [4;36;1mSQL (0.000352)[0m   [0;1mCREATE INDEX "temp_altered_site_mappings_chunk_id_index" ON altered_site_mappings ("chunk_id")[0m
+  [4;35;1mSQL (0.001621)[0m   [0mDROP TABLE site_mappings[0m
+  [4;36;1mSQL (0.000667)[0m   [0;1mCREATE TABLE site_mappings ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "path_segment" varchar(255) DEFAULT '' NOT NULL, "chunk_id" integer DEFAULT NULL, "version" integer DEFAULT NULL, "updated_at" datetime DEFAULT NULL, "root_id" integer DEFAULT NULL, "parent_id" integer DEFAULT 0, "depth" integer DEFAULT 0, "lft" integer DEFAULT 0, "rgt" integer DEFAULT 0, "is_internal" boolean DEFAULT 'f') [0m
+  [4;35;1mSQL (0.001039)[0m   [0mPRAGMA index_list(altered_site_mappings)[0m
+  [4;36;1mSQL (0.000355)[0m   [0;1mPRAGMA index_info('temp_altered_site_mappings_chunk_id_index')[0m
+  [4;35;1mSQL (0.000494)[0m   [0mPRAGMA index_info('temp_altered_site_mappings_path_segment_index')[0m
+  [4;36;1mSQL (0.000363)[0m   [0;1mPRAGMA index_info('temp_altered_site_mappings_parent_id_index')[0m
+  [4;35;1mSQL (0.000526)[0m   [0mPRAGMA index_info('temp_altered_site_mappings_lft_index')[0m
+  [4;36;1mSQL (0.000357)[0m   [0;1mPRAGMA index_info('temp_altered_site_mappings_depth_index')[0m
+  [4;35;1mSQL (0.000420)[0m   [0mCREATE INDEX "altered_site_mappings_chunk_id_index" ON site_mappings ("chunk_id")[0m
+  [4;36;1mSQL (0.000372)[0m   [0;1mCREATE INDEX "altered_site_mappings_path_segment_index" ON site_mappings ("path_segment", "version")[0m
+  [4;35;1mSQL (0.000364)[0m   [0mCREATE INDEX "altered_site_mappings_parent_id_index" ON site_mappings ("parent_id")[0m
+  [4;36;1mSQL (0.000730)[0m   [0;1mCREATE INDEX "altered_site_mappings_lft_index" ON site_mappings ("lft", "rgt")[0m
+  [4;35;1mSQL (0.000535)[0m   [0mCREATE INDEX "altered_site_mappings_depth_index" ON site_mappings ("depth")[0m
+  [4;36;1mSQL (0.000895)[0m   [0;1mDROP TABLE altered_site_mappings[0m
+  [4;35;1mSQL (0.000740)[0m   [0mCREATE TEMPORARY TABLE altered_site_mappings ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "path_segment" varchar(255) DEFAULT '' NOT NULL, "chunk_id" integer DEFAULT NULL, "version" integer DEFAULT NULL, "updated_at" datetime DEFAULT NULL, "root_id" integer DEFAULT NULL, "parent_id" integer DEFAULT 0, "depth" integer DEFAULT 0, "lft" integer DEFAULT 0, "rgt" integer DEFAULT 0, "is_internal" boolean DEFAULT 'f') [0m
+  [4;36;1mSQL (0.000955)[0m   [0;1mPRAGMA index_list(site_mappings)[0m
+  [4;35;1mSQL (0.000336)[0m   [0mPRAGMA index_info('altered_site_mappings_depth_index')[0m
+  [4;36;1mSQL (0.000484)[0m   [0;1mPRAGMA index_info('altered_site_mappings_lft_index')[0m
+  [4;35;1mSQL (0.000359)[0m   [0mPRAGMA index_info('altered_site_mappings_parent_id_index')[0m
+  [4;36;1mSQL (0.000488)[0m   [0;1mPRAGMA index_info('altered_site_mappings_path_segment_index')[0m
+  [4;35;1mSQL (0.000331)[0m   [0mPRAGMA index_info('altered_site_mappings_chunk_id_index')[0m
+  [4;36;1mSQL (0.000512)[0m   [0;1mCREATE INDEX "temp_altered_altered_site_mappings_depth_index" ON altered_site_mappings ("depth")[0m
+  [4;35;1mSQL (0.000354)[0m   [0mCREATE INDEX "temp_altered_altered_site_mappings_lft_index" ON altered_site_mappings ("lft", "rgt")[0m
+  [4;36;1mSQL (0.000361)[0m   [0;1mCREATE INDEX "temp_altered_altered_site_mappings_parent_id_index" ON altered_site_mappings ("parent_id")[0m
+  [4;35;1mSQL (0.000353)[0m   [0mCREATE INDEX "temp_altered_altered_site_mappings_path_segment_index" ON altered_site_mappings ("path_segment", "version")[0m
+  [4;36;1mSQL (0.000391)[0m   [0;1mCREATE INDEX "temp_altered_altered_site_mappings_chunk_id_index" ON altered_site_mappings ("chunk_id")[0m
+  [4;35;1mSQL (0.001642)[0m   [0mDROP TABLE site_mappings[0m
+  [4;36;1mSQL (0.000673)[0m   [0;1mCREATE TABLE site_mappings ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "path_segment" varchar(255) DEFAULT '' NOT NULL, "chunk_id" integer DEFAULT NULL, "version" integer DEFAULT NULL, "updated_at" datetime DEFAULT NULL, "root_id" integer DEFAULT NULL, "parent_id" integer DEFAULT 0, "depth" integer DEFAULT NULL, "lft" integer DEFAULT 0, "rgt" integer DEFAULT 0, "is_internal" boolean DEFAULT 'f') [0m
+  [4;35;1mSQL (0.000972)[0m   [0mPRAGMA index_list(altered_site_mappings)[0m
+  [4;36;1mSQL (0.000338)[0m   [0;1mPRAGMA index_info('temp_altered_altered_site_mappings_chunk_id_index')[0m
+  [4;35;1mSQL (0.000672)[0m   [0mPRAGMA index_info('temp_altered_altered_site_mappings_path_segment_index')[0m
+  [4;36;1mSQL (0.000338)[0m   [0;1mPRAGMA index_info('temp_altered_altered_site_mappings_parent_id_index')[0m
+  [4;35;1mSQL (0.000479)[0m   [0mPRAGMA index_info('temp_altered_altered_site_mappings_lft_index')[0m
+  [4;36;1mSQL (0.000331)[0m   [0;1mPRAGMA index_info('temp_altered_altered_site_mappings_depth_index')[0m
+  [4;35;1mSQL (0.000400)[0m   [0mCREATE INDEX "altered_site_mappings_chunk_id_index" ON site_mappings ("chunk_id")[0m
+  [4;36;1mSQL (0.000385)[0m   [0;1mCREATE INDEX "altered_site_mappings_path_segment_index" ON site_mappings ("path_segment", "version")[0m
+  [4;35;1mSQL (0.000396)[0m   [0mCREATE INDEX "altered_site_mappings_parent_id_index" ON site_mappings ("parent_id")[0m
+  [4;36;1mSQL (0.000384)[0m   [0;1mCREATE INDEX "altered_site_mappings_lft_index" ON site_mappings ("lft", "rgt")[0m
+  [4;35;1mSQL (0.000354)[0m   [0mCREATE INDEX "altered_site_mappings_depth_index" ON site_mappings ("depth")[0m
+  [4;36;1mSQL (0.000697)[0m   [0;1mDROP TABLE altered_site_mappings[0m
+  [4;35;1mSQL (0.000734)[0m   [0mCREATE TEMPORARY TABLE altered_site_mappings ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "path_segment" varchar(255) DEFAULT '' NOT NULL, "chunk_id" integer DEFAULT NULL, "version" integer DEFAULT NULL, "updated_at" datetime DEFAULT NULL, "root_id" integer DEFAULT NULL, "parent_id" integer DEFAULT 0, "depth" integer DEFAULT NULL, "lft" integer DEFAULT 0, "rgt" integer DEFAULT 0, "is_internal" boolean DEFAULT 'f') [0m
+  [4;36;1mSQL (0.000952)[0m   [0;1mPRAGMA index_list(site_mappings)[0m
+  [4;35;1mSQL (0.000334)[0m   [0mPRAGMA index_info('altered_site_mappings_depth_index')[0m
+  [4;36;1mSQL (0.000503)[0m   [0;1mPRAGMA index_info('altered_site_mappings_lft_index')[0m
+  [4;35;1mSQL (0.000350)[0m   [0mPRAGMA index_info('altered_site_mappings_parent_id_index')[0m
+  [4;36;1mSQL (0.000481)[0m   [0;1mPRAGMA index_info('altered_site_mappings_path_segment_index')[0m
+  [4;35;1mSQL (0.000331)[0m   [0mPRAGMA index_info('altered_site_mappings_chunk_id_index')[0m
+  [4;36;1mSQL (0.000365)[0m   [0;1mCREATE INDEX "temp_altered_altered_site_mappings_depth_index" ON altered_site_mappings ("depth")[0m
+  [4;35;1mSQL (0.000363)[0m   [0mCREATE INDEX "temp_altered_altered_site_mappings_lft_index" ON altered_site_mappings ("lft", "rgt")[0m
+  [4;36;1mSQL (0.000355)[0m   [0;1mCREATE INDEX "temp_altered_altered_site_mappings_parent_id_index" ON altered_site_mappings ("parent_id")[0m
+  [4;35;1mSQL (0.001901)[0m   [0mCREATE INDEX "temp_altered_altered_site_mappings_path_segment_index" ON altered_site_mappings ("path_segment", "version")[0m
+  [4;36;1mSQL (0.000383)[0m   [0;1mCREATE INDEX "temp_altered_altered_site_mappings_chunk_id_index" ON altered_site_mappings ("chunk_id")[0m
+  [4;35;1mSQL (0.001442)[0m   [0mDROP TABLE site_mappings[0m
+  [4;36;1mSQL (0.000690)[0m   [0;1mCREATE TABLE site_mappings ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "path_segment" varchar(255) DEFAULT '' NOT NULL, "chunk_id" integer DEFAULT NULL, "version" integer DEFAULT NULL, "updated_at" datetime DEFAULT NULL, "root_id" integer DEFAULT NULL, "parent_id" integer DEFAULT NULL, "depth" integer DEFAULT NULL, "lft" integer DEFAULT 0, "rgt" integer DEFAULT 0, "is_internal" boolean DEFAULT 'f') [0m
+  [4;35;1mSQL (0.000996)[0m   [0mPRAGMA index_list(altered_site_mappings)[0m
+  [4;36;1mSQL (0.000360)[0m   [0;1mPRAGMA index_info('temp_altered_altered_site_mappings_chunk_id_index')[0m
+  [4;35;1mSQL (0.000496)[0m   [0mPRAGMA index_info('temp_altered_altered_site_mappings_path_segment_index')[0m
+  [4;36;1mSQL (0.000374)[0m   [0;1mPRAGMA index_info('temp_altered_altered_site_mappings_parent_id_index')[0m
+  [4;35;1mSQL (0.000478)[0m   [0mPRAGMA index_info('temp_altered_altered_site_mappings_lft_index')[0m
+  [4;36;1mSQL (0.000359)[0m   [0;1mPRAGMA index_info('temp_altered_altered_site_mappings_depth_index')[0m
+  [4;35;1mSQL (0.000401)[0m   [0mCREATE INDEX "altered_site_mappings_chunk_id_index" ON site_mappings ("chunk_id")[0m
+  [4;36;1mSQL (0.000360)[0m   [0;1mCREATE INDEX "altered_site_mappings_path_segment_index" ON site_mappings ("path_segment", "version")[0m
+  [4;35;1mSQL (0.000365)[0m   [0mCREATE INDEX "altered_site_mappings_parent_id_index" ON site_mappings ("parent_id")[0m
+  [4;36;1mSQL (0.000383)[0m   [0;1mCREATE INDEX "altered_site_mappings_lft_index" ON site_mappings ("lft", "rgt")[0m
+  [4;35;1mSQL (0.000351)[0m   [0mCREATE INDEX "altered_site_mappings_depth_index" ON site_mappings ("depth")[0m
+  [4;36;1mSQL (0.000712)[0m   [0;1mDROP TABLE altered_site_mappings[0m
+  [4;35;1mSQL (0.000742)[0m   [0mCREATE TEMPORARY TABLE altered_site_mappings ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "path_segment" varchar(255) DEFAULT '' NOT NULL, "chunk_id" integer DEFAULT NULL, "version" integer DEFAULT NULL, "updated_at" datetime DEFAULT NULL, "root_id" integer DEFAULT NULL, "parent_id" integer DEFAULT NULL, "depth" integer DEFAULT NULL, "lft" integer DEFAULT 0, "rgt" integer DEFAULT 0, "is_internal" boolean DEFAULT 'f') [0m
+  [4;36;1mSQL (0.000950)[0m   [0;1mPRAGMA index_list(site_mappings)[0m
+  [4;35;1mSQL (0.000337)[0m   [0mPRAGMA index_info('altered_site_mappings_depth_index')[0m
+  [4;36;1mSQL (0.000555)[0m   [0;1mPRAGMA index_info('altered_site_mappings_lft_index')[0m
+  [4;35;1mSQL (0.000332)[0m   [0mPRAGMA index_info('altered_site_mappings_parent_id_index')[0m
+  [4;36;1mSQL (0.000523)[0m   [0;1mPRAGMA index_info('altered_site_mappings_path_segment_index')[0m
+  [4;35;1mSQL (0.000329)[0m   [0mPRAGMA index_info('altered_site_mappings_chunk_id_index')[0m
+  [4;36;1mSQL (0.000498)[0m   [0;1mCREATE INDEX "temp_altered_altered_site_mappings_depth_index" ON altered_site_mappings ("depth")[0m
+  [4;35;1mSQL (0.000364)[0m   [0mCREATE INDEX "temp_altered_altered_site_mappings_lft_index" ON altered_site_mappings ("lft", "rgt")[0m
+  [4;36;1mSQL (0.000370)[0m   [0;1mCREATE INDEX "temp_altered_altered_site_mappings_parent_id_index" ON altered_site_mappings ("parent_id")[0m
+  [4;35;1mSQL (0.000361)[0m   [0mCREATE INDEX "temp_altered_altered_site_mappings_path_segment_index" ON altered_site_mappings ("path_segment", "version")[0m
+  [4;36;1mSQL (0.000341)[0m   [0;1mCREATE INDEX "temp_altered_altered_site_mappings_chunk_id_index" ON altered_site_mappings ("chunk_id")[0m
+  [4;35;1mSQL (0.001448)[0m   [0mDROP TABLE site_mappings[0m
+  [4;36;1mSQL (0.000665)[0m   [0;1mCREATE TABLE site_mappings ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "path_segment" varchar(255) DEFAULT '' NOT NULL, "chunk_id" integer DEFAULT NULL, "version" integer DEFAULT NULL, "updated_at" datetime DEFAULT NULL, "root_id" integer DEFAULT NULL, "parent_id" integer DEFAULT NULL, "depth" integer DEFAULT NULL, "lft" integer DEFAULT NULL, "rgt" integer DEFAULT 0, "is_internal" boolean DEFAULT 'f') [0m
+  [4;35;1mSQL (0.000961)[0m   [0mPRAGMA index_list(altered_site_mappings)[0m
+  [4;36;1mSQL (0.000358)[0m   [0;1mPRAGMA index_info('temp_altered_altered_site_mappings_chunk_id_index')[0m
+  [4;35;1mSQL (0.000528)[0m   [0mPRAGMA index_info('temp_altered_altered_site_mappings_path_segment_index')[0m
+  [4;36;1mSQL (0.000336)[0m   [0;1mPRAGMA index_info('temp_altered_altered_site_mappings_parent_id_index')[0m
+  [4;35;1mSQL (0.000472)[0m   [0mPRAGMA index_info('temp_altered_altered_site_mappings_lft_index')[0m
+  [4;36;1mSQL (0.000329)[0m   [0;1mPRAGMA index_info('temp_altered_altered_site_mappings_depth_index')[0m
+  [4;35;1mSQL (0.000386)[0m   [0mCREATE INDEX "altered_site_mappings_chunk_id_index" ON site_mappings ("chunk_id")[0m
+  [4;36;1mSQL (0.000364)[0m   [0;1mCREATE INDEX "altered_site_mappings_path_segment_index" ON site_mappings ("path_segment", "version")[0m
+  [4;35;1mSQL (0.000406)[0m   [0mCREATE INDEX "altered_site_mappings_parent_id_index" ON site_mappings ("parent_id")[0m
+  [4;36;1mSQL (0.000377)[0m   [0;1mCREATE INDEX "altered_site_mappings_lft_index" ON site_mappings ("lft", "rgt")[0m
+  [4;35;1mSQL (0.000350)[0m   [0mCREATE INDEX "altered_site_mappings_depth_index" ON site_mappings ("depth")[0m
+  [4;36;1mSQL (0.000715)[0m   [0;1mDROP TABLE altered_site_mappings[0m
+  [4;35;1mSQL (0.000735)[0m   [0mCREATE TEMPORARY TABLE altered_site_mappings ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "path_segment" varchar(255) DEFAULT '' NOT NULL, "chunk_id" integer DEFAULT NULL, "version" integer DEFAULT NULL, "updated_at" datetime DEFAULT NULL, "root_id" integer DEFAULT NULL, "parent_id" integer DEFAULT NULL, "depth" integer DEFAULT NULL, "lft" integer DEFAULT NULL, "rgt" integer DEFAULT 0, "is_internal" boolean DEFAULT 'f') [0m
+  [4;36;1mSQL (0.001255)[0m   [0;1mPRAGMA index_list(site_mappings)[0m
+  [4;35;1mSQL (0.000360)[0m   [0mPRAGMA index_info('altered_site_mappings_depth_index')[0m
+  [4;36;1mSQL (0.000577)[0m   [0;1mPRAGMA index_info('altered_site_mappings_lft_index')[0m
+  [4;35;1mSQL (0.000395)[0m   [0mPRAGMA index_info('altered_site_mappings_parent_id_index')[0m
+  [4;36;1mSQL (0.000486)[0m   [0;1mPRAGMA index_info('altered_site_mappings_path_segment_index')[0m
+  [4;35;1mSQL (0.000336)[0m   [0mPRAGMA index_info('altered_site_mappings_chunk_id_index')[0m
+  [4;36;1mSQL (0.000394)[0m   [0;1mCREATE INDEX "temp_altered_altered_site_mappings_depth_index" ON altered_site_mappings ("depth")[0m
+  [4;35;1mSQL (0.000664)[0m   [0mCREATE INDEX "temp_altered_altered_site_mappings_lft_index" ON altered_site_mappings ("lft", "rgt")[0m
+  [4;36;1mSQL (0.000355)[0m   [0;1mCREATE INDEX "temp_altered_altered_site_mappings_parent_id_index" ON altered_site_mappings ("parent_id")[0m
+  [4;35;1mSQL (0.000352)[0m   [0mCREATE INDEX "temp_altered_altered_site_mappings_path_segment_index" ON altered_site_mappings ("path_segment", "version")[0m
+  [4;36;1mSQL (0.000343)[0m   [0;1mCREATE INDEX "temp_altered_altered_site_mappings_chunk_id_index" ON altered_site_mappings ("chunk_id")[0m
+  [4;35;1mSQL (0.002252)[0m   [0mDROP TABLE site_mappings[0m
+  [4;36;1mSQL (0.000932)[0m   [0;1mCREATE TABLE site_mappings ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "path_segment" varchar(255) DEFAULT '' NOT NULL, "chunk_id" integer DEFAULT NULL, "version" integer DEFAULT NULL, "updated_at" datetime DEFAULT NULL, "root_id" integer DEFAULT NULL, "parent_id" integer DEFAULT NULL, "depth" integer DEFAULT NULL, "lft" integer DEFAULT NULL, "rgt" integer DEFAULT NULL, "is_internal" boolean DEFAULT 'f') [0m
+  [4;35;1mSQL (0.001481)[0m   [0mPRAGMA index_list(altered_site_mappings)[0m
+  [4;36;1mSQL (0.000364)[0m   [0;1mPRAGMA index_info('temp_altered_altered_site_mappings_chunk_id_index')[0m
+  [4;35;1mSQL (0.000502)[0m   [0mPRAGMA index_info('temp_altered_altered_site_mappings_path_segment_index')[0m
+  [4;36;1mSQL (0.000342)[0m   [0;1mPRAGMA index_info('temp_altered_altered_site_mappings_parent_id_index')[0m
+  [4;35;1mSQL (0.000500)[0m   [0mPRAGMA index_info('temp_altered_altered_site_mappings_lft_index')[0m
+  [4;36;1mSQL (0.000344)[0m   [0;1mPRAGMA index_info('temp_altered_altered_site_mappings_depth_index')[0m
+  [4;35;1mSQL (0.000412)[0m   [0mCREATE INDEX "altered_site_mappings_chunk_id_index" ON site_mappings ("chunk_id")[0m
+  [4;36;1mSQL (0.000381)[0m   [0;1mCREATE INDEX "altered_site_mappings_path_segment_index" ON site_mappings ("path_segment", "version")[0m
+  [4;35;1mSQL (0.000622)[0m   [0mCREATE INDEX "altered_site_mappings_parent_id_index" ON site_mappings ("parent_id")[0m
+  [4;36;1mSQL (0.000423)[0m   [0;1mCREATE INDEX "altered_site_mappings_lft_index" ON site_mappings ("lft", "rgt")[0m
+  [4;35;1mSQL (0.000423)[0m   [0mCREATE INDEX "altered_site_mappings_depth_index" ON site_mappings ("depth")[0m
+  [4;36;1mSQL (0.000779)[0m   [0;1mDROP TABLE altered_site_mappings[0m
+  [4;35;1mSiteMapping Load (0.000361)[0m   [0mSELECT * FROM site_mappings WHERE (site_mappings."root_id" = 0) [0m
+  [4;36;1mSiteMapping Load (0.000326)[0m   [0;1mSELECT * FROM site_mappings WHERE (site_mappings."parent_id" = 0) [0m
+  [4;35;1mSQL (0.007680)[0m   [0m UPDATE plugin_schema_info 
+ SET version = 4 
+ WHERE plugin_name = 'railfrog'
+[0m
+  [4;36;1mSQL (0.000467)[0m   [0;1m SELECT version FROM plugin_schema_info 
+ WHERE plugin_name = 'railfrog'
+[0m
+Migrating to StoreMimeTypeStringOnChunk (5)
+  [4;35;1mSQL (0.006668)[0m   [0mALTER TABLE chunks ADD "mime_type_str" varchar(100) DEFAULT ''[0m
+  [4;36;1mSQL (0.017616)[0m   [0;1mVACUUM[0m
+  [4;35;1mChunk Load (0.001380)[0m   [0mSELECT * FROM chunks [0m
+  [4;36;1mSQL (0.007484)[0m   [0;1m UPDATE plugin_schema_info 
+ SET version = 5 
+ WHERE plugin_name = 'railfrog'
+[0m
+  [4;35;1mSQL (0.000484)[0m   [0m SELECT version FROM plugin_schema_info 
+ WHERE plugin_name = 'railfrog'
+[0m
+Migrating to IncreaseChunkSize (6)
+  [4;36;1mSQL (0.006461)[0m   [0;1m UPDATE plugin_schema_info 
+ SET version = 6 
+ WHERE plugin_name = 'railfrog'
+[0m
+  [4;35;1mSQL (0.003754)[0m   [0mUPDATE schema_info SET version = 1[0m
+  [4;36;1mSQL (0.000522)[0m   [0;1mSELECT * FROM schema_info[0m
+  [4;35;1mSQL (0.001315)[0m   [0m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;36;1mSQL (0.000645)[0m   [0;1mPRAGMA index_list(chunk_versions)[0m
+  [4;35;1mSQL (0.000354)[0m   [0mPRAGMA index_info('chunk_versions_version_index')[0m
+  [4;36;1mSQL (0.000345)[0m   [0;1mPRAGMA index_info('chunk_versions_chunk_id_index')[0m
+  [4;35;1mSQL (0.000372)[0m   [0mPRAGMA index_list(chunks)[0m
+  [4;36;1mSQL (0.000343)[0m   [0;1mPRAGMA index_info('chunks_mime_type_id_index')[0m
+  [4;35;1mSQL (0.000417)[0m   [0mPRAGMA index_list(file_extensions)[0m
+  [4;36;1mSQL (0.000427)[0m   [0;1mPRAGMA index_info('file_extensions_mime_type_id_index')[0m
+  [4;35;1mSQL (0.000346)[0m   [0mPRAGMA index_list(mapping_labels)[0m
+  [4;36;1mSQL (0.000345)[0m   [0;1mPRAGMA index_info('mapping_labels_site_mapping_id_index')[0m
+  [4;35;1mSQL (0.000367)[0m   [0mPRAGMA index_list(mime_types)[0m
+  [4;36;1mSQL (0.000474)[0m   [0;1mPRAGMA index_info('mime_types_mime_type_index')[0m
+  [4;35;1mSQL (0.000957)[0m   [0mPRAGMA index_list(site_mappings)[0m
+  [4;36;1mSQL (0.000379)[0m   [0;1mPRAGMA index_info('altered_site_mappings_depth_index')[0m
+  [4;35;1mSQL (0.000504)[0m   [0mPRAGMA index_info('altered_site_mappings_lft_index')[0m
+  [4;36;1mSQL (0.000335)[0m   [0;1mPRAGMA index_info('altered_site_mappings_parent_id_index')[0m
+  [4;35;1mSQL (0.000486)[0m   [0mPRAGMA index_info('altered_site_mappings_path_segment_index')[0m
+  [4;36;1mSQL (0.000337)[0m   [0;1mPRAGMA index_info('altered_site_mappings_chunk_id_index')[0m
+  [4;35;1mSQL (0.000136)[0m   [0mPRAGMA index_list(users)[0m

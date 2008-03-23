@@ -9,7 +9,7 @@ RAILS_GEM_VERSION = '2.0.2' unless defined? RAILS_GEM_VERSION
 
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
-require File.join(File.dirname(__FILE__), '../vendor/plugins/engines/boot
+require File.join(File.dirname(__FILE__), '../vendor/plugins/engines/boot')
 
 Rails::Initializer.run do |config|
   # Settings in config/environments/* take precedence over those specified here.
@@ -38,7 +38,7 @@ Rails::Initializer.run do |config|
   # Make sure the secret is at least 30 characters and all random, 
   # no regular words or you'll be exposed to dictionary attacks.
   config.action_controller.session = {
-    :session_key => '_ref_app_session',
+    :session_key => '_railfrog_ref_app_session',
     :secret      => '8ba1bdc63a910791f867ca048e182636798d4352788d48ed34fb4a9b9dbcfddfe4be6c18c6727d30b18ecb495d4d20cbae0a88396a9e669f48174d1128f144ba'
   }
 
