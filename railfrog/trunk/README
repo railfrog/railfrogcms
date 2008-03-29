@@ -68,4 +68,14 @@ To load example site from the file system run
 
   rake railfrog:site:load SITE=vendor/plugins/railfrog/db/sites/railfrog
 
+==== History
+
+Railfrog has been under development since June 2005, six months before
+Rails 1.0 was released. That means there's a lot of cruft, which we try
+to clear out and/or keep up to date -- but we need help with this :-)
+
+You'll find previous experimental work in svn -
+    svn -r 434 co https://svn.versiondude.net/railfrog/cms/railfrog/branches
+
+
 TBD
