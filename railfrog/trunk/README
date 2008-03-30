@@ -53,6 +53,13 @@ just about anyone else to deploy and manage a website.
   ruby script/generate plugin_migration && rake db:migrate
 
 
+=== Configuration
+
+# To enable Xinha editor add following line to your config/environment.rb
+  
+  Railfrog.xinha_enabled = true
+
+
 === How to use Railfrog
 
 Start service by running script/server and open http://localhost:3000/admin
