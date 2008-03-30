@@ -159,9 +159,7 @@ class SiteMapping < ActiveRecord::Base
   def self.get_all_tree
     tree = SiteMapping.find(:all, :order => 'root_id, lft')
 
-    if tree.size == 0
-      tree << SiteMapping.find_root
-    end
+    tree << SiteMapping.find_root if tree.empty?
 
     tree
   end
