@@ -1,6 +1,8 @@
 require 'railfrog'
 
 class RailfrogAdminController < ApplicationController
+  include RailfrogAdminHelper
+
   before_filter :ensure_logged_in
 
   upload_status_for :store_uploaded, :store_uploaded_version
@@ -174,7 +176,6 @@ class RailfrogAdminController < ApplicationController
 
     render :update do |page|
       page.replace_html 'content', :partial => 'new_chunk'
-      puts ">>>>>>>>>>>>>>>> about to call use_xinha?..."  #  FIXME
       page << Railfrog::XINHA_RUNNER_SCRIPT if use_xinha?(@markup, source)
       page.show 'content'
     end
@@ -214,7 +215,6 @@ class RailfrogAdminController < ApplicationController
 
     render :update do |page|
       page.replace_html 'content', :partial => 'edit_chunk'
-      puts ">>>>>>>>>>>>>>>> about to call use_xinha? in edit_chunk..."  #  FIXME
       page << Railfrog::XINHA_RUNNER_SCRIPT if use_xinha?(markup, source)
       page.show 'content'
     end
@@ -410,16 +410,6 @@ class RailfrogAdminController < ApplicationController
     #redirect_to_login
     redirect_to :controller => 'users', :action => 'login'
     return false
-  end
-
-  def use_xinha?(markup,source)
-    puts ">>>>>>>>>>>>>>>>>>>> use_xinha? :: params #{params.inspect}"   # FIXME debug...
-    puts ">>>>>>>>>>>>>>>>>>>> use_xinha? :: Railfrog.xinha_enabled is #{Railfrog.xinha_enabled.inspect}"   # FIXME debug...
-    puts ">>>>>>>>>>>>>>>>>>>> use_xinha? :: markup is \'#{markup.inspect}\'"   # FIXME debug...
-    puts ">>>>>>>>>>>>>>>>>>>> use_xinha? :: source is \'#{source.inspect}\'"   # FIXME debug...
-    retval = ((markup == 'html') && (source != 'true') && Railfrog.xinha_enabled) ? true : false
-    puts ">>>>>>>>>>>>>>>>>>>> use_xinha? returns #{retval}"   # FIXME debug...
-    retval
   end
 
 end

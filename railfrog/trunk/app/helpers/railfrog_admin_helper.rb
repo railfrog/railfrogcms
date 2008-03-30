@@ -45,6 +45,10 @@ module RailfrogAdminHelper
     page << "$(this).addClassName('active')"
   end
 
+  def use_xinha?(markup, source)
+    ((markup == 'html') && (source != 'true') && Railfrog.xinha_enabled) ? true : false
+  end
+
 end
 
 def humanize_markup_name(markup)
