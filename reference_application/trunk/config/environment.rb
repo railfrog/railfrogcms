@@ -59,4 +59,4 @@ Rails::Initializer.run do |config|
   # config.active_record.default_timezone = :utc
 end
 
-#Railfrog.xinha_enabled = false
+Railfrog.xinha_enabled = true
