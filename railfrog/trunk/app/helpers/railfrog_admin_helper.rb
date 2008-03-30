@@ -1,4 +1,6 @@
 module RailfrogAdminHelper
+  TABS = %w{ one two three four }.freeze  
+
   def create_mapping_tree(mappings, parent_id=0)
     mappings[parent_id].sort! do |x,y|
       if (x.all_children.size == y.all_children.size) || (x.all_children.size > 0 && y.all_children.size > 0)
@@ -24,6 +26,25 @@ module RailfrogAdminHelper
 
     tree
   end
+
+  # Activates given tab and deactivate others. 
+  # Shows submenu for active tab and hides all other submenus. 
+  def activate_tab(tab)
+    # hide all submenus
+    (TABS - [ tab ]).each { |item| page.hide item }
+
+    # show submenu of active tab
+    page.show tab
+
+    # deactivate all tabs
+    page.select('ul#folder_tabs li a').each do |item|
+      item.remove_class_name :active
+    end
+
+    # activate given tab
+    page << "$(this).addClassName('active')"
+  end
+
 end
 
 def humanize_markup_name(markup)
