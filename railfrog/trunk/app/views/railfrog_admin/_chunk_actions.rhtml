@@ -2,18 +2,18 @@
 <ul id="folder_tabs" class="subsection_tabs">
 
   <li>
-    <a href="<%= @file_name %>" target="_blank">View</a>
+    <a href="<%= @file_name %>" target="_blank"><%= :view.l('View') %></a>
   </li>	
 
   
   <li>
-    <%= link_to_remote('Edit',
+    <%= link_to_remote(:edit.l('Edit'),
       :url => { :action => 'edit_chunk',
       :chunk_version_id => @chunk_version,
       :site_mapping_id => @site_mapping }) %>
   </li>
   <li>
-    <%= link_to_remote('Edit Source',
+    <%= link_to_remote(:edit_source.l('Edit Source'),
       :url => { :action => 'edit_chunk',
       :chunk_version_id => @chunk_version,
       :site_mapping_id => @site_mapping,
@@ -21,27 +21,27 @@
   </li>
   
   <li>
-    <%= link_to_remote('Upload new version',
+    <%= link_to_remote(:upload_new_version.l('Upload New Version'),
       :url => { :action => 'upload_new_version',
       :chunk_version_id => @chunk_version,
       :mapping_id => @site_mapping}) %>
   </li>
   <li>
-    <%= link_to_remote('Labels',
+    <%= link_to_remote(:labels.l('Labels'),
       :url => { :action => 'show_labels',
       :site_mapping_id => @site_mapping}) %>
   </li>
   <li>
-    <%= link_to_remote('Versions',
+    <%= link_to_remote(:versions.l('Versions'),
       :url => { :action => 'show_versions',
       :chunk_id => @chunk,
       :mapping_id => @site_mapping}) %>
   </li>
   <li>
-    <%= link_to_remote('Delete document',
+    <%= link_to_remote(:delete_document.l('Delete Document'),
       :url => {:action => 'delete_chunk',
       :mapping_id => @site_mapping, :chunk_id => @chunk},
-      :confirm => 'Are you sure?') %>
+      :confirm => :are_you_sure.l('Are you sure?')) %>
   </li>
 </ul>
 </div>

@@ -1,26 +1,26 @@
 <div id="tabsMenu">
 
   <ul id="folder_tabs" class="subsection_tabs">
-    <li><%= link_to_function('Folders', :class => :active) { |page| page.activate_tab 'one' } %></li>
-    <li><%= link_to_function('Documents') { |page| page.activate_tab 'two' } %></li>
-    <li><%= link_to_function('Files') { |page| page.activate_tab 'three' } %></li>
-    <li><%= link_to_function('Labels') { |page| page.activate_tab 'four' } %></li>
+    <li><%= link_to_function(:folders.l('Folders'), :class => :active) { |page| page.activate_tab 'one' } %></li>
+    <li><%= link_to_function(:documents.l('Documents')) { |page| page.activate_tab 'two' } %></li>
+    <li><%= link_to_function(:files.l('Files')) { |page| page.activate_tab 'three' } %></li>
+    <li><%= link_to_function(:labels.l('Labels')) { |page| page.activate_tab 'four' } %></li>
   </ul>
 
   <div class="panelSet">
     <div class="panel" id="one">
       <ul>
         <li>
-          <%= link_to_remote('New folder',
+          <%= link_to_remote(:new_folder.l('New Folder'),
                 :url => {:action => 'new_folder', :parent_id => site_mapping}) %>
         </li>
         <% unless site_mapping.root? %>
           <li>
-            <%= link_to_remote('Rename Folder',
+            <%= link_to_remote(:rename_folder.l('Rename Folder'),
                   :url => {:action => 'rename_folder', :id => site_mapping}) %>
           </li>
           <li>
-            <%= link_to_remote('Delete Folder',
+            <%= link_to_remote(:delete_folder.l('Delete Folder'),
                   :url => {:action => 'delete_folder', :mapping_id => site_mapping},
                   :confirm => 'Are you sure?') %>
           </li> 
@@ -31,15 +31,15 @@
     <div class="panel" id="two"  style="display: none;">
       <ul>
         <li>
-          <%= link_to_remote('New Markdown Document',
+          <%= link_to_remote(:new_markdown_document.l('New Markdown Document'),
                 :url => {:action => 'new_chunk', :parent_id => site_mapping, :markup => :markdown}) %>
         </li>
         <li>
-          <%= link_to_remote('New Textile Document',
+          <%= link_to_remote(:new_textile_document.l('New Textile Document'),
                 :url => {:action => 'new_chunk', :parent_id => site_mapping, :markup => :textile}) %>
         </li>
         <li>
-          <%= link_to_remote('New HTML Document',
+          <%= link_to_remote(:new_html_document.l('New HTML Document'),
                 :url => {:action => 'new_chunk', :parent_id => site_mapping, :markup => :html}) %>
         </li>	  
       </ul>	
@@ -48,7 +48,7 @@
     <div class="panel" id="three"  style="display: none;">
       <ul>
         <li>
-          <%= link_to_remote('Upload file',
+          <%= link_to_remote(:upload_file.l('Upload File'),
                 :url => {:action => 'upload_file', :mapping_id => site_mapping}) %>
         </li>
       </ul>	  
@@ -57,7 +57,7 @@
     <div class="panel" id="four"  style="display: none;">
       <ul>
         <li>
-          <%= link_to_remote('Labels',
+          <%= link_to_remote(:labels.l('Labels'),
                 :url => { :action => 'show_labels',
                 :site_mapping_id => site_mapping}) %>
         </li>

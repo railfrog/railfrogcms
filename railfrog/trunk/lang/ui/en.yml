@@ -1,0 +1,58 @@
+add_label: Add Label
+ago: ago
+are_you_sure: Are you sure?
+
+base_version: Base Version
+
+comments: Comments
+content: Content
+create_new_document: Create New Document
+create_new_folder: Create New Folder
+created_at: Created At
+
+delete_document: Delete Document
+delete_folder: Delete Folder
+document: Document
+document_description: Document Description
+document_id: Document ID
+document_name: Document Name
+document_type: Document Type
+document_versions: Document Versions
+documents: Documents
+
+edit: Edit
+edit_document: Edit Document
+edit_source: Edit Source
+
+files: Files
+folders: Folders
+
+help_document_name_will_be_the_last_part_of_url: "имя документа будет последней частью URL'а этого документа"
+help_internal_documents_be_included_by_layouts: внутренние документы доступны только для включение в шаблоны и не доступны на прямую для пользователей
+is_internal: Is Internal?
+
+labels: Labels
+last_edited: Last Edited
+live: Live
+
+new_folder: New Folder
+new_html_document: New HTML Document
+new_markdown_document: New Markdown Document
+new_textile_document: New Textile Document
+
+put_live: Put Live
+
+railfrog_control_panel: Railfrog Control Panel
+rename_folder: Rename Folder
+
+save: Save
+status: Status
+
+updated_at: Updated At
+upload: Upload
+upload_file: Upload File
+upload_new_version: Upload
+
+version: Version
+versions: Version
+view: View

@@ -1,54 +1,42 @@
-
-
-  <!-- header  -->
+<!-- header  -->
 <div id="branding">
-<div id="logout"><%= link_to 'Logout', :controller => 'users', :action => 'logout' %></div>
-<%= image_tag 'images/logo.gif', :alt => 'Site Logo',  :id => 'branding-logo', :plugin => "railfrog" %>
-<h1 style="float:left">Railfrog Control Panel</h1>
-</div>
-  <!-- content -->
-<div id="contentWrapper">
-<div id="mainContent">
-        <div id="summary">
-          <%= render :partial => "folder_summary",
-              :locals => { :file_name => '/' } %>
-        </div>
-		<div id="context_menu">
-<%= render :partial => "folder_actions",
-:locals => { :site_mapping => SiteMapping.find_root } %>
+  <div id="logout"><%= link_to :logout.l('Logout'), :controller => 'users', :action => 'logout' %></div>
+  <%= image_tag 'images/logo.gif', :alt => 'Site Logo',  :id => 'branding-logo', :plugin => "railfrog" %>
+  <h1 style="float:left"><%= :railfrog_control_panel.l('Railfrog Control Panel') %></h1>
 </div>
 
-        <div id="chunk_version_summary" style="display:none"></div>
-        <div id="content" style="display:none"></div>
-</div>
+<!-- content -->
+<div id="contentWrapper">
+  <div id="mainContent">
+    <div id="summary">
+      <%= render :partial => "folder_summary", :locals => { :file_name => '/' } %>
+    </div>
+    <div id="context_menu">
+      <%= render :partial => "folder_actions", :locals => { :site_mapping => SiteMapping.find_root } %>
+    </div>
+    <div id="chunk_version_summary" style="display:none"></div>
+    <div id="content" style="display:none"></div>
+  </div>
 </div><!-- //content-wrapper -->
 
 <div id="mainNav">
 
-<div>
-<h2>Explore</h2>
-<%= create_mapping_tree(@site_mappings) %>
-</div>
-
-
+  <div>
+    <h2><%= :folders.l('Folders') %></h2>
+    <%= create_mapping_tree(@site_mappings) %>
+  </div>
 
 </div><!-- //mainNav -->
 
 <div id="footer">
 
-      <div id="siteinfo">
-<!-- FIXME - not yet implemented:
-
-        <ul id="nav-siteinfo" class="horizontal-list">
-          <li>Help</li>
-          <li>About Your Website</li>
-          <li>About Railfrog</li>
-        </ul>
--->
-        <div id="siteinfo-legal">&copy; 2006-2007 Railfrog.com</div>
-        <div id="siteinfo-credits">
-	  <!-- <a href="http://railfrog.com/"><img src="/images/frog-powered.png" width="80" height="15"/></a> -->
-          <a href="http://www.railfrog.com/"><%= image_tag 'images/frog-powered.png', :alt => 'Frog Powered',  :id => 'branding-powered-by', :plugin => "railfrog" %></a>
-	</div>
+  <div id="siteinfo">
+    <div id="siteinfo-legal">&copy; 2006-2008 Railfrog.com</div>
+    <div id="siteinfo-credits">
+      <a href="http://www.railfrog.com/">
+        <%= image_tag '/images/frog-powered.png', :alt => 'Frog Powered', :id => 'branding-powered-by', :plugin => "railfrog" %>
+      </a>
+    </div>
+  </div>
 
 </div>

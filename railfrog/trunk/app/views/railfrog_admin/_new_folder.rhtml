@@ -1,4 +1,4 @@
-<h4>Add new folder</h4>
+<h4><%= :create_new_folder.l('Create New folder') %></h4>
 
 <%
 form_remote_for :site_mapping, @site_mapping,
@@ -8,6 +8,6 @@ form_remote_for :site_mapping, @site_mapping,
 
   <%= hidden_field_tag :parent_id, @parent_id %>
   <%= render :partial => 'folder_form' %>
-  <%= submit_tag 'Save' %>
+  <%= submit_tag :save.l('Save') %>
 <% end %>
 

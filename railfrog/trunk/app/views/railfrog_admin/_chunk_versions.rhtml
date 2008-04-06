@@ -1,14 +1,14 @@
-<h4>Document Versions</h4>
+<h4><%= :document_versions.l('Document Versions') %></h4>
 
 <% unless chunk_versions.empty? then -%>
   <table class="versions">
     <tr>
-      <th>Version</th>
-      <th>Base version</th>
-      <th>Created at</th>
-      <th>Updated at</th>
-      <th>Comments</th>
-      <th>Status</th>
+      <th><%= :version.l('Version') %></th>
+      <th><%= :base_version.l('Base Version') %></th>
+      <th><%= :created_at.l('Created At') %></th>
+      <th><%= :updated_at.l('Updated At') %></th>
+      <th><%= :comments.l('Comments') %></th>
+      <th><%= :status.l('Status') %></th>
     </tr>
 
     <% for version in chunk_versions -%>
@@ -18,7 +18,7 @@
       <td><%= version.created_at.to_formatted_s(:db) %></td>
       <td><%= version.updated_at.to_formatted_s(:db) %></td>
       <td><%= h version.comments %></td>
-      <td><%= (chunk.live_version == version.version) ? '<strong>live</strong>' : link_to_remote('put live', :url => { :action => 'put_live', :chunk_id => chunk, :version => version.version, :mapping_id => mapping_id }) %></td>
+      <td><%= (chunk.live_version == version.version) ? "<strong>#{:live.l('Live')}</strong>" : link_to_remote(:put_live.l('Put Live'), :url => { :action => 'put_live', :chunk_id => chunk, :version => version.version, :mapping_id => mapping_id }) %></td>
 
   </tr>
   <% end -%>

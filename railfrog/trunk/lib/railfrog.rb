@@ -54,3 +54,6 @@ module Railfrog
 END_OF_SCRIPT
   end
 end
+
+Symbol.send :include, Railfrog::SymbolExtension
+

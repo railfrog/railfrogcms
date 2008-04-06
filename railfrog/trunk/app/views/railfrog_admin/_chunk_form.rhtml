@@ -2,20 +2,17 @@
 <%= error_messages_for 'chunk_version' %>
 <%= error_messages_for 'site_mapping' %>
 
-<!--[form:post]-->
-
-<p><label for="site_mapping_path_segment">Document Name</label><br/>
+<p><label for="site_mapping_path_segment"><%= :document_name.l('Document Name') %></label><br/>
 <%= text_field 'site_mapping', 'path_segment'  %><br/>
-&nbsp; &nbsp; the document name will be the last part of the URL for this document</p>
+&nbsp; &nbsp; <%= :help_document_name_will_be_the_last_part_of_url.l('the document name will be the last part of the URL for this document') %></p>
 
-<p><label for="site_mapping_is_internal">Is Internal</label><br/>
+<p><label for="site_mapping_is_internal"><%= :is_internal.l('Is Internal') %></label><br/>
 <%= check_box 'site_mapping', 'is_internal'  %><br/>
-&nbsp; &nbsp; internal documents can be included by layouts but not viewed directly</p>
-<p><label for="chunk_version_description">Document Description</label><br/>
+&nbsp; &nbsp; <%= :help_internal_documents_be_included_by_layouts.l('internal documents can be included by layouts but not viewed directly') %></p>
+<p><label for="chunk_version_description"><%= :document_description.l('Document Description') %></label><br/>
 <%= text_field 'chunk', 'description'  %></p>
-<p><label for="chunk_version_content">Content</label><br/>
+<p><label for="chunk_version_content"><%= :content.l('Content') %></label><br/>
 <%= text_area 'chunk_version', 'content', :id => 'XinhaTextArea', :rows => '50', :columns => '80', :style => "width: 100%;"  %></p>
-<p><label for="chunk_version_comments">Comments</label><br/>
+<p><label for="chunk_version_comments"><%= :comments.l('Comments') %></label><br/>
 <%= text_field 'chunk_version', 'comments'  %></p>
-<!--[eoform:post]-->
 

@@ -1,13 +1,13 @@
-<h4>Upload file</h4>
+<h4><%= :upload_file.l('Upload File') %></h4>
 
   <%= form_tag_with_upload_progress(:action=>'store_uploaded')%>
     <%= hidden_field_tag :parent_id, @parent_id %>
-    <p><label for="chunk_description">Document Description</label><br/>
+    <p><label for="chunk_description"><%= :document_description.l('Document Description') %></label><br/>
     <%= text_field 'chunk', 'description'  %></p>
 
-    <p><label for="chunk_version_content">Content</label><br/>
+    <p><label for="chunk_version_content"><%= :content.l('Content') %></label><br/>
     <%= file_field :chunk_version, :tmp_file %>
-    <%= submit_tag 'Upload' %>
+    <%= submit_tag :upload.l('Upload') %>
     <%= upload_status_tag %>
 
   </form>

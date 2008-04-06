@@ -1,0 +1,58 @@
+add_label: Добавить метку
+ago: ago
+are_you_sure: Вы уверены?
+
+base_version: Базовая версия
+
+comments: Комментарии
+content: Содержание
+create_new_document: Создание нового документа
+create_new_folder: Создание новой папки
+created_at: Создано
+
+delete_document: Удалить документ
+delete_folder: Удалить папку
+document: Документ
+document_description: Описание
+document_id: Идентификационный номер документа
+document_name: Имя документа
+document_type: Тип документа
+document_versions: Версии документа
+documents: Документы
+
+edit: Редактировать
+edit_document: Редактировать документ
+edit_source: Исходный код
+
+files: Файлы
+folders: Папки
+
+help_document_name_will_be_the_last_part_of_url: "имя документа будет последней частью URL'а этого документа"
+help_internal_documents_be_included_by_layouts: внутренние документы доступны только для включение в шаблоны и не доступны на прямую для пользователей
+is_internal: Внутренний документ?
+
+labels: Метки
+last_edited: Последний раз редактировался
+live: Активная версия
+
+new_folder: Новая папка
+new_html_document: Новый HTML документ
+new_markdown_document: Новый Markdown документ
+new_textile_document: Новый Textile документ
+
+put_live: Сделать активной
+
+railfrog_control_panel: Панель управления Railfrog 
+rename_folder: Переменовать папку
+
+save: Сохранить
+status: Статус
+
+updated_at: Обновлено
+upload: Залить
+upload_file: Залить файл
+upload_new_version: Залить
+
+version: Версия
+versions: Версии
+view: Просмотр

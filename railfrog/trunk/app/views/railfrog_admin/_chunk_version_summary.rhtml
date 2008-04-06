@@ -1,3 +1,4 @@
-Last edited <%= time_ago_in_words(@chunk_version.created_at) %> ago
-(Version <%= @chunk_version.version %>)
+<%= :last_edited.l('Last edited') %> <%= time_ago_in_words(@chunk_version.created_at) %> 
+<%= :ago.l('ago') %>
+(<%= :version.l('Version') %> <%= @chunk_version.version %>)
 

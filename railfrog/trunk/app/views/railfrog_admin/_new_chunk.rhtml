@@ -1,9 +1,9 @@
-<h1>Create new document</h1>
-<p id="markup-type">Document type: <%= humanize_markup_name @markup -%> </p>
+<h4><%= :create_new_document.l('Create New Document') %></h4>
+<p id="markup-type"><%= :document_type.l('Document type') %>: <%= humanize_markup_name @markup -%> </p>
 <%= form_remote_tag :url => {:action => 'create_chunk'} %>
   <%= hidden_field_tag :parent_id, @parent_id %>
   <%= hidden_field_tag :markup, @markup %>
   <%= render :partial => 'chunk_form' %>
-  <%= submit_tag 'Save' %>
+  <%= submit_tag :save.l('Save') %>
 </form>
 

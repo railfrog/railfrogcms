@@ -1,4 +1,4 @@
-<h4>Rename folder</h4>
+<h4><%= :rename_folder.l('Rename Folder') %></h4>
 
 <%
 form_remote_for :site_mapping, @site_mapping,
@@ -7,7 +7,7 @@ form_remote_for :site_mapping, @site_mapping,
 %>
   <%= f.hidden_field :id %>
   <%= render :partial => 'folder_form' %>
-  <%= submit_tag 'Save' %>
+  <%= submit_tag :save.l('Save') %>
 <% end %>
 
 
