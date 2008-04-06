@@ -2,12 +2,14 @@ add_label: Добавить метку
 ago: ago
 are_you_sure: Вы уверены?
 
+back: Back
 base_version: Базовая версия
 
 comments: Комментарии
 content: Содержание
-create_new_document: Создание нового документа
-create_new_folder: Создание новой папки
+create_new_document: Создать новый документ
+create_new_folder: Создать новую папку
+create_new_user: Создать нового пользователя
 created_at: Создано
 
 delete_document: Удалить документ
@@ -23,8 +25,10 @@ documents: Документы
 edit: Редактировать
 edit_document: Редактировать документ
 edit_source: Исходный код
+email: E-mail
 
 files: Файлы
+first_name: Имя
 folders: Папки
 
 help_document_name_will_be_the_last_part_of_url: "имя документа будет последней частью URL'а этого документа"
@@ -33,13 +37,20 @@ is_internal: Внутренний документ?
 
 labels: Метки
 last_edited: Последний раз редактировался
+last_name: Фамилия 
 live: Активная версия
+login: Вход в систему
+login_failed: Не удалось войти
+logout: Выход
+logout_successful: Выход успешно завершён
 
+name: Имя
 new_folder: Новая папка
 new_html_document: Новый HTML документ
 new_markdown_document: Новый Markdown документ
 new_textile_document: Новый Textile документ
 
+password: Пароль
 put_live: Сделать активной
 
 railfrog_control_panel: Панель управления Railfrog 
@@ -52,6 +63,8 @@ updated_at: Обновлено
 upload: Залить
 upload_file: Залить файл
 upload_new_version: Залить
+user_successfully_created: Пользователь успешно создан
+users: Users
 
 version: Версия
 versions: Версии

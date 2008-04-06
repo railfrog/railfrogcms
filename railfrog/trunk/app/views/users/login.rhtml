@@ -1,18 +1,14 @@
-<h1>Log In</h1>
+<h1><%= :login.l('Log In') %></h1>
 
 <% form_tag :action => 'authenticate', :controller => 'users' do %>
-<p><label>E-mail Address:</label><br />
+<p><label><%= :email.l('E-mail') %>:</label><br />
 <%= text_field_tag :email %>
 </p>
 
-<p><label>Password:</label><br />
+<p><label><%= :password.l('Password') %>:</label><br />
 <%= password_field_tag :password %>
 </p>
 
-<p><%= submit_tag 'Log In' %></p>
+<p><%= submit_tag :login.l('Log In') %></p>
 <% end %>
 
-<p>
-email: test@test.com<br />
-pass: test
-</p>

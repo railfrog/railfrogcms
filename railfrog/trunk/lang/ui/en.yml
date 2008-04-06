@@ -2,12 +2,14 @@ add_label: Add Label
 ago: ago
 are_you_sure: Are you sure?
 
+back: Back
 base_version: Base Version
 
 comments: Comments
 content: Content
-create_new_document: Create New Document
-create_new_folder: Create New Folder
+create_new_document: Create a New Document
+create_new_folder: Create a New Folder
+create_new_user: Create a New User
 created_at: Created At
 
 delete_document: Delete Document
@@ -23,23 +25,32 @@ documents: Documents
 edit: Edit
 edit_document: Edit Document
 edit_source: Edit Source
+email: E-mail
 
 files: Files
+first_name: First Name
 folders: Folders
 
-help_document_name_will_be_the_last_part_of_url: "имя документа будет последней частью URL'а этого документа"
-help_internal_documents_be_included_by_layouts: внутренние документы доступны только для включение в шаблоны и не доступны на прямую для пользователей
+help_document_name_will_be_the_last_part_of_url: the document name will be the last part of the URL for this document
+help_internal_documents_be_included_by_layouts: internal documents can be included by layouts but not viewed directly
 is_internal: Is Internal?
 
 labels: Labels
 last_edited: Last Edited
+last_name: Last Name
 live: Live
+login: Log In
+login_failed: Log In Failed
+logout: Logout
+logout_successful: Logout Successful
 
+name: Name
 new_folder: New Folder
 new_html_document: New HTML Document
 new_markdown_document: New Markdown Document
 new_textile_document: New Textile Document
 
+password: Password
 put_live: Put Live
 
 railfrog_control_panel: Railfrog Control Panel
@@ -52,6 +63,8 @@ updated_at: Updated At
 upload: Upload
 upload_file: Upload File
 upload_new_version: Upload
+user_successfully_created: User Successfully Created
+users: Users
 
 version: Version
 versions: Version

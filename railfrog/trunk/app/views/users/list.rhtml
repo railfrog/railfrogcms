@@ -1,20 +1,22 @@
-<h1>Current Users</h1>
+<h4><%= :users.l('Users') %></h4>
+
+<p>
+  <%= link_to :create_new_user.l('Create a New User'), :action => 'new' %>
+</p>
 
 <table>
-<tr>
-<th>Name</th>
-<th>Email</th>
-</tr>
-<% for user in @users %>
-<tr>
-<td><%= user.first_name %> <%= user.last_name %></td>
-<td><%= user.email %></td>
-</tr>
-<% end %>
+  <tr>
+    <th><%= :name.l('Name') %></th>
+    <th><%= :email.l('Email') %></th>
+  </tr>
+  <% for user in @users %>
+    <tr>
+      <td><%= user.first_name %> <%= user.last_name %></td>
+      <td><%= user.email %></td>
+    </tr>
+  <% end %>
 </table>
 
-<%= link_to 'Previous Page', { :page => @user_pages.current.previous } if @user_pages.current.previous %>
-<%= link_to 'Next Page', { :page => @user_pages.current.next } if @user_pages.current.next %> 
-<br />
-<%= link_to 'Add a New User', :action => 'new' %><br />
-<%= link_to 'Back to Index', :controller => 'index' %>
+<p>
+  <%= link_to :back.l('Back'), :controller => 'users' %>
+</p>

@@ -16,7 +16,7 @@ class UsersController < ApplicationController
       session[:last_name] = user.last_name
       redirect_to rf_admin_url
     else
-      flash[:error] = 'Log In Failed'
+      flash[:error] = :login_failed.l('Log In Failed')
       redirect_to :action => 'login'
       return
     end
@@ -28,7 +28,7 @@ class UsersController < ApplicationController
     session[:user_id] = nil
     session[:first_name] = nil
     session[:last_name] = nil
-    flash[:notice] = 'Logout Sucessful'
+    flash[:notice] = :logout_successful.l('Logout Successful')
     redirect_to ''
   end
   
@@ -49,7 +49,7 @@ class UsersController < ApplicationController
   def create
     @user = User.new(params[:user])
     if @user.save
-      flash[:notice] = 'User Successfully Created'
+      flash[:notice] = :user_successfully_created.l('User Successfully Created')
       redirect_to :action => 'list'
     else
       render :action => 'new'
