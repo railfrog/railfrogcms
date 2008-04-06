@@ -28,8 +28,9 @@ h1, h2, p {
 
 
 #branding {
+border-top:#abc561 solid 3px;
 background:#c1df7d url(/plugin_assets/railfrog/images/images/top_bg.gif) repeat-x;
-height: 156px;
+height: 110px;
 position:relative
 }
 
@@ -40,10 +41,10 @@ margin-left:3px;
 
 #branding h1 {
   margin: 0;
-  color:#693;
+  color:#360;
   padding-top:30px;
-  font-weight:bold;
-  font-family:Arial
+  font-weight:normal;
+  font-family:Tahoma;
 }
 
 #mainNav {
