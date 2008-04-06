@@ -59,4 +59,9 @@ Rails::Initializer.run do |config|
   # config.active_record.default_timezone = :utc
 end
 
+# Use Xinha WYSIWYG HTML Editor 
 Railfrog.xinha_enabled = true
+
+# Default language of Railfrog Admin UI (Railfrog Control Panel)
+#Globalite.language = :ru
+

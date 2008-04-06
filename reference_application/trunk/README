@@ -7,6 +7,10 @@ You need to have following:
 1. Ruby interpreter. See http://www.ruby-lang.org
 2. Rails. Run gem install rails -y
 3. SQLite or MySQL. Find full list of supported databases at http://api.rubyonrails.com/files/vendor/rails/activerecord/README.html
+4. Install mime-types gem:
+
+  gem install mime-types 
+
 
 === Installation
 
@@ -20,11 +24,18 @@ You need to have following:
 
   rake db:migrate
 
+
 === How to use Railfrog
 
 Start service by running script/server and open http://localhost:3000/admin
 
 TBD
+
+
+=== Localization of Railfrog Control Panel
+
+Please find Localization instruction at vendor/plugins/railfrog/README
+
 
 === More info
 
