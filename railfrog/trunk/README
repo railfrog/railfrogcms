@@ -7,6 +7,13 @@ Railfrog makes it easy for developers, designers, webmasters, or
 just about anyone else to deploy and manage a website.
 
 
+=== Prerequirements
+
+# Install mime-types gem:
+
+  gem install mime-types 
+
+
 === Installation notes
 
 ==== ... new application
@@ -74,6 +81,25 @@ You can find an example at vendor/plugins/railfrog/db/sites/railfrog
 To load example site from the file system run 
 
   rake railfrog:site:load SITE=vendor/plugins/railfrog/db/sites/railfrog
+
+
+=== Localization of Railfrog Control Panel
+
+By default you have English version of Railfrog Control Panel. If you'd like 
+to have localized version of UI you can easily localize Railfrog. Railfrog uses 
+Globalite plugin (http://code.google.com/p/globalite/). To localize Admin UI 
+you can just copy one of existing localization files eg:
+
+  cp vendor/plugins/railfrog/lang/ui/ru.yml lang/ui
+
+and add following line to your config/environment.rb file:
+
+  Globalite.language = :ru
+
+If you'd like to contribute localization file please send it to railfrog mailing list:
+
+  railfrog-dev@googlegroups.com
+
 
 ==== History
 
