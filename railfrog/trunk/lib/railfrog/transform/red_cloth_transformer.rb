@@ -1,9 +1,5 @@
-require 'railfrog'
-require 'railfrog/transform/base_transformer'
-
 module Railfrog
   module Transform
-
 
     # RedCloth is a processor for Textile content - see http://whytheluckystiff.net/ruby/redcloth/
     class RedClothTransformer < BaseTransformer

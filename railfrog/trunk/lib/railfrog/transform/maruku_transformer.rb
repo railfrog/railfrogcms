@@ -1,9 +1,5 @@
-require 'railfrog'
-require 'railfrog/transform/base_transformer'
-
 module Railfrog
   module Transform
-
 
     # Maruku is a processor for Markdown content - see http://www.maruku.org/
     class MarukuTransformer < BaseTransformer
