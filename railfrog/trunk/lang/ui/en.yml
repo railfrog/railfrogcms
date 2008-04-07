@@ -51,6 +51,8 @@ new_markdown_document: New Markdown Document
 new_textile_document: New Textile Document
 
 password: Password
+please_create_admin_user: Please Create Admin User
+please_login: Please Log In
 put_live: Put Live
 
 railfrog_control_panel: Railfrog Control Panel

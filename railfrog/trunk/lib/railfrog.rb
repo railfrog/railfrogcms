@@ -9,7 +9,6 @@ tm = Railfrog::Transform::TransformManager.instance
 tm.register(Railfrog::Transform::MarukuTransformer.new, Mime::MARKDOWN, Mime::HTML)
 tm.register(Railfrog::Transform::RedClothTransformer.new, Mime::TEXTILE, Mime::HTML)
 
-
 module Railfrog
 
 #  Global config options: can be set in environment.rb
@@ -53,6 +52,7 @@ module Railfrog
         HTMLArea.startEditors(xinha_editors);
 END_OF_SCRIPT
   end
+
 end
 
 Symbol.send :include, Railfrog::SymbolExtension

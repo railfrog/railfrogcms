@@ -51,6 +51,8 @@ new_markdown_document: Новый Markdown документ
 new_textile_document: Новый Textile документ
 
 password: Пароль
+please_create_admin_user: Пожалуйста, создайте учётную запись пользователя
+please_login: Пожалуйста, выполните вход
 put_live: Сделать активной
 
 railfrog_control_panel: Панель управления Railfrog 

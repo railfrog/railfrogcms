@@ -84,8 +84,6 @@ class InitialSchema < ActiveRecord::Migration
       t.column "updated_at", :datetime, :null => false
     end
 
-    User.create :first_name => "Test", :last_name => "Tester", :email => "test@test.com", :password => "test"
-
     STDERR.puts "  loading mime types file"
     if RAILS_ENV == 'production'
       file_name = File.dirname(__FILE__) + '/mime.types'

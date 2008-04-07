@@ -1,9 +1,14 @@
+require 'digest/sha1'
+
 class UsersController < ApplicationController  
-  require 'digest/sha1'
+  include UsersHelper
   layout 'default'
   
-  # Security
-  before_filter :ensure_logged_in, :only => [ :index, :list, :new, :create ]
+  before_filter :ensure_logged_in, :only => [ :index, :list ]
+
+  if User.count > 0
+    before_filter :ensure_logged_in, :only => [ :new, :create ]
+  end
   
   # Login Authentication
   def authenticate
