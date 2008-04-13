@@ -99,13 +99,13 @@ class InitialSchema < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table :users
-    drop_table :site_mappings
-    drop_table :chunk_versions
-    drop_table :chunks
-    drop_table :file_extensions
-    drop_table :mime_types
-    drop_table :mapping_labels
+    drop_table "users"
+    drop_table "site_mappings"
+    drop_table "chunk_versions"
+    drop_table "chunks"
+    drop_table "file_extensions"
+    drop_table "mime_types"
+    drop_table "mapping_labels"
   end
 
   def self.load_mime_types_file(filename)
@@ -135,6 +135,6 @@ class InitialSchema < ActiveRecord::Migration
       c.mime_type_id = MimeType.find_default_mime_type.id
       c.save
     end
-   end
+  end
 
 end

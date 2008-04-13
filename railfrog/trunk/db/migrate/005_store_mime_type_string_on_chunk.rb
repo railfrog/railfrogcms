@@ -6,7 +6,7 @@ end
 
 class StoreMimeTypeStringOnChunk < ActiveRecord::Migration
   def self.up
-    add_column :chunks, :mime_type_str, :string, :default => "", :limit => 100
+    add_column "chunks", :mime_type_str, :string, :default => "", :limit => 100
     Chunk.reset_column_information
     # Set string mime type for each chunk
     all_chunks = Chunk.find(:all)
@@ -19,6 +19,6 @@ class StoreMimeTypeStringOnChunk < ActiveRecord::Migration
   end
 
   def self.down
-    remove_column :chunks, :mime_type_str
+    remove_column "chunks", :mime_type_str
   end
 end
