@@ -6,6 +6,9 @@
 <%= text_field 'site_mapping', 'path_segment'  %><br/>
 &nbsp; &nbsp; <%= :help_document_name_will_be_the_last_part_of_url.l('the document name will be the last part of the URL for this document') %></p>
 
+<p><label for="chunk_mime_type_str"><%= :document_type.l('Document Type') %></label><br/>
+<%= text_field 'chunk', 'mime_type_str'  %></p>
+
 <p><label for="site_mapping_is_internal"><%= :is_internal.l('Is Internal') %></label><br/>
 <%= check_box 'site_mapping', 'is_internal'  %><br/>
 &nbsp; &nbsp; <%= :help_internal_documents_be_included_by_layouts.l('internal documents can be included by layouts but not viewed directly') %></p>
