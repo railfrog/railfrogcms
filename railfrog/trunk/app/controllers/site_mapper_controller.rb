@@ -32,7 +32,9 @@ class SiteMapperController < ApplicationController
       path.push index_page
       @mapping, @rf_labels, @chunk_version = SiteMapping.find_mapping_and_labels_and_chunk(path, params[:version], true)
     end
+
     logger.debug "show_chunk >>>> mapping for path  \'#{path.join('/')}\' is #{@mapping.id}" if @mapping
+
     if @mapping && @mapping.chunk     # this is a data node, since a folder node will not have an associated chunk
       @chunk_content = @mapping.chunk.live_chunk_version.content
 
@@ -45,10 +47,13 @@ class SiteMapperController < ApplicationController
         tm = Railfrog::Transform::TransformManager.instance
         @chunk_content, render_mt = tm.transform(@chunk_content, chunk_mt, requested_mt)
       end
-      logger.debug "show_chunk >>>> render_mt is \'#{render_mt}\'"
 
       data_options[:type] = render_mt
       data_options[:filename] = params[:path].last
+
+      if data_options[:type].include?("html") || data_options[:type].include?("xml")
+        @chunk_content = render_content @chunk_content
+      end
 
       if data_options[:type].include?("html") && params[:layout] != 'false' then
         # if it is an html doc, then render our data inside the layout
@@ -67,6 +72,7 @@ class SiteMapperController < ApplicationController
 
             @rf_labels["chunk_content"] = @chunk_content
             @rf_labels["chunk-content"] = @chunk_content    # Allow either hyphen or underscore
+            
           else
             rendering_options[:partial] = "chunk_content"
             rendering_options[:layout] = layout
@@ -98,6 +104,11 @@ class SiteMapperController < ApplicationController
 
   private
   def render_chunk(options)
-    render_to_string :inline => Chunk.find_version(options).content, :locals => {:rf_labels => @rf_labels }
+    render_content Chunk.find_version(options).content
   end
+
+  def render_content(content)
+    render_to_string :inline => content, :locals => {:rf_labels => @rf_labels }
+  end
+
 end
