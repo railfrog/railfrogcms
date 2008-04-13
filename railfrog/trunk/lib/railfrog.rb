@@ -10,6 +10,7 @@ tm.register(Railfrog::Transform::MarukuTransformer.new, Mime::MARKDOWN, Mime::HT
 tm.register(Railfrog::Transform::RedClothTransformer.new, Mime::TEXTILE, Mime::HTML)
 
 module Railfrog
+  VERSION = '0.5.5-b1'
 
 #  Global config options: can be set in environment.rb
 #  mattr_accessor :config_param

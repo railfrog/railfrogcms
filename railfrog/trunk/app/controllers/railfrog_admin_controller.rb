@@ -10,8 +10,6 @@ class RailfrogAdminController < ApplicationController
 
   helper_method :use_xinha?
 
-  layout 'default'
-
   def index
     @site_mappings = SiteMapping.get_all_tree.inject({}) do |hash, mapping|
       if mapping.parent_id.nil?
