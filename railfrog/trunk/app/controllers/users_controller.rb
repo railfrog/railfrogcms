@@ -2,7 +2,7 @@ require 'digest/sha1'
 
 class UsersController < ApplicationController  
   include UsersHelper
-  layout 'default'
+  layout 'railfrog_admin'
   
   before_filter :ensure_logged_in, :only => [ :index, :list ]
 
