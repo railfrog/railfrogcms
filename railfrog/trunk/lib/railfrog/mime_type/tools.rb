@@ -62,8 +62,9 @@ module Railfrog
         if !@@custom_types_loaded
           # See thread http://www.mail-archive.com/markdown-discuss@six.pairlist.net/msg00654.html for list of Markdown extensions
           register("text/x-markdown", :markdown, [], 
-                   ["md", "mdown", "mkdwn", "mark","markdn", "mdtext", "mdml", "mkd"])
+                   %w{ md mdown mkdwn mark markdn mdtext mdml mkd })
           register("text/x-textile", :textile, [])
+          register("application/x-javascript", :javascript, [], %w{ js } )
           @@custom_types_loaded = true
         end
         # TODO:REFACTOR once Edge code is golden - may choose to drop MIME::Type gem and load from file with:
