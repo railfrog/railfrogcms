@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+html-ext:
+  id: 1
+  extension: html
+  mime_type_id: 1
+htm-ext:
+  id: 2
+  extension: htm
+  mime_type_id: 1
+png-ext:
+  id: 3
+  extension: png
+  mime_type_id: 2

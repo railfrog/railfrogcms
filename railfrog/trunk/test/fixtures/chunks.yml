@@ -1,0 +1,14 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+index:
+  id:           1
+  description:  Railfrog Index Page
+  live_version: 2
+  mime_type_id: 1
+  mime_type_str: text/html
+
+chocolate_cake_page:
+  id:           2
+  description:  Chocolate Cake Page
+  live_version: 1
+  mime_type_id: 1
+  mime_type_str: text/html
