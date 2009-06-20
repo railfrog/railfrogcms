@@ -1,0 +1,4 @@
+log/*.log
+public/plugin_assets
+db/*.sqlite3
+db/schema.rb
