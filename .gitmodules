@@ -1,0 +1,3 @@
+[submodule "reference_application/vendor/rails"]
+	path = reference_application/vendor/rails
+	url = git://github.com/rails/rails.git
