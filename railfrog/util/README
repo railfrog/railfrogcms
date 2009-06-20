@@ -1,7 +1,0 @@
-= Utilities useful for Railfrog (and other Rails) setups
-
- * mongrel.logrotate -- copy to /etc/logrotate.d
- * monitrc -- copy to /etc/monitrc
- * monitgen.rb -- generate mongrel.monitrc from mongrel_cluster.yml (copy to /etc/monit.d)
- * nginx.conf -- sample for use with mongrel_cluster. Needs ssl certs to start.
- * DOT_irbrc -- save in your home dir as ~/.irbrc

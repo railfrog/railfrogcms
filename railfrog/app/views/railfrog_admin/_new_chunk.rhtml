@@ -1,8 +1,0 @@
-<h4><%= :create_new_document.l('Create New Document') %></h4>
-<%= form_remote_tag :url => {:action => 'create_chunk'} %>
-  <%= hidden_field_tag :parent_id, @parent_id %>
-  <%= hidden_field_tag :markup, @markup %>
-  <%= render :partial => 'chunk_form' %>
-  <%= submit_tag :save.l('Save') %>
-</form>
-

@@ -1,8 +1,0 @@
-<% if @site_mapping.is_internal then %>
-    <%= h @chunk_version.content %>
-<% else %>
-  <object
-    data="<%= file_name + "?#{Time.now.to_i}" %>"
-    type="<%= mime_type %>"
-    <%= mime_type.include?("text") ? "width='100%' height='100%'" : "" %> />
-<% end %>
