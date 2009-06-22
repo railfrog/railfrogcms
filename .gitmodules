@@ -4,3 +4,6 @@
 [submodule "vendor/plugins/engines"]
 	path = vendor/plugins/engines
 	url = git://github.com/lazyatom/engines.git
+[submodule "vendor/plugins/railfrog"]
+	path = vendor/plugins/railfrog
+	url = git://github.com/railfrog/railfrog
