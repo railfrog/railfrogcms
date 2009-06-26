@@ -2,20 +2,20 @@
 
 ### Requirements
 
-Railfrog setup currently requires the commandline - on Windows, Start | Accessories | All Programs | Command Shell, or
-use Terminal or Konsole on OS/X / Linux.
+Railfrog setup currently requires the commandline - on Windows,
+Start | Accessories | All Programs | Command Shell
+or use Terminal or Konsole on OS/X / Linux.
 
 You need to have the following:
 
   1. Ruby interpreter. See http://www.ruby-lang.org
   2. RubyGems. See http://www.rubygems.org 
   3. Rails. Run `gem install rails` (or `sudo gem install rails` on Linux or OS/X)  
-  (**Note:** No longer required for Git installation - see below)
+     (**Note:** No longer required for Git installation - see below)
   4. SQLite, MySQL or PostgreSQL. Find full list of supported databases at
-  <http://api.rubyonrails.com/files/vendor/rails/activerecord/README.html> -SQLite has the easiest setup
-  and may already be installed.
-  5. The mime-types gem:
-   - `gem install mime-types`
+     <http://api.rubyonrails.com/files/vendor/rails/activerecord/README.html>
+     - SQLite has the easiest setup and may already be installed.
+  5. The mime-types gem: - `gem install mime-types`
 
 
 ### Installation
@@ -24,12 +24,11 @@ You need to have the following:
 
    * If you have Git - clone the railfrog repo, then get linked resources (including Rails):
 
-<pre>
-git clone git://github.com/railfrog/railfrog.git
-git submodule update --init
-</pre>
+       git clone git://github.com/railfrog/railfrog.git
+       git submodule update --init
 
    * If you prefer just to download - you'll need to install Rails.
+
 
 Note:  currently Railfrog only works with Rails 2.0 and earlier. This is automatically
 handled by the Git installation. 
@@ -39,12 +38,11 @@ handled by the Git installation.
 
  Edit config/database.yml if you want to use MySQL or PostgreSQL instead of SQLite.
 
- * Set up the database. **Note:** For the current Rails 2.0.5 code you'll need Rake 0.7.3 installed.
+ * Set up the database.
+   **Note:** For the current Rails 2.0.5 code you'll need Rake 0.7.3 installed:
 
-<pre>
-sudo gem i --version=0.7.3 rake
-rake _0.7.3_ db:migrate
-</pre>
+       sudo gem i --version=0.7.3 rake
+       rake _0.7.3_ db:migrate
 
 ### Getting Started
 
