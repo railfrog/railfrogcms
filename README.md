@@ -24,8 +24,10 @@ You need to have the following:
 
    * If you have Git - clone the railfrog repo, then get linked resources (including Rails):
 
+
     git clone git://github.com/railfrog/railfrog.git
     git submodule update --init
+
 
    * If you prefer just to download - you'll need to install Rails.
 
