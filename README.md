@@ -25,8 +25,7 @@ You need to have the following:
    * If you have Git - clone the railfrog repo, then get linked resources (including Rails):
 
     git clone git://github.com/railfrog/railfrog.git
-    git submodule init
-    git submodule update
+    git submodule update --init
 
    * If you prefer just to download - you'll need to install Rails.
 
@@ -38,9 +37,10 @@ handled by the Git installation.
 
  Edit config/database.yml if you want to use MySQL or PostgreSQL instead of SQLite.
 
- * Set up the database:
+ * Set up the database. **Note:** For the current Rails 2.0.5 code you'll need Rake 0.7.3 installed.
 
-    rake db:migrate
+    sudo gem i --version=0.7.3 rake
+    rake _0.7.3_ db:migrate
 
 
 ### Getting Started
