@@ -18,7 +18,7 @@ You need to have the following:
   3. SQLite, MySQL or PostgreSQL. Find full list of supported databases at
      <http://api.rubyonrails.com/files/vendor/rails/activerecord/README.html>
      - SQLite has the easiest setup and may already be installed.
-  4. The mime-types gem: - `sudo gem install mime-types`
+  4. A few required gems: - `sudo gem install mime-types maruku RedCloth`
 
 
 ### Installation
