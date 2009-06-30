@@ -44,7 +44,7 @@ While you might have Ruby on Rails already installed on your system (or you inst
 
 Railfrog setup currently requires that you use a commandline "shell" (called Command Prompt, Terminal or Konsole on various platforms) - but even if you have not done this before, it's very straightforward.
 
-**Note:** In the following instructions we are prefixing all the commands with "sudo", which is what you need to gain administrator privileges on Linux and Mac. If you are on Windows, type the same commands at the "C:\>" prompt (Start | All Programs | Accessories | Command Prompt), but without the "sudo".
+**Note:** In the following instructions we are prefixing all the commands with "sudo", which is what you need to gain administrator privileges on Linux and Mac. If you are on Windows, type the same commands at the "C:\\\>" prompt (Start | All Programs | Accessories | Command Prompt), but without the "sudo".
 
 ### Step 1. Ensure you Have the Right Gems 
 
@@ -68,7 +68,7 @@ At the time of writing, Raifrog requires Rails 2.0.5. As mentioned earlier, you'
 
 ### Step 3. Clone the RailfrogCMS Repository
 
-First create a working directory - for example, `/Users/pris/dev` or `C:\\dev`. Change to this directory:
+First create a working directory - for example, `/Users/pris/dev` or `C:\dev`. Change to this directory:
 
 `cd /Users/pris/dev`
 
