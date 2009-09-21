@@ -36,7 +36,7 @@ You need to have the following:
 
 If you want to do more than just install the Railfrog CMS and publish a website, you should be familiar with Ruby on Rails. If you are not, then you might want to go through the [Getting Started with Rails](http://guides.rubyonrails.org/getting_started.html) guide.
 
-Before you proceed with installation, you may want to make sure you are able to create and start a simple Ruby on Rails application. This is not required, but will reassure you that you have all the required bits and pieces installed and running (the ruby interpreter, the database, the web server, etc.).
+Before you proceed with installation, you may want to make sure you are able to create and start a simple Ruby on Rails application. This is not required, but will reassure you that you have all the required bits and pieces installed and running (the ruby interpreter, the database, the web server, etc.). If you're on Windows, this [tutorial on setting up Rails in Windows](http://railstutor.org/projects/rails-tutor/wiki/Windows) may save you some pain.
 
 While you might have Ruby on Rails already installed on your system (or you installed it yourself following the above mentioned Getting Started guide), when you perform the following instructions to install the Railfrog CMS, you will get a specific version of Rails installed under the *vendor* directory. This is to ensure that Railfrog runs against the specific version of Rails that is needed (and that one might *not* be the same as the one that is already installed on your computer).
 
